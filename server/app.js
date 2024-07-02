@@ -7,8 +7,8 @@ dotenv.config();
 app.listen(process.env.PORT);
 
 
-//const userRouter = require('./routes/users');
-//const schedulesRouter = require('./routes/schedules');
+const userRouter = require('./routes/users');
+const schedulesRouter = require('./routes/schedules');
 const todoRouter = require('./routes/todos');
 
 //app.use("/users",userRouter);
