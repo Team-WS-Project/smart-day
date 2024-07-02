@@ -23,10 +23,16 @@ const addTodos = (req, res) => {
 const getTodos = (req, res) => {
   //user_id는 users랑 합칠때 authorization.id로 변경될 것
   const { user_id } = req.body;
-  const {today} = req.query;
+  const {today, month} = req.query;
 
-  let values = [user_id, today];
-  let sql = `SELECT * FROM todos WHERE user_id = ? and due_date > ?`;
+  if(today){
+    let values = [user_id, today];
+    let sql = `SELECT * FROM todos WHERE user_id = ? and due_date > ?`;
+  }
+  else if(month){
+    let values = [user_id, month];
+    let sql = `SELECT * FROM todos WHERE user_id = ? and due_date LIKE ?`;
+  }
 
   conn.query(sql, values, (err, results) => {
     if (err) {
