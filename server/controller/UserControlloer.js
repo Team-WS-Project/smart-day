@@ -46,12 +46,12 @@ const login = (req, res) => {
 
     const loginUser = results[0];
 
-    // salt값 꺼내서 날 것으로 들어온 비밀번호 암호화 해보고
+    // salt값 꺼내서 날 것으로 들어온 비밀번호 암호화
     const hashPassword = crypto
       .pbkdf2Sync(password, loginUser.salt, 10000, 10, "sha512")
       .toString("base64");
 
-    // => db 비밀번호랑 비교
+    // 위에서 암호화된 비밀번호 db 비밀번호랑 비교
     if (loginUser && loginUser.password == hashPassword) {
       const token = jwt.sign(
         {
@@ -68,7 +68,7 @@ const login = (req, res) => {
       res.cookie("token", token, {
         httpOnly: true,
       });
-      console.log(token);
+      // console.log(token);
 
       return res.status(StatusCodes.CREATED).json(results);
     } else {
@@ -77,7 +77,7 @@ const login = (req, res) => {
         .json({
           message: "아이디 또는 비밀번호를 잘못 입력했습니다.",
         })
-        .end(); // 401 : Unauthorized (비인증), 403 : Forbidden (접근 권리 없음)
+        .end();
     }
   });
 };
