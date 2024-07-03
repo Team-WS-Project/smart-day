@@ -5,6 +5,7 @@ const addTodos = (req, res) => {
   //user_id는 users랑 합칠때 authorization.id로 변경될 것
   const { title, detail, due_date, user_id } = req.body;
 
+  //detail 안넣었때 처리해주기
   const sql = `INSERT INTO todos (title, detail, due_date, user_id) VALUES(?, ?, ?, ?)`;
   const values = [title, detail, due_date, user_id];
   conn.query(sql, values, (err, results) => {
@@ -32,7 +33,7 @@ const getTodos = (req, res) => {
     values.push(user_id, today);
     sql += `AND due_date > ?`;
   } else if (month) {
-    values.push(user_id, month);
+    values.push(user_id, month+'%');
     sql += `AND due_date LIKE ?`;
   }else{
     return res.status(StatusCodes.BAD_REQUEST).end();
@@ -72,6 +73,7 @@ const editTodos = (req, res) => {
   const { id } = req.params;
   const { title, detail, due_date, completed } = req.body;
 
+  //detail 없을때 처리
   const sql = `UPDATE todos SET title = ?, detail = ?, due_date = ?, completed = ?
         WHERE id = ?`;
 
