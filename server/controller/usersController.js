@@ -67,7 +67,7 @@ const getInfoToUpdate = (req, res) => {
 const join = (req, res) => {
   const { email, password, location, nickname } = req.body;
 
-  const sql = `INSERT INTO users (email, password, salt, location, nickname) VALUES (?, ?, ?, ?, ?, ?)`;
+  const sql = `INSERT INTO users (email, password, salt, location, nickname) VALUES (?, ?, ?, ?, ?)`;
 
   const salt = crypto.randomBytes(16).toString("base64");
   const hashPassword = crypto
