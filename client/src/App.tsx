@@ -1,8 +1,9 @@
+// import React from "react";
+import MainRoutes from './routes/MainRoutes';
+
 function App() {
   return (
-    <div>
-      <h1>Vite + React</h1>
-    </div>
+    <MainRoutes />
   );
 }
 
