@@ -68,7 +68,7 @@ const login = (req, res) => {
       res.cookie("token", token, {
         httpOnly: true,
       });
-      // console.log(token);
+      console.log(token);
 
       return res.status(StatusCodes.CREATED).json(results);
     } else {
@@ -80,6 +80,32 @@ const login = (req, res) => {
         .end();
     }
   });
+};
+
+// 메인페이지 location, nickname 조회
+const userInformation = (req, res) => {
+  let authorization = ensureAuthorization(req, res);
+
+  if (authorization instanceof jwt.TokenExpiredError) {
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      message: "로그인 세션이 만료되었습니다. 다시 로그인 하세요.",
+    });
+  } else if (authorization instanceof jwt.JsonWebTokenError) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: "잘못된 토큰입니다.",
+    });
+  } else {
+    let sql = `SELECT location, nickname FROM users WHERE email = ?`;
+
+    conn.query(sql, authorization.email, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(StatusCodes.BAD_REQUEST).end();
+      }
+
+      return res.status(StatusCodes.OK).json(results[0]);
+    });
+  }
 };
 
 // 회원 정보 수정창 email, nickname, location 조회
@@ -146,36 +172,10 @@ const updateUserInformation = (req, res) => {
   }
 };
 
-// 메인페이지 location, nickname 조회
-const mainPage = (req, res) => {
-  let authorization = ensureAuthorization(req, res);
-
-  if (authorization instanceof jwt.TokenExpiredError) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      message: "로그인 세션이 만료되었습니다. 다시 로그인 하세요.",
-    });
-  } else if (authorization instanceof jwt.JsonWebTokenError) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "잘못된 토큰입니다.",
-    });
-  } else {
-    let sql = `SELECT location, nickname FROM users WHERE email = ?`;
-
-    conn.query(sql, authorization.email, (err, results) => {
-      if (err) {
-        console.log(err);
-        return res.status(StatusCodes.BAD_REQUEST).end();
-      }
-
-      return res.status(StatusCodes.OK).json(results[0]);
-    });
-  }
-};
-
 module.exports = {
   join,
   login,
   infoToUpdate,
   updateUserInformation,
-  mainPage,
+  userInformation,
 };
