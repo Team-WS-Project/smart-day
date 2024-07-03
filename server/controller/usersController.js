@@ -97,6 +97,15 @@ const login = (req, res) => {
       return res.status(StatusCodes.BAD_REQUEST).end();
     }
 
+    if (results.length === 0) {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({
+          message: "아이디 또는 비밀번호를 잘못 입력했습니다.",
+        })
+        .end();
+    }
+
     const loginUser = results[0];
 
     // salt값 꺼내서 날 것으로 들어온 비밀번호 암호화
@@ -104,7 +113,7 @@ const login = (req, res) => {
 
     // 위에서 암호화된 비밀번호 db 비밀번호랑 비교
     if (loginUser && loginUser.password == hashPassword) {
-      const token = jwt.sign(
+      const access_token = jwt.sign(
         {
           id: loginUser.id,
           email: loginUser.email,
@@ -116,12 +125,11 @@ const login = (req, res) => {
         },
       );
       // 토큰 쿠키에 담기
-      res.cookie("token", token, {
+      res.cookie("access_token", access_token, {
         httpOnly: true,
       });
-      console.log(token);
 
-      return res.status(StatusCodes.CREATED).json(results);
+      return res.status(StatusCodes.OK).json(results);
     } else {
       return res
         .status(StatusCodes.UNAUTHORIZED)
