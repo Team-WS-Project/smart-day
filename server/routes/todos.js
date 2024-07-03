@@ -1,5 +1,4 @@
 const express = require("express");
-const router = express.Router();
 const {
   addTodos,
   getTodos,
@@ -9,13 +8,14 @@ const {
   changeCompleted,
 } = require("../controller/todoController");
 
+const router = express.Router();
 router.use(express.json());
 
 router.post("/", addTodos);
 router.get("/", getTodos);
 router.get("/:id", getTodoDetail);
 router.put("/:id", editTodos);
-router.delete("/:id", deleteTodos);
 router.put("/completed/:id", changeCompleted);
+router.delete("/:id", deleteTodos);
 
 module.exports = router;
