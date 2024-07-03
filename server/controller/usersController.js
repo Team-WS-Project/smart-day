@@ -111,8 +111,8 @@ const login = (req, res) => {
         },
         process.env.PRIVATE_KEY,
         {
-          expiresIn: "1h",
-          issuer: "User",
+          expiresIn: process.env.TOKEN_EXPIRED_TIME,
+          issuer: "SmartDay",
         },
       );
       // 토큰 쿠키에 담기
