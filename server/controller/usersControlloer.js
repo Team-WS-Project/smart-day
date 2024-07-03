@@ -62,7 +62,7 @@ const login = (req, res) => {
         {
           expiresIn: "1h",
           issuer: "User",
-        }
+        },
       );
       // 토큰 쿠키에 담기
       res.cookie("token", token, {
