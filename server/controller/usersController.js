@@ -6,6 +6,64 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const ensureAuthorization = require("../auth");
 
+// 메인페이지 location, nickname 조회
+const getUserInformation = (req, res) => {
+  let authorization = ensureAuthorization(req, res);
+
+  if (authorization instanceof jwt.TokenExpiredError) {
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      message: "로그인 세션이 만료되었습니다. 다시 로그인 하세요.",
+    });
+  } else if (authorization instanceof jwt.JsonWebTokenError) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: "잘못된 토큰입니다.",
+    });
+  } else {
+    const sql = `SELECT location, nickname FROM users WHERE email = ?`;
+
+    conn.query(sql, authorization.email, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(StatusCodes.BAD_REQUEST).end();
+      }
+
+      return res.status(StatusCodes.OK).json(results[0]);
+    });
+  }
+};
+
+// 회원 정보 수정창 email, nickname, location 조회
+const getInfoToUpdate = (req, res) => {
+  let authorization = ensureAuthorization(req, res);
+
+  if (authorization instanceof jwt.TokenExpiredError) {
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      message: "로그인 세션이 만료되었습니다. 다시 로그인 하세요.",
+    });
+  } else if (authorization instanceof jwt.JsonWebTokenError) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: "잘못된 토큰입니다.",
+    });
+  } else {
+    const sql = `SELECT email, nickname, location FROM users WHERE email = ?`;
+
+    conn.query(sql, authorization.email, (err, results) => {
+      if (err) {
+        console.log(err);
+        return res.status(StatusCodes.BAD_REQUEST).end();
+      }
+
+      if (results.length > 0) {
+        return res.status(StatusCodes.OK).json(results[0]);
+      } else {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          message: "User not found",
+        });
+      }
+    });
+  }
+};
+
 const join = (req, res) => {
   const { email, password, location, nickname } = req.body;
 
@@ -82,64 +140,6 @@ const login = (req, res) => {
   });
 };
 
-// 메인페이지 location, nickname 조회
-const userInformation = (req, res) => {
-  let authorization = ensureAuthorization(req, res);
-
-  if (authorization instanceof jwt.TokenExpiredError) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      message: "로그인 세션이 만료되었습니다. 다시 로그인 하세요.",
-    });
-  } else if (authorization instanceof jwt.JsonWebTokenError) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "잘못된 토큰입니다.",
-    });
-  } else {
-    let sql = `SELECT location, nickname FROM users WHERE email = ?`;
-
-    conn.query(sql, authorization.email, (err, results) => {
-      if (err) {
-        console.log(err);
-        return res.status(StatusCodes.BAD_REQUEST).end();
-      }
-
-      return res.status(StatusCodes.OK).json(results[0]);
-    });
-  }
-};
-
-// 회원 정보 수정창 email, nickname, location 조회
-const infoToUpdate = (req, res) => {
-  let authorization = ensureAuthorization(req, res);
-
-  if (authorization instanceof jwt.TokenExpiredError) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      message: "로그인 세션이 만료되었습니다. 다시 로그인 하세요.",
-    });
-  } else if (authorization instanceof jwt.JsonWebTokenError) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "잘못된 토큰입니다.",
-    });
-  } else {
-    let sql = `SELECT email, nickname, location FROM users WHERE email = ?`;
-
-    conn.query(sql, authorization.email, (err, results) => {
-      if (err) {
-        console.log(err);
-        return res.status(StatusCodes.BAD_REQUEST).end();
-      }
-
-      if (results.length > 0) {
-        return res.status(StatusCodes.OK).json(results[0]);
-      } else {
-        return res.status(StatusCodes.NOT_FOUND).json({
-          message: "User not found",
-        });
-      }
-    });
-  }
-};
-
 // 회원 정보 수정
 const updateUserInformation = (req, res) => {
   let { location, nickname } = req.body;
@@ -173,9 +173,9 @@ const updateUserInformation = (req, res) => {
 };
 
 module.exports = {
+  getUserInformation,
+  getInfoToUpdate,
   join,
   login,
-  infoToUpdate,
   updateUserInformation,
-  userInformation,
 };
