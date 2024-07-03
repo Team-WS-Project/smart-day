@@ -8,48 +8,36 @@ const ensureAuthorization = require("../auth");
 
 // 메인페이지 location, nickname 조회
 const getUserInformation = (req, res) => {
-  let authorization = ensureAuthorization(req, res);
-
-  if (authorization instanceof jwt.TokenExpiredError) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      message: "로그인 세션이 만료되었습니다. 다시 로그인 하세요.",
-    });
-  } else if (authorization instanceof jwt.JsonWebTokenError) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "잘못된 토큰입니다.",
-    });
-  } else {
+  ensureAuthorization(req, res, () => {
+    // 인증 성공 시 실행될 코드
     const sql = `SELECT location, nickname FROM users WHERE email = ?`;
 
-    conn.query(sql, authorization.email, (err, results) => {
+    conn.query(sql, req.authorization.email, (err, results) => {
       if (err) {
-        console.log(err);
+        console.error(err);
         return res.status(StatusCodes.BAD_REQUEST).end();
+      }
+
+      if (results.length === 0) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          message: "사용자 정보를 찾을 수 없습니다.",
+        });
       }
 
       return res.status(StatusCodes.OK).json(results[0]);
     });
-  }
+  });
 };
 
 // 회원 정보 수정창 email, nickname, location 조회
 const getInfoToUpdate = (req, res) => {
-  let authorization = ensureAuthorization(req, res);
-
-  if (authorization instanceof jwt.TokenExpiredError) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      message: "로그인 세션이 만료되었습니다. 다시 로그인 하세요.",
-    });
-  } else if (authorization instanceof jwt.JsonWebTokenError) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "잘못된 토큰입니다.",
-    });
-  } else {
+  ensureAuthorization(req, res, () => {
+    // 인증 성공 시 실행될 코드
     const sql = `SELECT email, nickname, location FROM users WHERE email = ?`;
 
-    conn.query(sql, authorization.email, (err, results) => {
+    conn.query(sql, req.authorization.email, (err, results) => {
       if (err) {
-        console.log(err);
+        console.error(err);
         return res.status(StatusCodes.BAD_REQUEST).end();
       }
 
@@ -61,7 +49,7 @@ const getInfoToUpdate = (req, res) => {
         });
       }
     });
-  }
+  });
 };
 
 const join = (req, res) => {
@@ -143,31 +131,21 @@ const login = (req, res) => {
 
 // 회원 정보 수정
 const updateUserInformation = (req, res) => {
-  let { location, nickname } = req.body;
+  const { location, nickname } = req.body;
 
-  let authorization = ensureAuthorization(req, res);
+  ensureAuthorization(req, res, () => {
+    const sql = `UPDATE users SET location=?, nickname=? WHERE email=?`;
 
-  if (authorization instanceof jwt.TokenExpiredError) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      message: "로그인 세션이 만료되었습니다. 다시 로그인 하세요.",
-    });
-  } else if (authorization instanceof jwt.JsonWebTokenError) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "잘못된 토큰입니다.",
-    });
-  } else {
-    let sql = `UPDATE users SET location=?, nickname=? WHERE email=?`;
-
-    let values = [location, nickname, authorization.email];
+    const values = [location, nickname, req.authorization.email];
     conn.query(sql, values, (err, results) => {
       if (err) {
-        console.log(err);
+        console.error(err);
         return res.status(StatusCodes.BAD_REQUEST).end();
       }
 
       return res.status(StatusCodes.OK).json(results);
     });
-  }
+  });
 };
 
 const hashing = (password, salt) => {
