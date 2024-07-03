@@ -7,7 +7,7 @@ const {
   infoToUpdate,
   updateUserInformation,
   mainPage,
-} = require("../controller/UserControlloer");
+} = require("../controller/usersControlloer");
 
 router.use(express.json());
 

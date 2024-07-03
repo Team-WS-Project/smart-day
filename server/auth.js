@@ -15,8 +15,8 @@ const ensureAuthorization = (req, res) => {
       throw new ReferenceError("jwt must be provided");
     }
   } catch (err) {
-    console.log(err.name);
-    console.log(err.message);
+    // console.log(err.name);
+    // console.log(err.message);
 
     return err;
   }

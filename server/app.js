@@ -6,10 +6,10 @@ dotenv.config();
 
 app.listen(process.env.PORT);
 
-const userRouter = require("./routes/users");
+const usersRouter = require("./routes/users");
 const schedulesRouter = require("./routes/schedules");
-const todolistRouter = require("./routes/todolist");
+const todosRouter = require("./routes/todos");
 
-app.use("/users", userRouter);
+app.use("/users", usersRouter);
 app.use("/schedules", schedulesRouter);
-app.use("/todolist", todolistRouter);
+app.use("/todos", todosRouter);
