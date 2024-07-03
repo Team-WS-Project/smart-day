@@ -70,9 +70,7 @@ const join = (req, res) => {
   const sql = `INSERT INTO users (email, password, salt, location, nickname) VALUES (?, ?, ?, ?, ?)`;
 
   const salt = crypto.randomBytes(16).toString("base64");
-  const hashPassword = crypto
-    .pbkdf2Sync(password, salt, 10000, 10, "sha512")
-    .toString("base64");
+  const hashPassword = hashing(password, salt);
 
   const values = [email, hashPassword, salt, location, nickname];
   conn.query(sql, values, (err, results) => {
@@ -102,9 +100,7 @@ const login = (req, res) => {
     const loginUser = results[0];
 
     // salt값 꺼내서 날 것으로 들어온 비밀번호 암호화
-    const hashPassword = crypto
-      .pbkdf2Sync(password, loginUser.salt, 10000, 10, "sha512")
-      .toString("base64");
+    const hashPassword = hashing(password, loginUser.salt);
 
     // 위에서 암호화된 비밀번호 db 비밀번호랑 비교
     if (loginUser && loginUser.password == hashPassword) {
@@ -164,6 +160,13 @@ const updateUserInformation = (req, res) => {
       return res.status(StatusCodes.OK).json(results);
     });
   }
+};
+
+const hashing = (password, salt) => {
+  const hashPassword = crypto
+    .pbkdf2Sync(password, salt, 10000, 10, "sha512")
+    .toString("base64");
+  return hashPassword;
 };
 
 module.exports = {
