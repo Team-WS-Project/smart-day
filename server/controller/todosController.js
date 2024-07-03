@@ -1,7 +1,5 @@
-//const ensureAuthorization = require('../auth');
 const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
-const jwt = require("jsonwebtoken");
 
 const addTodos = (req, res) => {
   //user_id는 users랑 합칠때 authorization.id로 변경될 것
@@ -14,24 +12,28 @@ const addTodos = (req, res) => {
       console.log(err);
       return res.status(StatusCodes.BAD_REQUEST).end();
     }
-    if (results.affectedRows)
+    if (results.affectedRows === 0) {
       return res.status(StatusCodes.CREATED).json(results);
-    else return res.status(StatusCodes.BAD_REQUEST).end();
+    } else {
+      return res.status(StatusCodes.BAD_REQUEST).end();
+    }
   });
 };
 
 const getTodos = (req, res) => {
   //user_id는 users랑 합칠때 authorization.id로 변경될 것
   const { user_id } = req.body;
-  const {today, month} = req.query;
+  const { today, month } = req.query;
 
-  if(today){
-    let values = [user_id, today];
-    let sql = `SELECT * FROM todos WHERE user_id = ? and due_date > ?`;
-  }
-  else if(month){
-    let values = [user_id, month];
-    let sql = `SELECT * FROM todos WHERE user_id = ? and due_date LIKE ?`;
+  let sql = `SELECT * FROM todos WHERE user_id = ? `;
+  let values = [];
+
+  if (today) {
+    values.push(user_id, today);
+    sql += `AND due_date > ?`;
+  } else if (month) {
+    values.push(user_id, month);
+    sql += `AND due_date LIKE ?`;
   }
 
   conn.query(sql, values, (err, results) => {
@@ -39,8 +41,10 @@ const getTodos = (req, res) => {
       return res.status(StatusCodes.BAD_REQUEST).end();
     }
 
-    if (results.length) {
+    if (results.length > 0) {
       res.status(StatusCodes.OK).json(results);
+    } else {
+      res.status(StatusCodes.NOT_FOUND).json(results);
     }
   });
 };
@@ -56,7 +60,7 @@ const getTodoDetail = (req, res) => {
       return res.status(StatusCodes.BAD_REQUEST).end();
     }
 
-    if (results.length) {
+    if (results.length > 0) {
       res.status(StatusCodes.OK).json(results);
     }
   });
@@ -75,7 +79,7 @@ const editTodos = (req, res) => {
       console.log(err);
       return res.status(StatusCodes.BAD_REQUEST).end();
     }
-    if (results.affectedRows == 0) {
+    if (results.affectedRows === 0) {
       return res.status(StatusCodes.BAD_REQUEST).end();
     } else {
       res.status(StatusCodes.OK).json(results);
@@ -98,45 +102,18 @@ const deleteTodos = (req, res) => {
   });
 };
 
-const changeCompleted = async (req, res) => {
-  const mariadb = require("mysql2/promise");
-  const conn = await mariadb.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "root",
-    database: "SmartDay",
-    dateStrings: true,
-  });
+const changeCompleted = (req, res) => {
   const { id } = req.params;
 
-  //delivery 삽입
-  sql = `SELECT completed FROM todos WHERE id = ?`;
-  let [todo, fields] = await conn.query(sql, [id]);
+  let sql = `UPDATE todos SET completed = NOT completed WHERE id = ?`;
 
-  let completed = [];
-  todo.forEach((item) => completed.push(item.completed));
-
-  if (completed == 0) {
-    let sql = `UPDATE todos SET completed = ?
-                    WHERE id = ?`;
-    let values = [1, id];
-    results = await conn.execute(sql, values);
-    if (results.affectedRows == 0) {
+  conn.query(sql, [id], (err, results) => {
+    if (err) {
+      console.log(err);
       return res.status(StatusCodes.BAD_REQUEST).end();
-    } else {
-      res.status(StatusCodes.OK).json(results);
     }
-  } else if (completed == 1) {
-    let sql = `UPDATE todos SET completed = ?
-                    WHERE id = ?`;
-    let values = [0, id];
-    results = await conn.execute(sql, values);
-    if (results.affectedRows == 0) {
-      return res.status(StatusCodes.BAD_REQUEST).end();
-    } else {
-      res.status(StatusCodes.OK).json(results);
-    }
-  }
+    return res.status(StatusCodes.OK).json(results);
+  });
 };
 
 module.exports = {
