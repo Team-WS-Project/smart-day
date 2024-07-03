@@ -12,14 +12,14 @@ const join = (req, res) => {
   const now = new Date();
   const formattedTime = new Date(now);
 
-  let sql = `INSERT INTO users (email, password, salt, location, nickname, created_time) VALUES (?, ?, ?, ?, ?, ?)`;
+  const sql = `INSERT INTO users (email, password, salt, location, nickname, created_time) VALUES (?, ?, ?, ?, ?, ?)`;
 
-  const salt = crypto.randomBytes(10).toString("base64");
+  const salt = crypto.randomBytes(16).toString("base64");
   const hashPassword = crypto
     .pbkdf2Sync(password, salt, 10000, 10, "sha512")
     .toString("base64");
 
-  let values = [email, hashPassword, salt, location, nickname, formattedTime];
+  const values = [email, hashPassword, salt, location, nickname, formattedTime];
   conn.query(sql, values, (err, results) => {
     if (err) {
       console.log(err);
@@ -37,7 +37,7 @@ const join = (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
-  let sql = `SELECT * FROM users WHERE email = ?`;
+  const sql = `SELECT * FROM users WHERE email = ?`;
   conn.query(sql, email, (err, results) => {
     if (err) {
       console.log(err);
