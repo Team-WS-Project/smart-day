@@ -67,17 +67,14 @@ const getInfoToUpdate = (req, res) => {
 const join = (req, res) => {
   const { email, password, location, nickname } = req.body;
 
-  const now = new Date();
-  const formattedTime = new Date(now);
-
-  const sql = `INSERT INTO users (email, password, salt, location, nickname, created_time) VALUES (?, ?, ?, ?, ?, ?)`;
+  const sql = `INSERT INTO users (email, password, salt, location, nickname) VALUES (?, ?, ?, ?, ?, ?)`;
 
   const salt = crypto.randomBytes(16).toString("base64");
   const hashPassword = crypto
     .pbkdf2Sync(password, salt, 10000, 10, "sha512")
     .toString("base64");
 
-  const values = [email, hashPassword, salt, location, nickname, formattedTime];
+  const values = [email, hashPassword, salt, location, nickname];
   conn.query(sql, values, (err, results) => {
     if (err) {
       console.log(err);
@@ -155,12 +152,9 @@ const updateUserInformation = (req, res) => {
       message: "잘못된 토큰입니다.",
     });
   } else {
-    let sql = `UPDATE users SET location=?, nickname=?, modified_time=? WHERE email=?`;
+    let sql = `UPDATE users SET location=?, nickname=? WHERE email=?`;
 
-    const now = new Date();
-    const formattedTime = new Date(now);
-
-    let values = [location, nickname, formattedTime, authorization.email];
+    let values = [location, nickname, authorization.email];
     conn.query(sql, values, (err, results) => {
       if (err) {
         console.log(err);
