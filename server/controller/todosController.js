@@ -53,9 +53,14 @@ const addTodos = (req, res) => {
   //user_id는 users랑 합칠때 authorization.id로 변경될 것
   const { title, detail, due_date, user_id } = req.body;
 
-  //detail 안넣었때 처리해주기
-  const sql = `INSERT INTO todos (title, detail, due_date, user_id) VALUES(?, ?, ?, ?)`;
-  const values = [title, detail, due_date, user_id];
+  let sql = `INSERT INTO todos (title, detail, due_date, user_id) VALUES(?, ?, ?, ?)`;
+  let values = [title, detail, due_date, user_id];
+
+  if(detail===undefined){
+    sql = `INSERT INTO todos (title, due_date, user_id) VALUES(?, ?, ?)`;
+    values = [title, due_date, user_id];
+  }
+  
   conn.query(sql, values, (err, results) => {
     if (err) {
       console.log(err);
@@ -71,13 +76,16 @@ const addTodos = (req, res) => {
 
 const editTodos = (req, res) => {
   const { id } = req.params;
-  const { title, detail, due_date, completed } = req.body;
+  const { title, detail, due_date } = req.body;
 
-  //detail 없을때 처리
-  const sql = `UPDATE todos SET title = ?, detail = ?, due_date = ?, completed = ?
-        WHERE id = ?`;
+  let sql = `UPDATE todos SET title = ?, detail = ?, due_date = ? WHERE id = ?`;
+  let values = [title, detail, due_date, id];
 
-  const values = [title, detail, due_date, completed, id];
+  if(detail===undefined){
+    sql = `UPDATE todos SET title = ?, due_date = ? WHERE id = ?`;
+    values = [title, due_date, id];
+  }
+  
   conn.query(sql, values, (err, results) => {
     if (err) {
       console.log(err);
@@ -119,8 +127,6 @@ const deleteTodos = (req, res) => {
     }
   });
 };
-
-
 
 module.exports = {
   getTodos,
