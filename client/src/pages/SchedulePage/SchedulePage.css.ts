@@ -5,10 +5,9 @@ export const pageContainer = style({
   display: "flex",
   flexDirection: "column",
   height: "100vh",
-}); // global 선언해야될 듯
-
+}); 
 export const schedulePageContainer = style({
-  margin: "5% 10%",
+  margin: "2% 4%",
   flex: "1",
   overflowY: "hidden",
   display: "flex",
