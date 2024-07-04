@@ -1,4 +1,4 @@
-import { createGlobalTheme } from "@vanilla-extract/css";
+import { createGlobalTheme, style } from "@vanilla-extract/css";
 
 export const vars = createGlobalTheme(":root", {
   color: {
@@ -65,4 +65,10 @@ export const vars = createGlobalTheme(":root", {
   shadow: {
     basic: "4px 4px 8px 0px rgba(34, 60, 80, 0.2)",
   },
+});
+
+export const pageContainer = style({
+  display: "flex",
+  flexDirection: "column",
+  height: "100vh",
 });

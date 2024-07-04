@@ -1,0 +1,55 @@
+.react-calendar__month-view__weekdays__weekday {
+    background-color: white;
+    border-style: none;
+    box-shadow: 0 0 0 1px black;
+    font-weight: bold;
+    text-align: left;
+    height: 5vh;
+}
+
+.react-calendar__tile {
+    color: black;
+    background-color: white;
+    border-style: none;
+    box-shadow: 0 0 0 1px black;
+    text-align: left;
+    width: 5vw;
+    height: 8.8vh;
+}
+
+.react-calendar__tile--now {
+    color: black;
+    text-decoration: underline;
+    font-weight: bold;
+}
+  
+.react-calendar__tile--active {
+    background-color: rgb(20, 35, 91);
+    color: white;
+}
+
+.my-calendar {
+    width: 60vw;
+    height: 64.3vh;
+    border: none;
+    box-shadow: 0 0 0 1px black;
+}
+
+.my-calendar .have-task {
+    background-color: rgb(201, 207, 216);
+}
+
+.my-calendar .react-calendar__navigation {
+    border-style: none;
+    height: auto;
+    margin-top : 1%
+}
+
+.react-calendar__navigation__label {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+  
+.react-calendar__navigation__arrow {
+    padding: 0%;
+}
