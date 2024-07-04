@@ -1,5 +1,5 @@
+// styles.css.ts
 import { style } from "@vanilla-extract/css";
-import { vars } from "../../../App.css";
 
 export const wrapper = style({
   width: "100vw",
@@ -10,78 +10,101 @@ export const wrapper = style({
   justifyContent: "center",
   alignItems: "center",
   backgroundColor: "rgba(0,0,0,0.3)",
+  overflow: "auto",
 });
 
-export const modalWindow = style({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  minHeight: 500,
-  maxHeight: 800,
-  overflow: "auto",
-  width: "max-content",
-  height: "max-content",
-  backgroundColor: vars.color.main,
-  borderRadius: vars.radius.large,
-  padding: 50,
-  color: vars.color.brightText,
-  boxShadow: vars.shadow.basic,
+export const modalContainer = style({
+  backgroundColor: "#002366",
+  borderRadius: "30px",
+  padding: "20px",
+  width: "300px",
+  color: "white",
 });
+
 export const header = style({
   display: "flex",
   width: "100%",
   flexDirection: "row",
   alignItems: "center",
-  justifyContent: "space-between",
   marginTop: "2%",
+  marginBottom: "10%",
 });
+
 export const title = style({
-  fontSize: vars.fontSizing.H6,
+  fontSize: "32px",
   margin: "0 auto",
   textAlign: "center",
 });
+
 export const closeButton = style({
-  fontSize: vars.fontSizing.H7,
-  marginTop: -20,
+  fontSize: "24px",
+  marginTop: -30,
   ":hover": {
     cursor: "pointer",
     opacity: "0.5",
   },
-  marginRight: "-20px",
 });
-export const body = style({
-  padding: 20,
-  color: vars.color.darkText,
-  marginTop: "5%",
+
+export const selectBox = style({
   width: "100%",
-  borderRadius: vars.radius.medium,
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "center",
+  padding: "10px",
+  marginBottom: "10px",
+  borderRadius: "5px",
+  border: "none",
 });
 
-export const selectArea = style({});
-export const selectBox = style({});
-export const selectBoxArrow = style({});
+export const favoriteArea = style({
+  marginTop: "20px",
+  paddingTop: "10px",
+  marginBottom: "20px",
+  paddingBottom: "10px",
+  flexDirection: "column",
+  // backgroundColor: "black",
+  borderTop: "solid 1px white",
+  borderBottom: "solid 1px white",
+});
 
-export const currentLocationArea = style({});
-export const currentLocationTitle = style({});
+export const subTitle = style({
+  fontSize: 20,
+  textAlign: "center",
+  marginBottom: "4%",
+});
 
-export const latestLocationArea = style({});
-export const latestTextArea = style({});
-export const latestStar = style({});
+export const locationItem = style({
+  padding: "10px",
+  backgroundColor: "#004080",
+  borderRadius: "5px",
+  marginBottom: "10px",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  color: "white",
+});
 
-export const footer = style({});
+export const currentLocationArea = style({
+  padding: "10px",
+  marginTop: "10px",
+  display: "flex",
+  flexDirection: "column",
+  color: "#ffff00",
+});
 
 export const okButton = style({
-  padding: vars.spacing.medium,
-  backgroundColor: vars.color.secondary,
-  color: vars.color.brightText,
-  marginTop: "auto",
-  borderRadius: vars.radius.small,
+  marginTop: "20px",
+  padding: "10px",
+  backgroundColor: "#004080",
+  borderRadius: "5px",
+  border: "none",
+  color: "white",
+  width: "100%",
+  cursor: "pointer",
   ":hover": {
-    cursor: "pointer",
-    opacity: "0.8",
+    opacity: "0.7",
   },
 });
+
+//★
+export const starFilledIcon = style({});
+
+//☆
+export const starEmptyIcon = style({});
