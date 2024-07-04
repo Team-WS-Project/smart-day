@@ -66,7 +66,7 @@ const addTodos = (req, res) => {
       console.log(err);
       return res.status(StatusCodes.BAD_REQUEST).end();
     }
-    if (results.affectedRows == 0) {
+    if (results.affectedRows === 0) {
       return res.status(StatusCodes.BAD_REQUEST).end();
     } else {
       return res.status(StatusCodes.CREATED).json(results);
