@@ -27,6 +27,7 @@ export const appContainer = style({
 export const contentsContainer = style({
   display: "flex",
   flexDirection: "row",
+  overflowY: "hidden",
   flex: 1,
 });
 

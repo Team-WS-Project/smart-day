@@ -2,7 +2,8 @@ import { useNavigate } from "react-router-dom";
 import ListContainer from "../../components/PageComponents/ListContainer/ListContainer";
 import Header from "../../components/PageComponents/Header/Header";
 import Footer from "../../components/PageComponents/Footer/Footer";
-import { datePick, headerAndFooter, linkCalendarPage, locationTextArea, textArea, weatherText } from "./MainPage.css";
+import { datePick, linkCalendarPage, locationTextArea, pageContainer, textArea, weatherText } from "./MainPage.css";
+import { appContainer } from "../../App.css";
 
 const MainPage = () => {
     const navigate = useNavigate();
@@ -12,11 +13,9 @@ const MainPage = () => {
     };
 
     return(
-        <div>
-            <div className={headerAndFooter}>
-                <Header />
-            </div>
-            <div>
+        <div className={appContainer}>
+            <Header />
+            <div className={pageContainer}>
                 <div className={locationTextArea}>
                     현재 지역은 location 입니다.
                 </div>
@@ -32,9 +31,7 @@ const MainPage = () => {
                     >전체 달력 보기</div>
                 </div>
             </div>
-            <div className={headerAndFooter}>
-                <Footer />
-            </div>
+            <Footer />
         </div>
     )
 };

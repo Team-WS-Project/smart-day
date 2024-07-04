@@ -10,7 +10,7 @@ import {
   rightPanel,
   todoList,
   formTitle,
-  viewAllButton,
+  // viewAllButton,
 } from "./TodolistPage.css";
 import Todo from "./TodolistPageComponents/Todo";
 import Footer from "../../components/PageComponents/Footer/Footer";

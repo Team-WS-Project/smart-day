@@ -67,8 +67,23 @@ export const vars = createGlobalTheme(":root", {
   },
 });
 
-export const pageContainer = style({
+export const appContainer = style({
   display: "flex",
   flexDirection: "column",
   height: "100vh",
 });
+
+export const scrollbar = {
+  "::-webkit-scrollbar": {
+    height: "5px",
+    width: "5px",
+  },
+  "::-webkit-scrollbar-track": {
+    backgroundColor: "transparent",
+  },
+  "::-webkit-scrollbar-thumb": {
+    backgroundColor: "rgba(175,175,175,1)",
+    borderRadius: "10px",
+  },
+  border: `solid 20px ${vars.color.secondary}`,
+};

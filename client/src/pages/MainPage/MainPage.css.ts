@@ -1,9 +1,12 @@
 import { style } from "@vanilla-extract/css";
 import { vars } from "../../App.css";
 
-export const headerAndFooter = style({
-    minWidth: "1050px"
-});
+export const pageContainer = style({
+    flex: "1",
+    overflowY: "hidden",
+    display: "flex",
+    flexDirection: "column",
+  });
 
 export const locationTextArea = style({
     display: "flex",
