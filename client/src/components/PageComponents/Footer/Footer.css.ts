@@ -6,4 +6,11 @@ export const footerButton = style({
   fontFamily: vars.font.inter,
   marginLeft: vars.spacing.big1,
   marginRight: vars.spacing.big1,
+
+  ":hover": {
+    transform: "scale(1.03)",
+    textUnderlineOffset: "5px",
+    fontWeight: "bold",
+    transition: "transform 50ms",
+  },
 });

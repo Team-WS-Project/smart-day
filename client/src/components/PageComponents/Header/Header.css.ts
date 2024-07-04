@@ -8,6 +8,7 @@ export const headerFooterContainer = style({
   color: vars.color.brightText,
   justifyContent: "space-between",
   alignItems: "center",
+  flexShrink: "0",
 });
 
 export const mainLogo = style({
@@ -34,6 +35,12 @@ export const headerButton = style({
   borderRadius: vars.radius.small,
   width: "45%",
   height: "100%",
+
+  ":hover": {
+    backgroundColor: vars.color.darkIconHover,
+    transition: "transform 200ms",
+    transform: "scale(1.03)",
+  },
 });
 
 export const headerNavigator = style({
@@ -47,4 +54,12 @@ export const headerNaviButtons = style({
   textAlign: "center",
   fontSize: vars.fontSizing.H8,
   fontFamily: vars.font.arial,
+
+  ":hover": {
+    transform: "scale(1.03)",
+    textUnderlineOffset: "5px",
+    fontWeight: "bold",
+    textDecoration: "underline",
+    transition: "transform 100ms",
+  },
 });
