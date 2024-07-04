@@ -9,16 +9,17 @@ export const wrapper = style({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  backgroundColor: "rgba(0,0,0,0.3)",
+  overflow: "auto",
 });
 
 export const modalWindow = style({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  minHeight: 500,
+  minHeight: 200,
   maxHeight: 800,
-  overflow: "auto", // 캐러셀?
-  width: 800,
+  width: "40%",
   height: "max-content",
   backgroundColor: vars.color.main,
   borderRadius: vars.radius.large,
@@ -80,4 +81,24 @@ export const timeBox = style({});
 
 export const descriptionBox = style({
   flex: "2",
+});
+
+export const footer = style({
+  width: "100%",
+  display: "flex",
+  margin: "3% 0%",
+  fontSize: vars.fontSizing.H6,
+  justifyContent: "space-between",
+});
+export const leftArrow = style({
+  ":hover": {
+    cursor: "pointer",
+    opacity: "0.5",
+  },
+});
+export const rightArrow = style({
+  ":hover": {
+    cursor: "pointer",
+    opacity: "0.5",
+  },
 });

@@ -3,11 +3,24 @@ import { vars } from "../../App.css";
 
 const LIST_WIDTH = 500;
 
+const scrollbar = {
+  "::-webkit-scrollbar": {
+    height: "5px",
+    width: "5px",
+  },
+  "::-webkit-scrollbar-track": {
+    backgroundColor: "transparent",
+  },
+  "::-webkit-scrollbar-thumb": {
+    backgroundColor: "rgba(175,175,175,1)",
+    borderRadius: "10px",
+  },
+  border: `solid 20px ${vars.color.secondary}`,
+};
+
 export const appContainer = style({
   display: "flex",
   flexDirection: "column",
-  width: "100vw",
-  minHeight: "100vh",
   height: "100vh",
 });
 
@@ -15,14 +28,12 @@ export const contentsContainer = style({
   display: "flex",
   flexDirection: "row",
   flex: 1,
-  // overflow: "scroll",
 });
 
 export const leftPanel = style({
   display: "flex",
   flex: 1,
   flexDirection: "column",
-  // backgroundColor: "black",
   alignItems: "center",
   justifyContent: "space-between",
 });
@@ -30,12 +41,13 @@ export const leftPanel = style({
 export const uncompletedList = style({
   display: "flex",
   flexDirection: "column",
-  marginTop: "5%",
+  margin: "5% 0%",
   width: LIST_WIDTH,
   height: 300,
   backgroundColor: vars.color.secondary,
   borderRadius: vars.radius.large,
-  // overflow: "scroll",
+  overflowY: "scroll",
+  ...scrollbar,
 });
 export const completedList = style({
   display: "flex",
@@ -45,11 +57,12 @@ export const completedList = style({
   height: 300,
   backgroundColor: vars.color.secondary,
   borderRadius: vars.radius.large,
+  overflowY: "scroll",
+  ...scrollbar,
 });
 
 export const rightPanel = style({
   flex: 1,
-  // backgroundColor: "green",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -60,20 +73,27 @@ export const rightPanel = style({
 export const todoList = style({
   display: "flex",
   flexDirection: "column",
-  marginTop: "5%",
+  margin: "5% 0%",
   minHeight: 200,
   width: LIST_WIDTH,
   height: "max-content",
+  maxHeight: "70%",
   backgroundColor: vars.color.secondary,
   borderRadius: vars.radius.large,
+  overflowY: "auto",
+  ...scrollbar,
 });
 
 export const formTitle = style({
-  marginTop: "5%",
-  marginBottom: "5%",
+  position: "sticky",
+  top: "0%",
+  paddingTop: "3%",
+  paddingBottom: "3%",
+  backgroundColor: vars.color.secondary,
   textAlign: "center",
   fontSize: vars.fontSizing.H7,
   fontWeight: "bold",
+  zIndex: 1,
 });
 
 export const viewAllButton = style({

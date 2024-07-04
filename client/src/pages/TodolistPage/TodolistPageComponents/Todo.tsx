@@ -6,19 +6,20 @@ import {
   todoContainer,
 } from "./Todo.css";
 
-const Todo = ({ checked, description, dueDate }) => {
-  const [isChecked, setIsChecked] = useState(checked);
+const Todo = ({ isChecked, description, dueDate }) => {
+  const [checked, setChecked] = useState(isChecked);
 
   return (
     <div className={todoContainer}>
       <input
         type={"checkbox"}
         className={checkBox}
-        checked={isChecked}
-        onClick={() => setIsChecked(!isChecked)}
+        checked={checked}
+        onClick={() => setChecked(!checked)}
       />
       <div className={descriptionArea}>{description}</div>
-      <div className={dueDateArea}>{dueDate}</div>
+      {/* dueDate가 어떤 형식으로 오느냐에 따라 바꿔야함 */}
+      <div className={dueDateArea}>{dueDate.slice(-5)}</div>
     </div>
   );
 };

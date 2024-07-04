@@ -9,6 +9,7 @@ export const wrapper = style({
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  backgroundColor: "rgba(0,0,0,0.3)",
 });
 
 export const modalWindow = style({
@@ -70,9 +71,6 @@ export const customCalendar = style({
   textAlign: "center",
 });
 
-export const calendarIcon = style({
-  backgroundColor: "white",
-});
 export const okButton = style({
   padding: vars.spacing.medium,
   backgroundColor: vars.color.secondary,

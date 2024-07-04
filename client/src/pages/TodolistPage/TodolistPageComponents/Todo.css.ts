@@ -15,6 +15,9 @@ export const checkBox = style({
   flex: 0.3,
   width: "10px",
   height: "24px",
+  ":hover": {
+    cursor: "pointer",
+  },
 });
 export const descriptionArea = style({
   flex: 1,
@@ -23,7 +26,13 @@ export const descriptionArea = style({
   fontSize: vars.fontSizing.H8,
   backgroundColor: TODO_BG_COLOR,
   marginRight: "5%",
-  padding: "1%",
+  paddingLeft: "2%",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  flexWrap: "nowrap",
+  ":hover": {
+    cursor: "pointer",
+  },
 });
 export const dueDateArea = style({
   flex: 0.3,
@@ -32,4 +41,6 @@ export const dueDateArea = style({
   height: 30,
   marginRight: "5%",
   padding: "1%",
+  textAlign: "center",
+  borderRadius: vars.radius.small,
 });

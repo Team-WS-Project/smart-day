@@ -35,11 +35,10 @@ const DatepickerModal = () => {
             }}
             inline
             locale={ko}
-            monthsShown={3}
+            monthsShown={1}
             dateFormat="YYYY-MM-dd"
             dateFormatCalendar="YYYY년 MMMM"
             className={customCalendar}
-            calendarIconClassName={calendarIcon}
           />
         </div>
         <div className={okButton}>확인</div>
