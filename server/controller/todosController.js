@@ -13,10 +13,10 @@ const getTodos = (req, res) => {
     values.push(user_id, today);
     sql += `AND due_date > ?`;
   } else if (month) {
-    values.push(user_id, month+'%');
+    values.push(user_id, month + "%");
     sql += `AND due_date LIKE ?`;
-  }else{
-    return res.status(StatusCodes.BAD_REQUEST).end();
+  } else {
+    values = [user_id];
   }
 
   conn.query(sql, values, (err, results) => {
@@ -56,11 +56,11 @@ const addTodos = (req, res) => {
   let sql = `INSERT INTO todos (title, detail, due_date, user_id) VALUES(?, ?, ?, ?)`;
   let values = [title, detail, due_date, user_id];
 
-  if(detail===undefined){
+  if (detail === undefined) {
     sql = `INSERT INTO todos (title, due_date, user_id) VALUES(?, ?, ?)`;
     values = [title, due_date, user_id];
   }
-  
+
   conn.query(sql, values, (err, results) => {
     if (err) {
       console.log(err);
@@ -81,11 +81,11 @@ const editTodos = (req, res) => {
   let sql = `UPDATE todos SET title = ?, detail = ?, due_date = ? WHERE id = ?`;
   let values = [title, detail, due_date, id];
 
-  if(detail===undefined){
+  if (detail === undefined) {
     sql = `UPDATE todos SET title = ?, due_date = ? WHERE id = ?`;
     values = [title, due_date, id];
   }
-  
+
   conn.query(sql, values, (err, results) => {
     if (err) {
       console.log(err);
