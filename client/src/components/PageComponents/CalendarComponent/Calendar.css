@@ -1,25 +1,55 @@
-/* Calendar.css */
-
-.react-calendar__month-view__weekdays__weekday,
-.react-calendar__tile {
-
+.react-calendar__month-view__weekdays__weekday {
     background-color: white;
     border-style: none;
     box-shadow: 0 0 0 1px black;
-    color: #333; /* 요일 타일 칸의 글자색 */
+    font-weight: bold;
     text-align: left;
+    height: 5vh;
+}
+
+.react-calendar__tile {
+    color: black;
+    background-color: white;
+    border-style: none;
+    box-shadow: 0 0 0 1px black;
+    text-align: left;
+    width: 5vw;
+    height: 8.8vh;
 }
 
 .react-calendar__tile--now {
-    background-color: rgba(138, 228, 255, 0.311)
+    color: black;
+    text-decoration: underline;
+    font-weight: bold;
 }
   
 .react-calendar__tile--active {
-    background: blue;
+    background-color: rgb(20, 35, 91);
     color: white;
 }
 
-.react-calendar__month-view__weekdays__weekday {
-    color: #333;
-    font-weight: bold; /*요일 타일 칸의 글자 굵기 */
+.my-calendar {
+    width: 60vw;
+    height: 64.3vh;
+    border: none;
+    box-shadow: 0 0 0 1px black;
+}
+
+.my-calendar .have-task {
+    background-color: rgb(201, 207, 216);
+}
+
+.my-calendar .react-calendar__navigation {
+    border-style: none;
+    height: auto;
+    margin-top : 1%
+}
+
+.react-calendar__navigation__label {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+  
+.react-calendar__navigation__arrow {
+    padding: 0%;
 }

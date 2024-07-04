@@ -1,30 +1,23 @@
 import { style } from "@vanilla-extract/css";
 import { vars } from "../../../App.css";
 
-export const div1 = style({
-    width: "99vw",
-    alignItems: "center",
-    display: "flex",
-    justifyContent: "center",
-    textAlign: "center"
-});
 
-export const div2 = style({
-    width: "80vh",
-    height: "75vh",
+export const dailyTaskContainer = style({
     display: "flex",
+    minWidth: "1050px",
     alignItems: "center",
     textAlign: "center",
     justifyContent: "center"
 });
 
-export const div3 = style({
-    marginLeft: "12%",
-    marginRight: "12%"
+export const divArrow = style({
+    width: "10%",
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center",
 });
 
-export const icon1 = style({
+export const arrowIcon = style({
     cursor: "pointer",
-    fontSize: vars.fontSizing.H4
+    fontSize: vars.fontSizing.H4,
 });
-

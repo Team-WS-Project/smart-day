@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import ListContainer from "../../components/PageComponents/ListContainer/ListContainer";
-import { div1, div2, div3, text1, text2, text3 } from "./MainPage.css";
+import Header from "../../components/PageComponents/Header/Header";
+import Footer from "../../components/PageComponents/Footer/Footer";
+import { datePick, headerAndFooter, linkCalendarPage, locationTextArea, textArea, weatherText } from "./MainPage.css";
 
 const MainPage = () => {
     const navigate = useNavigate();
@@ -11,26 +13,28 @@ const MainPage = () => {
 
     return(
         <div>
+            <div className={headerAndFooter}>
+                <Header />
+            </div>
             <div>
-                // header
-                <div className={div2}>
-                    <br />
+                <div className={locationTextArea}>
                     현재 지역은 location 입니다.
                 </div>
-                <div className={div1}>
+                <div>
                     <ListContainer/>
                 </div>
-                <div className={div3}>
-                    <text className={text1}>+ 월별 일정 추가</text>
-                    <text className={text2}>오늘은 날씨가 weather이므로, textObj 하시는건 어때요?</text>
-                    <text
-                        className={text3}
+                <div className={textArea}>
+                    <div className={datePick}>+ 월별 일정 추가</div>
+                    <div className={weatherText}>오늘은 날씨가 weather이므로, textObj 하시는건 어때요?</div>
+                    <div
+                        className={linkCalendarPage}
                         onClick={textClick}
-                    >전체 달력 보기</text>
+                    >전체 달력 보기</div>
                 </div>
             </div>
-            <br />
-            // footer
+            <div className={headerAndFooter}>
+                <Footer />
+            </div>
         </div>
     )
 };
