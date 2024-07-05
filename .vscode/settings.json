@@ -1,0 +1,56 @@
+{
+  "folder-color.pathColors": [
+    {
+      "folderPath": "smart-day\\client\\src\\components\\ModalComponents\\LocationModal\\",
+      "color": "foldercolorizer.PureGold"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\components\\ModalComponents\\DatepickerModal\\",
+      "color": "foldercolorizer.PureGold"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\components\\ModalComponents\\LoggerModal\\",
+      "color": "foldercolorizer.PureGold"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\pages\\TodolistPage\\",
+      "color": "foldercolorizer.PureGold"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\components\\ModalComponents\\UserEditModal\\",
+      "color": "foldercolorizer.LightMaroon"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\components\\ModalComponents\\TodoScheduleModal\\",
+      "color": "foldercolorizer.LightMaroon"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\components\\ModalComponents\\TaskModal\\",
+      "color": "foldercolorizer.LightMaroon"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\components\\ModalComponents\\RegisterModal\\",
+      "color": "foldercolorizer.LightMaroon"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\components\\ModalComponents\\LoginModal\\",
+      "color": "foldercolorizer.LightMaroon"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\components\\ModalComponents\\DayModal\\",
+      "color": "foldercolorizer.LightMaroon"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\pages\\MainPage\\",
+      "color": "foldercolorizer.LimeGreen"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\pages\\CalendarPage\\",
+      "color": "foldercolorizer.LimeGreen"
+    },
+    {
+      "folderPath": "smart-day\\client\\src\\pages\\SchedulePage\\",
+      "color": "foldercolorizer.LightMaroon"
+    }
+  ]
+}

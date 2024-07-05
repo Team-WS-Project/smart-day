@@ -18,7 +18,6 @@ export const modalWindow = style({
   alignItems: "center",
   minHeight: 500,
   maxHeight: 800,
-  overflow: "auto", // 캐러셀?
   width: "max-content",
   height: "max-content",
   backgroundColor: vars.color.main,
