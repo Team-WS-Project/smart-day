@@ -14,7 +14,7 @@ const myScrollbar = {
   },
 };
 
-export const loggoArea = style({
+export const logoArea = style({
   display: "flex",
   alignItems: "center",
   height: "auto",
