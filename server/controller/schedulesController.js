@@ -1,11 +1,17 @@
 const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
 
-// 전체 일정 조회
 const getAllSchedules = (req, res) => {
-  let sql = "SELECT * FROM SmartDay.schedules;";
+  const { start, end } = req.query;
+  let values = [];
+  let sql = "SELECT * FROM SmartDay.schedules";
 
-  conn.query(sql, (err, results) => {
+  if (start && end) {
+    sql += " WHERE date BETWEEN ? AND ?";
+    values = [start, end];
+  }
+
+  conn.query(sql, values, (err, results) => {
     if (err) {
       console.error(err);
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
@@ -14,24 +20,7 @@ const getAllSchedules = (req, res) => {
   });
 };
 
-// 기간별 일정 조회 - error
-///ex. schedules?start=2024-06-01&end=2024-07-01
-const getSchedulesByTimeFrame = (req, res) => {
-  const { start, end } = req.query;
-  let sql = "SELECT * FROM schedules WHERE date BETWEEN ? AND ?";
-  let values = [start, end];
-
-  conn.query(sql, values, (err, results) => {
-    if (err) {
-      console.error(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
-    }
-
-    res.status(StatusCodes.OK).json(results);
-  });
-};
-
-// 날짜별 일정 조회 - 배열 벗기기!!!
+// 날짜별 일정 조회 
 ///ex. schedules/date/2024-06-01
 const getSchedulesByDate = (req, res) => {
   const { date } = req.params;
@@ -87,15 +76,13 @@ const addSchedule = (req, res) => {
     "INSERT INTO schedules (Title, date, start_time, end_time) VALUES(?, ?, ?, ?)";
   let values = [title, date, startTime, endTime];
 
-  conn.query(sql, values, (err, result) => {
+  conn.query(sql, values, (err, results) => {
     if (err) {
       console.error(err);
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
 
-    res.status(StatusCodes.CREATED).json({
-      message: "새 일정 추가 완료 -> 메인 페이지로 이동",
-    });
+    res.status(StatusCodes.CREATED).json(results);
   });
 };
 
@@ -146,7 +133,6 @@ const deleteSchedule = (req, res) => {
 
 module.exports = {
   getAllSchedules,
-  getSchedulesByTimeFrame,
   getSchedulesByDate,
   getScheduleById,
   addSchedule,
