@@ -24,7 +24,7 @@ export const scheduleTrash = style({
   width: "23px",
   height: "23px",
   borderRadius: vars.radius.large,
-  border: "1px solid white",
+  border: "1px solid ${vars.color.brightIcon}",
 
   ":hover": {
     backgroundColor: vars.color.warningButtonHover,
