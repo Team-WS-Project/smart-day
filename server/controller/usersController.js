@@ -7,30 +7,30 @@ const crypto = require("crypto");
 const ensureAuthorization = require("../auth");
 
 // 메인페이지 location, nickname 조회
-const getUserInformation = (req, res) => {
-  ensureAuthorization(req, res, () => {
-    // 인증 성공 시 실행될 코드
-    const sql = `SELECT location, nickname FROM users WHERE email = ?`;
+// const getUser = (req, res) => {
+//   ensureAuthorization(req, res, () => {
+//     // 인증 성공 시 실행될 코드
+//     const sql = `SELECT location, nickname FROM users WHERE email = ?`;
 
-    conn.query(sql, req.authorization.email, (err, results) => {
-      if (err) {
-        console.error(err);
-        return res.status(StatusCodes.BAD_REQUEST).end();
-      }
+//     conn.query(sql, req.authorization.email, (err, results) => {
+//       if (err) {
+//         console.error(err);
+//         return res.status(StatusCodes.BAD_REQUEST).end();
+//       }
 
-      if (results.length === 0) {
-        return res.status(StatusCodes.NOT_FOUND).json({
-          message: "사용자 정보를 찾을 수 없습니다.",
-        });
-      }
+//       if (results.length === 0) {
+//         return res.status(StatusCodes.NOT_FOUND).json({
+//           message: "사용자 정보를 찾을 수 없습니다.",
+//         });
+//       }
 
-      return res.status(StatusCodes.OK).json(results[0]);
-    });
-  });
-};
+//       return res.status(StatusCodes.OK).json(results[0]);
+//     });
+//   });
+// };
 
-// 회원 정보 수정창 email, nickname, location 조회
-const getInfoToUpdate = (req, res) => {
+// 회원 정보 수정창 email, nickname, location 조회, 메인페이지 nickname, location 조회
+const getUser = (req, res) => {
   ensureAuthorization(req, res, () => {
     // 인증 성공 시 실행될 코드
     const sql = `SELECT email, nickname, location FROM users WHERE email = ?`;
@@ -45,7 +45,7 @@ const getInfoToUpdate = (req, res) => {
         return res.status(StatusCodes.OK).json(results[0]);
       } else {
         return res.status(StatusCodes.NOT_FOUND).json({
-          message: "User not found",
+          message: "사용자 정보를 찾을 수 없습니다.",
         });
       }
     });
