@@ -4,7 +4,6 @@ const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
 const {
   getAllSchedules,
-  getSchedulesByDate,
   getScheduleById,
   addSchedule,
   updateSchedule,
@@ -14,7 +13,6 @@ const {
 router.use(express.json());
 
 router.get("/", getAllSchedules);
-router.get("/date/:date", getSchedulesByDate);
 router.get("/detail/:id", getScheduleById);
 router.post("/", addSchedule);
 router.put("/:id", updateSchedule);
