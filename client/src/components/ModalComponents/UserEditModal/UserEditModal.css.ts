@@ -35,7 +35,7 @@ export const loginMain = style({
 export const inputField = style({
   width: "70%",
   height: "35px",
-  border: "1px solid grey",
+  border: "1px solid ${vars.color.secondary}",
   borderRadius: vars.radius.small,
   backgroundColor: vars.color.brightIcon,
   alignContent: "center",
@@ -69,7 +69,7 @@ export const locationButton = style({
   fontSize: vars.fontSizing.H9,
   padding: "12px 10px",
   borderRadius: vars.radius.small,
-  border: "1px solid white",
+  border: "1px solid ${vars.color.brightIcon}",
   marginTop: vars.spacing.big2,
   fontWeight: "bold",
 
@@ -88,7 +88,7 @@ export const registerButton = style({
   fontWeight: "bold",
   padding: "12px 10px",
   borderRadius: vars.radius.small,
-  border: "1px solid white",
+  border: "1px solid ${vars.color.brightIcon}",
   margin: "15px auto",
 
   ":hover": {
