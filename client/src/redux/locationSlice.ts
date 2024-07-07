@@ -1,16 +1,16 @@
 // locationSlice.js
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  sido: '',
-  sigungu: '',
-  eupmyeon: '',
+  sido: "",
+  sigungu: "",
+  eupmyeon: "",
   favoriteLocations: [],
-  currentLocation: '',
+  currentLocation: "",
 };
 
 const locationSlice = createSlice({
-  name: 'location',
+  name: "location",
   initialState,
   reducers: {
     setSido(state, action) {
@@ -31,12 +31,6 @@ const locationSlice = createSlice({
   },
 });
 
-export const {
-  setSido,
-  setSigungu,
-  setEupmyeon,
-  addFavoriteLocation,
-  setCurrentLocation,
-} = locationSlice.actions;
+export const { setSido, setSigungu, setEupmyeon, addFavoriteLocation, setCurrentLocation } = locationSlice.actions;
 
 export default locationSlice.reducer;
