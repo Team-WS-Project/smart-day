@@ -1,5 +1,5 @@
 import { style } from "@vanilla-extract/css";
-import { vars } from "../../../App.css";
+import { scrollbar, vars } from "../../../App.css";
 
 export const dailyContainer = style({
   width: "25%",
@@ -28,4 +28,6 @@ export const scheduleList = style({
   overflowY: "auto",
   fontFamily: vars.font.inter,
   fontSize: vars.fontSizing.H9,
+  ...scrollbar,
+  border: "unset",
 });
