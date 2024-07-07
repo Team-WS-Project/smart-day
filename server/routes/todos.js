@@ -3,7 +3,7 @@ const {
   getTodos,
   getTodoDetail,
   addTodos,
-  editTodos,
+  updateTodos,
   changeCompleted,
   deleteTodos,
 } = require("../controller/todosController");
@@ -14,7 +14,7 @@ router.use(express.json());
 router.get("/", getTodos);
 router.get("/:id", getTodoDetail);
 router.post("/", addTodos);
-router.put("/:id", editTodos);
+router.put("/:id", updateTodos);
 router.put("/completed/:id", changeCompleted);
 router.delete("/:id", deleteTodos);
 

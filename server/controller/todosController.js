@@ -74,7 +74,7 @@ const addTodos = (req, res) => {
   });
 };
 
-const editTodos = (req, res) => {
+const updateTodos = (req, res) => {
   const { id } = req.params;
   const { title, detail, due_date } = req.body;
 
@@ -132,7 +132,7 @@ module.exports = {
   getTodos,
   getTodoDetail,
   addTodos,
-  editTodos,
+  updateTodos,
   changeCompleted,
   deleteTodos,
 };
