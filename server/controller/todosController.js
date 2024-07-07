@@ -2,7 +2,7 @@ const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
 
 const getTodos = (req, res) => {
-  //user_id는 users랑 합칠때 authorization.id로 변경될 것
+  // TODO: user_id는 users랑 합칠때 authorization.id로 변경될 것 (@ hyoeun0001)
   const { user_id } = req.body;
   const { today, month } = req.query;
 
@@ -50,7 +50,7 @@ const getTodoDetail = (req, res) => {
 };
 
 const addTodos = (req, res) => {
-  //user_id는 users랑 합칠때 authorization.id로 변경될 것
+  // TODO: user_id는 users랑 합칠때 authorization.id로 변경될 것 (@ hyoeun0001)
   const { title, detail, due_date, user_id } = req.body;
 
   let sql = `INSERT INTO todos (title, detail, due_date, user_id) VALUES(?, ?, ?, ?)`;
