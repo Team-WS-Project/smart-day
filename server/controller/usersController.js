@@ -158,7 +158,6 @@ const hashPassword = (password, salt) => {
 
 module.exports = {
   getUser,
-  getInfoToUpdate,
   join,
   login,
   updateUserInformation,
