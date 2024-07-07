@@ -184,7 +184,9 @@ const createSchedule = (req, res) => {
       return res.status(StatusCodes.INTERNAL_SERVER_err).end();
     }
 
-    return res.status(StatusCodes.CREATED).json(results);
+    res.status(StatusCodes.CREATED).json({
+      message: "새 일정 추가 완료 -> 메인 페이지로 이동",
+    });
   });
 };
 
