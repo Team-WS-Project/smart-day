@@ -80,81 +80,36 @@ const getSchedules = async (req, res) => {
   });
 };
 
-const getScheduleTitles = (startDate, endDate) => {
-  return new Promise((resolve, reject) => {
-    const { sql, value: values } = getScheduleByPeriod(startDate, endDate);
-    console.log("Executing query:", sql);
-    console.log("With values:", values);
+// 날짜별 일정 조회 
+///ex. schedules/date/2024-06-01
+const getSchedulesByDate = (req, res) => {
+  const { date } = req.params;
+  let sql = "SELECT * FROM schedules WHERE date = ?";
+  let values = [date];
 
-    conn.query(sql, values, (err, results) => {
-      if (err) {
-        console.err(err);
-        reject(err);
-        return;
-      }
+  conn.query(sql, values, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+    }
 
-      const formattedResults = results.map((schedule) => ({
-        start_date: new Date(schedule.start_date).toISOString().split("T")[0],
-        titles: schedule.titles.split(", "),
-      }));
+    if (results.length === 0) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "해당 날짜의 일정이 없습니다." });
+    }
 
-      resolve(formattedResults);
-    });
+    res.status(StatusCodes.OK).json(results);
   });
 };
 
-const createScheduleArray = (year, month) => {
-  return new Promise((resolve, reject) => {
-    const daysInMonth = new Date(year, month, 0).getDate();
-    const monthArray = new Array(daysInMonth).fill(false);
-
-    const sql = `
-      SELECT start_date, end_date 
-      FROM schedules 
-      WHERE YEAR(start_date) = ? AND MONTH(start_date) = ?
-    `;
-    const values = [year, month];
-
-    conn.query(sql, values, (err, results) => {
-      if (err) {
-        console.err(err);
-        reject(err);
-        return;
-      }
-
-      results.forEach((schedule) => {
-        const start = new Date(schedule.start_date);
-        const end = new Date(schedule.end_date);
-
-        for (let d = start.getUTCDate(); d <= end.getUTCDate(); d++) {
-          monthArray[d - 1] = true;
-        }
-      });
-
-      resolve(monthArray);
-    });
-  });
-};
-
-const getMonthlyArray = async (req, res) => {
-  const { year, month } = req.query;
-
-  try {
-    const scheduleArray = await createScheduleArray(year, month);
-    res.status(StatusCodes.OK).json({ monthArray: scheduleArray });
-  } catch (err) {
-    console.err(err);
-    res.status(StatusCodes.INTERNAL_SERVER_err).end();
-  }
-};
-
+//개별 일정 조회
 const getScheduleById = (req, res) => {
   const { id } = req.params;
-
-  const sql = `
-    SELECT title, detail, start_date, end_date, start_time, end_time, completed
-	  FROM schedules
-	  WHERE id = ?
+  let sql = `
+      SELECT date, start_time, end_time, title, detail, completed
+      FROM schedules
+      WHERE id = ?
     `;
   const values = [id];
 
@@ -172,11 +127,12 @@ const getScheduleById = (req, res) => {
   });
 };
 
-const createSchedule = (req, res) => {
-  const { title, detail, startDate, endDate, startTime, endTime } = req.body;
-  const sql =
-    "INSERT INTO schedules (title, detail, start_date, end_date, start_time, end_time) VALUES (?, ?, ?, ?,?,?)";
-  const values = [title, detail, startDate, endDate, startTime, endTime];
+// 개별 일정 추가
+const addSchedule = (req, res) => {
+  const { title, date, startTime, endTime } = req.body;
+  let sql =
+    "INSERT INTO schedules (Title, date, start_time, end_time) VALUES(?, ?, ?, ?)";
+  let values = [title, date, startTime, endTime];
 
   conn.query(sql, values, (err, results) => {
     if (err) {
@@ -216,6 +172,7 @@ const deleteSchedule = (req, res) => {
   const { id } = req.params;
   const sql = "DELETE FROM schedules WHERE id = ?";
 
+  conn.query(sql, id, (err, results) => {
   conn.query(sql, id, (err, results) => {
     if (err) {
       console.err(err);
