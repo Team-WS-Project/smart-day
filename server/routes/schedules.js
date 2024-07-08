@@ -19,4 +19,3 @@ router.put("/:id", updateSchedule);
 router.delete("/delete/:id", deleteSchedule);
 
 module.exports = router;
-
