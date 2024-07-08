@@ -1,189 +1,255 @@
 const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
+const ensureAuthorization = require("../auth");
 
-const getScheduleByPeriod = (start, end) => {
+const getScheduleByPeriod = (id, start, end) => {
   return {
     sql: `
-     SELECT start_date, GROUP_CONCAT(title ORDER BY title ASC SEPARATOR ', ') AS titles
-      FROM schedules
-      WHERE start_date BETWEEN ? AND ?
-      GROUP BY start_date
-      ORDER BY start_date ASC
+    SELECT user_id, start_date, GROUP_CONCAT(title ORDER BY title ASC SEPARATOR ', ') AS titles
+    FROM schedules
+    WHERE user_id = ?
+    AND start_date BETWEEN ? AND ?
+    GROUP BY start_date
+    ORDER BY start_date ASC
     `,
-    value: [start, end],
+    values: [id, start, end],
   };
 };
 
-const getScheduleByMonth = (month) => {
+const getScheduleByMonth = (id, month) => {
   return {
     sql: `
-    SELECT id, user_id, title, detail, start_date, end_date, start_time, end_time, completed 
+    SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time, completed 
     FROM schedules 
-    WHERE DATE_FORMAT(start_date, '%Y-%m') = ?
+    WHERE user_id = ?
+    AND DATE_FORMAT(start_date, '%Y-%m') = ?
     `,
-    value: [month],
+    values: [id, month],
   };
 };
 
-const getScheduleByDate = (date) => {
+const getScheduleByDate = (id, date) => {
   return {
     sql: `
-    SELECT id, user_id, title, detail, start_date, end_date, start_time, end_time, completed 
+    SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time, completed 
     FROM schedules 
-    WHERE start_date = ?`,
-    value: [date],
+    WHERE user_id = ?
+    AND start_date = ?
+    `,
+    values: [id, date],
   };
 };
 
-const getSchedulesQuery = ({ start, end, date, month }) => {
-  if (start && end) {
-    return getScheduleByPeriod(start, end);
+const getSchedulesQuery = ({ id, start, end, date, month }) => {
+  if (id && start && end) {
+    return getScheduleByPeriod(id, start, end);
   }
-  if (month) {
-    return getScheduleByMonth(month);
+  if (id && month) {
+    return getScheduleByMonth(id, month);
   }
-  if (date) {
-    return getScheduleByDate(date);
+  if (id && date) {
+    return getScheduleByDate(id, date);
   }
 
   return {
     sql: `SELECT id, user_id, title, detail, start_time, end_time, start_date 
-    FROM schedules`,
-    value: [],
+    FROM schedules
+    WHERE user_id = ?
+    `,
+    values: [id],
   };
 };
 
 const getSchedules = async (req, res) => {
   const { start, end, date, month } = req.query;
 
-  if (start && end) {
-    try {
-      const scheduleTitles = await getScheduleTitles(start, end);
-      return res.status(StatusCodes.OK).json(scheduleTitles);
-    } catch (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
+  ensureAuthorization(req, res, async () => {
+    const id = req.authorization.id;
+    if (id && start && end) {
+      try {
+        const scheduleTitles = await getScheduleTitles(id, start, end);
+        return res.status(StatusCodes.OK).json(scheduleTitles);
+      } catch (err) {
+        console.error(err);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      }
     }
+
+    const query = getSchedulesQuery({ id, start, end, date, month });
+
+    const { sql, values } = query;
+
+    conn.query(sql, values, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      }
+
+      return res.status(StatusCodes.OK).json(results);
+    });
+  });
+};
+
+const getScheduleTitles = async (id, startDate, endDate) => {
+  try {
+    const { sql, values } = getScheduleByPeriod(id, startDate, endDate);
+    console.log("Executing query:", sql);
+    console.log("With values:", values);
+
+    const results = await new Promise((resolve, reject) => {
+      conn.query(sql, values, (err, results) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+          return;
+        }
+        resolve(results);
+      });
+    });
+
+    const formattedResults = results.map((schedule) => ({
+      start_date: new Date(schedule.start_date).toISOString().split("T")[0],
+      titles: schedule.titles.split(", "),
+    }));
+
+    return formattedResults;
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
+};
 
-  const query = getSchedulesQuery({ start, end, date, month });
+const createScheduleArray = (year, month) => {
+  return new Promise((resolve, reject) => {
+    const daysInMonth = new Date(year, month, 0).getDate();
+    const monthArray = new Array(daysInMonth).fill(false);
 
-  const { sql, value: values } = query;
+    const sql = `
+      SELECT start_date, end_date 
+      FROM schedules 
+      WHERE YEAR(start_date) = ? AND MONTH(start_date) = ?
+    `;
+    const values = [year, month];
 
-  conn.query(sql, values, (err, results) => {
-    if (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
-    }
+    conn.query(sql, values, (err, results) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+        return;
+      }
 
-    return res.status(StatusCodes.OK).json(results);
+      results.forEach((schedule) => {
+        const start = new Date(schedule.start_date);
+        const end = new Date(schedule.end_date);
+
+        for (let d = start.getUTCDate(); d <= end.getUTCDate(); d++) {
+          monthArray[d - 1] = true;
+        }
+      });
+
+      resolve(monthArray);
+    });
   });
 };
 
-// 날짜별 일정 조회 
-///ex. schedules/date/2024-06-01
-const getSchedulesByDate = (req, res) => {
-  const { date } = req.params;
-  let sql = "SELECT * FROM schedules WHERE date = ?";
-  let values = [date];
+const getMonthlyArray = async (req, res) => {
+  const { year, month } = req.query;
 
-  conn.query(sql, values, (err, results) => {
-    if (err) {
+  ensureAuthorization(req, res, async () => {
+    try {
+      const scheduleArray = await createScheduleArray(year, month);
+      res.status(StatusCodes.OK).json({ monthArray: scheduleArray });
+    } catch (err) {
       console.error(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
-
-    if (results.length === 0) {
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .json({ message: "해당 날짜의 일정이 없습니다." });
-    }
-
-    res.status(StatusCodes.OK).json(results);
   });
 };
 
-//개별 일정 조회
 const getScheduleById = (req, res) => {
   const { id } = req.params;
-  let sql = `
-      SELECT date, start_time, end_time, title, detail, completed
+  ensureAuthorization(req, res, () => {
+    const sql = `
+      SELECT title, detail, start_date, end_date, start_time, end_time, completed
       FROM schedules
       WHERE id = ?
-    `;
-  const values = [id];
+      `;
 
-  conn.query(sql, values, (err, results) => {
-    if (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
-    }
+    conn.query(sql, id, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      }
 
-    if (results.affectedRows === 0) {
-      return res.status(StatusCodes.NOT_FOUND).end();
-    }
+      if (results.length === 0) {
+        return res.status(StatusCodes.NOT_FOUND).end();
+      }
 
-    res.status(StatusCodes.OK).json(results[0]);
+      res.status(StatusCodes.OK).json(results[0]);
+    });
   });
 };
 
-// 개별 일정 추가
-const addSchedule = (req, res) => {
-  const { title, date, startTime, endTime } = req.body;
-  let sql =
-    "INSERT INTO schedules (Title, date, start_time, end_time) VALUES(?, ?, ?, ?)";
-  let values = [title, date, startTime, endTime];
+const createSchedule = (req, res) => {
+  ensureAuthorization(req, res, () => {
+    const { title, detail, startDate, endDate, startTime, endTime } = req.body;
+    const sql =
+      "INSERT INTO schedules (title, detail, start_date, end_date, start_time, end_time) VALUES (?, ?, ?, ?,?,?)";
+    const values = [title, detail, startDate, endDate, startTime, endTime];
 
-  conn.query(sql, values, (err, results) => {
-    if (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
-    }
+    conn.query(sql, values, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      }
 
-    res.status(StatusCodes.CREATED).json({
-      message: "새 일정 추가 완료 -> 메인 페이지로 이동",
+      return res.status(StatusCodes.CREATED).json(results);
     });
   });
 };
 
 const updateSchedule = (req, res) => {
-  const { id } = req.params;
-  const { title, detail, startDate, endDate, startTime, endTime } = req.body;
+  ensureAuthorization(req, res, () => {
+    const { id } = req.params;
+    const { title, detail, startDate, endDate, startTime, endTime } = req.body;
 
-  const sql = `
-    UPDATE schedules
-    SET title = ?, detail = ?, start_date = ?, end_date = ?, start_time = ?, end_time = ?
-    WHERE id = ?
-  `;
+    const sql = `
+      UPDATE schedules
+      SET title = ?, detail = ?, start_date = ?, end_date = ?, start_time = ?, end_time = ?
+      WHERE id = ?
+    `;
 
-  const values = [title, detail, startDate, endDate, startTime, endTime, id];
+    const values = [title, detail, startDate, endDate, startTime, endTime, id];
 
-  conn.query(sql, values, (err, results) => {
-    if (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
-    }
+    conn.query(sql, values, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      }
 
-    return res.status(StatusCodes.OK).json(results);
+      return res.status(StatusCodes.OK).json(results);
+    });
   });
 };
 
 const deleteSchedule = (req, res) => {
-  const { id } = req.params;
-  const sql = "DELETE FROM schedules WHERE id = ?";
+  ensureAuthorization(req, res, () => {
+    const { id } = req.params;
 
-  conn.query(sql, id, (err, results) => {
-  conn.query(sql, id, (err, results) => {
-    if (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
-    }
+    const sql = "DELETE FROM schedules WHERE id = ?";
 
-    if (results.affectedRows === 0) {
-      return res.status(StatusCodes.NOT_FOUND).end();
-    }
+    conn.query(sql, id, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      }
 
-    return res.status(StatusCodes.OK).json(results);
+      if (results.affectedRows === 0) {
+        return res.status(StatusCodes.NOT_FOUND).end();
+      }
+
+      return res.status(StatusCodes.OK).json(results);
+    });
   });
 };
 
