@@ -19,7 +19,7 @@ export const modalWindow = style({
   alignItems: "center",
   minHeight: 200,
   maxHeight: 800,
-  width: "40%",
+  width: "800px",
   height: "max-content",
   backgroundColor: vars.color.main,
   borderRadius: vars.radius.large,
@@ -52,7 +52,7 @@ export const closeButton = style({
 });
 
 export const body = style({
-  padding: 20,
+  padding: "20px 0px",
   color: vars.color.darkText,
   marginTop: "5%",
   backgroundColor: "white",

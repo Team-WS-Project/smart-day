@@ -10,13 +10,12 @@ import {
 } from "../../../redux/locationSlice";
 import * as styles from "./LocationModal.css";
 import locationDatas from "./locationDatas.json";
-import { TiStarOutline } from "react-icons/ti";
+import { TiStarOutline, TiStarFullOutline } from "react-icons/ti";
 import { FiX } from "react-icons/fi";
 
 const LocationModal = () => {
   const dispatch = useDispatch();
-  const { sido, sigungu, eupmyeon, favoriteLocations, currentLocation } =
-    useSelector((state) => state.location);
+  const { sido, sigungu, eupmyeon, favoriteLocations, currentLocation } = useSelector((state) => state.location);
 
   const handleSidoChange = (e) => {
     dispatch(setSido(e.target.value));
@@ -49,36 +48,23 @@ const LocationModal = () => {
           <FiX className={styles.closeButton} />
         </div>
 
-        <select
-          name="sido"
-          className={styles.selectBox}
-          value={sido}
-          onChange={handleSidoChange}
-        >
+        <select name="sido" className={styles.selectBox} value={sido} onChange={handleSidoChange}>
           <option value="">시/도 선택</option>
           {locationDatas.map((data) => (
             <option value={data.name}>{data.name}</option>
           ))}
         </select>
 
-        <select
-          name="sigungu"
-          className={styles.selectBox}
-          value={sigungu}
-          onChange={handleSigunguChange}
-        >
+        <select name="sigungu" className={styles.selectBox} value={sigungu} onChange={handleSigunguChange}>
           <option value="">시/군/구 선택</option>
           {locationDatas.map((data) =>
             data.name === sido
               ? data.subArea.map((subAreaData) => (
-                  <option
-                    onClick={handleSetCurrentLocation(`${sido} ${sigungu}`)}
-                    value={subAreaData}
-                  >
+                  <option onClick={handleSetCurrentLocation(`${sido} ${sigungu}`)} value={subAreaData}>
                     {subAreaData}
                   </option>
                 ))
-              : null
+              : null,
           )}
         </select>
 
@@ -97,7 +83,7 @@ const LocationModal = () => {
           {favoriteLocations.map((location, index) => (
             <div key={index} className={styles.locationItem}>
               {location}
-              <TiStarOutline />
+              <TiStarFullOutline className={styles.starFilledIcon} />
             </div>
           ))}
         </div>
@@ -107,7 +93,7 @@ const LocationModal = () => {
           <div className={styles.subTitle}>현재 위치</div>
           <div className={styles.locationItem}>
             {currentLocation}
-            <TiStarOutline onClick={handleAddFavorite} />
+            <TiStarOutline className={styles.starEmptyIcon} onClick={handleAddFavorite} />
           </div>
         </div>
         <button className={styles.okButton}>확인</button>

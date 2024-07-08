@@ -18,6 +18,7 @@ import Footer from "../../components/PageComponents/Footer/Footer";
 
 const SchedulePage = () => {
   const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   return (
     <div className={pageContainer}>
       <Header />
@@ -40,9 +41,9 @@ const SchedulePage = () => {
           <div className={dateContainer}>
             <DatePicker
               showIcon
-              selected={startDate}
+              selected={endDate}
               dateFormat="yyyy-MM-dd"
-              onChange={(date) => setStartDate(date)}
+              onChange={(date) => setEndDate(date)}
               icon={<FiCalendar />}
               className={datePickerContainer}
             />
