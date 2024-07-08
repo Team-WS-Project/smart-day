@@ -1,5 +1,5 @@
 import { appContainer } from "../../App.css";
-import CalendarComponent from "../../components/PageComponents/CalendarComponent/CalendarComponent";
+import CalendarComponent from "./CalendarComponent/CalendarComponent";
 import Footer from "../../components/PageComponents/Footer/Footer";
 import Header from "../../components/PageComponents/Header/Header";
 import { calendarPageBody } from "./CalendarPage.css";
