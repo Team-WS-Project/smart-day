@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import ListContainer from "../../components/PageComponents/ListContainer/ListContainer";
 import Header from "../../components/PageComponents/Header/Header";
 import Footer from "../../components/PageComponents/Footer/Footer";
+import ListContainer from "./ListContainer/ListContainer";
 import { datePick,
   linkCalendarPage,
   locationTextArea,
@@ -18,12 +18,6 @@ const MainPage = () => {
     navigate("/calendar");
   };
 
-  /* 임시 ...........................  */
-  const openDatePickerModal = () => {
-    navigate("/datepickermodal");
-  };
-  /* ................................. */
-
   return (
     <div className={appContainer}>
       <Header />
@@ -33,10 +27,7 @@ const MainPage = () => {
           <ListContainer />
         </div>
         <div className={textArea}>
-          <div
-            className={datePick}
-            onClick={openDatePickerModal} //
-          >
+          <div className={datePick}>
             + 월별 일정 추가
           </div>
           <div className={weatherText}>오늘은 날씨가 weather이므로, textObj 하시는건 어때요?</div>

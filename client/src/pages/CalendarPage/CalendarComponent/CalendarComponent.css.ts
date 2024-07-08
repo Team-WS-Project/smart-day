@@ -32,7 +32,7 @@ export const locationChangeText = style({
   cursor: "pointer",
 });
 
-export const loggoAreaRight = style({
+export const logoAreaRight = style({
   display: "flex",
   alignItems: "center",
   marginLeft: "28vw",
