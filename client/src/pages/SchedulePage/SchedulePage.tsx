@@ -12,9 +12,9 @@ import {
 import { FiCalendar } from "react-icons/fi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import DailyScheduleContainer from "../../components/PageComponents/DailyScheduleContainer/DailyScheduleContainer";
 import Header from "../../components/PageComponents/Header/Header";
 import Footer from "../../components/PageComponents/Footer/Footer";
+import DailyScheduleContainer from "./DailyScheduleContainer/DailyScheduleContainer";
 
 const SchedulePage = () => {
   const [startDate, setStartDate] = useState(new Date());
