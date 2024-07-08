@@ -8,8 +8,8 @@ import {
   iconArea,
   iconStyle,
   locationChangeText,
-  loggoArea,
-  loggoAreaRight,
+  logoArea,
+  logoAreaRight,
   monthText,
   seeAllSchedules,
   textArea,
@@ -84,19 +84,9 @@ const CalendarComponent: FC = () => {
     navigate("/schedule");
   };
 
-  /* 임시 코드 ................................. */
-  const openDayModal = () => {
-    navigate("/daymodal");
-  };
-
-  const gotoTodolistPage = () => {
-    navigate("/todolist");
-  };
-  /* .......................................... */
-
   return (
     <div>
-      <div className={loggoArea}>
+      <div className={logoArea}>
         <div className={textArea}>
           <div>
             현재 지역은 location 입니다.
@@ -106,7 +96,7 @@ const CalendarComponent: FC = () => {
           </div>
           <div>오늘은 날씨가 weather이므로, textObj 하시는건 어때요?</div>
         </div>
-        <div className={loggoAreaRight}>
+        <div className={logoAreaRight}>
           <div className={seeAllSchedules} onClick={gotoSchedulePage}>
             전체 일정 보기
           </div>
@@ -124,7 +114,6 @@ const CalendarComponent: FC = () => {
           tileClassName={tileClassName}
           onChange={onChange}
           value={value}
-          onClickDay={openDayModal}
         />
         <div className={todolistContainer}>
           <div className={todoTitle}>
@@ -142,7 +131,7 @@ const CalendarComponent: FC = () => {
                 07/02
               </text>
             </div>
-            <div className={todolistDetail} onClick={gotoTodolistPage}>
+            <div className={todolistDetail}>
               <text
                 style={{
                   textDecoration: isChecked ? "line-through" : "none",
