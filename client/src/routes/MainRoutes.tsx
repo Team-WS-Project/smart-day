@@ -5,14 +5,6 @@ import CalendarPage from "../pages/CalendarPage/CalendarPage";
 import SchedulePage from "../pages/SchedulePage/SchedulePage";
 import TodoListPage from "../pages/TodolistPage/TodolistPage";
 
-// 임시 import
-import LoginModal from "../components/ModalComponents/LoginModal/LoginModal";
-import UserEditModal from "../components/ModalComponents/UserEditModal/UserEditModal";
-import DayModal from "../components/ModalComponents/DayModal/DayModal";
-import DatepickerModal from "../components/ModalComponents/DatepickerModal/DatepickerModal";
-import TaskModal from "../components/ModalComponents/TaskModal/TaskModal";
-import LoggerModal from "../components/ModalComponents/LoggerModal/LoggerModal";
-
 function MainRoutes() {
   return (
     <Router>
@@ -22,13 +14,6 @@ function MainRoutes() {
         <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/todolist" element={<TodoListPage />} />
 
-        {/* 임시 라우팅 */}
-        <Route path="/loginmodal" element={<LoginModal />} />
-        <Route path="/usereditmodal" element={<UserEditModal />} />
-        <Route path="/datepickermodal" element={<DatepickerModal />} />
-        <Route path="/daymodal" element={<DayModal />} />
-        <Route path="/taskmodal" element={<TaskModal />} />
-        <Route path="/loggermodal" element={<LoggerModal />} />
       </Routes>
     </Router>
   );
