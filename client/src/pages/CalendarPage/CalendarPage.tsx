@@ -1,20 +1,19 @@
-import CalendarComponent from "../../components/PageComponents/CalendarComponent/CalendarComponent";
+import { appContainer } from "../../App.css";
+import CalendarComponent from "./CalendarComponent/CalendarComponent";
 import Footer from "../../components/PageComponents/Footer/Footer";
 import Header from "../../components/PageComponents/Header/Header";
-import { appContainer } from "./CalendarPage.css";
+import { calendarPageBody } from "./CalendarPage.css";
 
 const CalendarPage = () => {
-    return(
-        <div className={appContainer}>
-            <Header />
-            <div>
-                <div>
-                    <CalendarComponent />
-                </div>
-            </div>
-            <Footer />
-        </div>
-    )
+  return (
+    <div className={appContainer}>
+      <Header />
+      <div className={calendarPageBody}>
+        <CalendarComponent />
+      </div>
+      <Footer />
+    </div>
+  );
 };
 
 export default CalendarPage;
