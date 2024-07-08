@@ -56,10 +56,8 @@ export const selectBox = style({
 export const favoriteArea = style({
   marginTop: "20px",
   paddingTop: "10px",
-  marginBottom: "20px",
   paddingBottom: "10px",
   flexDirection: "column",
-  // backgroundColor: "black",
   borderTop: "solid 1px white",
   borderBottom: "solid 1px white",
 });
@@ -82,7 +80,6 @@ export const locationItem = style({
 });
 
 export const currentLocationArea = style({
-  padding: "10px",
   marginTop: "10px",
   display: "flex",
   flexDirection: "column",
@@ -104,7 +101,16 @@ export const okButton = style({
 });
 
 //★
-export const starFilledIcon = style({});
+export const starFilledIcon = style({
+  ":hover": {
+    cursor: "pointer",
+  },
+  color: "yellow",
+});
 
 //☆
-export const starEmptyIcon = style({});
+export const starEmptyIcon = style({
+  ":hover": {
+    cursor: "pointer",
+  },
+});
