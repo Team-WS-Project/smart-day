@@ -33,7 +33,7 @@ export const loginField = style({
 export const inputField = style({
   width: "70%",
   height: "35px",
-  border: "1px solid grey",
+  border: "1px solid ${vars.color.secondary}",
   borderRadius: vars.radius.small,
   alignContent: "center",
   margin: "auto",

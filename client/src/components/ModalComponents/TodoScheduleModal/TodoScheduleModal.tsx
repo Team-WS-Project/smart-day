@@ -31,7 +31,7 @@ const TodoScheduleModal = () => {
           </div>
         </div>
         <div className={todoScheduleCenter}>
-          <div className={todoScheduleTitle}>일정</div>
+          <div className={todoScheduleTitle}>Todo</div>
           <div className={todoDate}>
             <div className={todoString}>기한 : </div>
             <div>
