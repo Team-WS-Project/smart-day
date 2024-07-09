@@ -3,20 +3,20 @@ const { StatusCodes } = require("http-status-codes");
 
 const getTodos = (req, res) => {
   // TODO: user_id는 users랑 합칠때 authorization.id로 변경될 것 (@ hyoeun0001)
-  const { user_id } = req.body;
+  const { userId } = req.body;
   const { today, month } = req.query;
 
-  let sql = `SELECT * FROM todos WHERE user_id = ? `;
+  let sql = `SELECT id, due_date, title, completed FROM todos WHERE user_id = ? `;
   let values = [];
 
   if (today) {
-    values.push(user_id, today);
-    sql += `AND due_date > ?`;
+    values.push(userId, today);
+    sql += `AND due_date >= ?`;
   } else if (month) {
-    values.push(user_id, month + "%");
+    values.push(userId, month + "%");
     sql += `AND due_date LIKE ?`;
   } else {
-    values = [user_id];
+    values = [userId];
   }
 
   conn.query(sql, values, (err, results) => {
@@ -50,15 +50,15 @@ const getTodoDetail = (req, res) => {
 };
 
 const addTodos = (req, res) => {
-  // TODO: user_id는 users랑 합칠때 authorization.id로 변경될 것 (@ hyoeun0001)
-  const { title, detail, due_date, user_id } = req.body;
+  // TODO: userId는 users랑 합칠때 authorization.id로 변경될 것 (@ hyoeun0001)
+  const { title, detail, dueDate, userId } = req.body;
 
   let sql = `INSERT INTO todos (title, detail, due_date, user_id) VALUES(?, ?, ?, ?)`;
-  let values = [title, detail, due_date, user_id];
+  let values = [title, detail, dueDate, userId];
 
   if (detail === undefined) {
     sql = `INSERT INTO todos (title, due_date, user_id) VALUES(?, ?, ?)`;
-    values = [title, due_date, user_id];
+    values = [title, dueDate, userId];
   }
 
   conn.query(sql, values, (err, results) => {
@@ -76,14 +76,14 @@ const addTodos = (req, res) => {
 
 const updateTodos = (req, res) => {
   const { id } = req.params;
-  const { title, detail, due_date } = req.body;
+  const { title, detail, dueDate } = req.body;
 
   let sql = `UPDATE todos SET title = ?, detail = ?, due_date = ? WHERE id = ?`;
-  let values = [title, detail, due_date, id];
+  let values = [title, detail, dueDate, id];
 
   if (detail === undefined) {
     sql = `UPDATE todos SET title = ?, due_date = ? WHERE id = ?`;
-    values = [title, due_date, id];
+    values = [title, dueDate, id];
   }
 
   conn.query(sql, values, (err, results) => {
