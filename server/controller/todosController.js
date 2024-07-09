@@ -3,14 +3,14 @@ const { StatusCodes } = require("http-status-codes");
 
 //TODO: SQL로 테이블과 연결되는 부분은 나중에 파일 분리할 예정 (@ hyoeun0001)
 function getTodayTodos({ userId, today, month }) {
-  const sql = "SELECT id, due_date, title, completed FROM todos WHERE user_id = ? AND due_date > ?";
+  const sql = `SELECT id, due_date, title, completed FROM todos WHERE user_id = ? AND due_date > ?`;
   const values = [userId, today];
 
   return [sql, values];
 }
 
 function getMonthTodos({ userId, today, month }) {
-  const sql = "SELECT id, due_date, title, completed FROM todos WHERE user_id = ? AND due_date LIKE ?";
+  const sql = `SELECT id, due_date, title, completed FROM todos WHERE user_id = ? AND due_date LIKE ?`;
   const values = [userId, month + "%"];
 
   return [sql, values];
