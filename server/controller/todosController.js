@@ -3,7 +3,7 @@ const { StatusCodes } = require("http-status-codes");
 
 //TODO: SQL로 테이블과 연결되는 부분은 나중에 파일 분리할 예정 (@ hyoeun0001)
 function getTodayTodos({ userId, today, month }) {
-  const sql = `SELECT id, due_date, title, completed FROM todos WHERE user_id = ? AND due_date > ?`;
+  const sql = `SELECT id, due_date, title, completed FROM todos WHERE user_id = ? AND due_date >= ? AND completed = 0`;
   const values = [userId, today];
 
   return [sql, values];
@@ -41,6 +41,45 @@ const getTodos = (req, res) => {
   const { today, month } = req.query;
 
   const [sql, values] = getTodosQuery({ userId, today, month });
+
+  conn.query(sql, values, (err, results) => {
+    if (err) {
+      return res.status(StatusCodes.BAD_REQUEST).end();
+    }
+
+    if (results.length > 0) {
+      res.status(StatusCodes.OK).json(results);
+    } else {
+      res.status(StatusCodes.NOT_FOUND).json(results);
+    }
+  });
+};
+
+const getFailureTodos = (req, res) => {
+  const { userId } = req.body;
+  const { today } = req.query;
+
+  const sql = `SELECT id, title, due_date, completed FROM todos WHERE user_id = ? AND completed = 0 AND due_date < ?`;
+  const values = [userId, today];
+
+  conn.query(sql, values, (err, results) => {
+    if (err) {
+      return res.status(StatusCodes.BAD_REQUEST).end();
+    }
+
+    if (results.length > 0) {
+      res.status(StatusCodes.OK).json(results);
+    } else {
+      res.status(StatusCodes.NOT_FOUND).json(results);
+    }
+  });
+};
+
+const getCompletedTodos = (req, res) => {
+  const { userId } = req.body;
+
+  const sql = `SELECT id, title, due_date, completed FROM todos WHERE user_id = ? AND completed = 1`;
+  const values = [userId];
 
   conn.query(sql, values, (err, results) => {
     if (err) {
@@ -185,6 +224,8 @@ const deleteTodos = (req, res) => {
 
 module.exports = {
   getTodos,
+  getFailureTodos,
+  getCompletedTodos,
   getTodoDetail,
   addTodos,
   updateTodos,
