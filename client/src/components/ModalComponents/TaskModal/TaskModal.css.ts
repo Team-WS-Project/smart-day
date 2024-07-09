@@ -101,21 +101,31 @@ export const scheduleSave = style({
 });
 
 export const timePicker = style({
-  width: "100px",
-});
-
-globalStyle(`${timePicker} > div`, {
-  margin: "0 5px",
-  padding: "0 5px",
+  width: "120px",
 });
 
 globalStyle(`${timePicker} > div > input`, {
-  textAlign: "center",
+  textAlign: "right",
   backgroundColor: vars.color.brightIcon,
   height: "1px",
   fontSize: vars.fontSizing.P1,
   padding: "10px",
+  paddingRight: "0",
   borderRadius: vars.radius.large,
+});
+
+globalStyle(`.MuiFormControl-root`, {
+  backgroundColor: vars.color.brightIcon,
+  borderRadius: vars.radius.large,
+});
+
+globalStyle(`.MuiSvgIcon-root`, {
+  fontSize: "15px !important",
+  color: vars.color.darkIcon,
+});
+
+globalStyle(`.MuiPickersPopper-root `, {
+  zIndex: "20000 !important",
 });
 
 export const scheduleClose = style({
