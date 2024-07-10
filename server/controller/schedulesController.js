@@ -4,9 +4,11 @@ const { StatusCodes } = require("http-status-codes");
 const getScheduleByPeriod = (start, end) => {
   return {
     sql: `
-    SELECT user_id, id, title, start_date, end_date, start_time, end_time, completed
-    FROM schedules 
-    WHERE start_date BETWEEN ? AND ?
+     SELECT start_date, GROUP_CONCAT(title ORDER BY title ASC SEPARATOR ', ') AS titles
+      FROM schedules
+      WHERE start_date BETWEEN ? AND ?
+      GROUP BY start_date
+      ORDER BY start_date ASC
     `,
     value: [start, end],
   };
@@ -14,14 +16,21 @@ const getScheduleByPeriod = (start, end) => {
 
 const getScheduleByMonth = (month) => {
   return {
-    sql: "SELECT * FROM schedules WHERE DATE_FORMAT(date, '%Y-%m') = ?",
+    sql: `
+    SELECT id, user_id, title, detail, start_date, end_date, start_time, end_time, completed 
+    FROM schedules 
+    WHERE DATE_FORMAT(start_date, '%Y-%m') = ?
+    `,
     value: [month],
   };
 };
 
 const getScheduleByDate = (date) => {
   return {
-    sql: "SELECT * FROM schedules WHERE start_date = ?",
+    sql: `
+    SELECT id, user_id, title, detail, start_date, end_date, start_time, end_time, completed 
+    FROM schedules 
+    WHERE start_date = ?`,
     value: [date],
   };
 };
@@ -44,8 +53,35 @@ const getSchedulesQuery = ({ start, end, date, month }) => {
   };
 };
 
-const getSchedules = (req, res) => {
+// const getSchedules = (req, res) => {
+//   const { start, end, date, month } = req.query;
+//   const query = getSchedulesQuery({ start, end, date, month });
+
+//   const { sql, value: values } = query;
+
+//   conn.query(sql, values, (err, results) => {
+//     if (err) {
+//       console.error(err);
+//       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+//     }
+
+//     return res.status(StatusCodes.OK).json(results);
+//   });
+// };
+
+const getSchedules = async (req, res) => {
   const { start, end, date, month } = req.query;
+
+  if (start && end) {
+    try {
+      const scheduleTitles = await getScheduleTitlesByDateRange(start, end);
+      return res.status(StatusCodes.OK).json(scheduleTitles);
+    } catch (error) {
+      console.error("Error:", error);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+    }
+  }
+
   const query = getSchedulesQuery({ start, end, date, month });
 
   const { sql, value: values } = query;
@@ -57,6 +93,29 @@ const getSchedules = (req, res) => {
     }
 
     return res.status(StatusCodes.OK).json(results);
+  });
+};
+
+const getScheduleTitlesByDateRange = (startDate, endDate) => {
+  return new Promise((resolve, reject) => {
+    const { sql, value: values } = getScheduleByPeriod(startDate, endDate);
+    console.log("Executing query:", sql);
+    console.log("With values:", values);
+
+    conn.query(sql, values, (err, results) => {
+      if (err) {
+        console.error("Database query error:", err);
+        reject(err);
+        return;
+      }
+
+      const formattedResults = results.map((schedule) => ({
+        start_date: new Date(schedule.start_date).toISOString().split("T")[0],
+        titles: schedule.titles.split(", "),
+      }));
+
+      resolve(formattedResults);
+    });
   });
 };
 
@@ -109,7 +168,7 @@ const getScheduleById = (req, res) => {
   const { id } = req.params;
 
   const sql = `
-    SELECT title, start_date, start_time, end_time, detail, completed
+    SELECT title, detail, start_date, end_date, start_time, end_time, completed
 	  FROM schedules
 	  WHERE id = ?
     `;
@@ -121,8 +180,8 @@ const getScheduleById = (req, res) => {
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
 
-    if (results.length === 0) {
-      return res.status(StatusCodes.NOT_FOUND).json({ message: "" });
+    if (results.affectedRows === 0) {
+      return res.status(StatusCodes.NOT_FOUND).end();
     }
 
     res.status(StatusCodes.OK).json(results[0]);
@@ -130,9 +189,10 @@ const getScheduleById = (req, res) => {
 };
 
 const createSchedule = (req, res) => {
-  const { title, date, startTime, endTime } = req.body;
-  const sql = "INSERT INTO schedules (title, start_date, start_time, end_time) VALUES (?, ?, ?, ?)";
-  const values = [title, date, startTime, endTime];
+  const { title, detail, startDate, endDate, startTime, endTime } = req.body;
+  const sql =
+    "INSERT INTO schedules (title, detail, start_date, end_date, start_time, end_time) VALUES (?, ?, ?, ?,?,?)";
+  const values = [title, detail, startDate, endDate, startTime, endTime];
 
   conn.query(sql, values, (err, results) => {
     if (err) {
@@ -146,14 +206,15 @@ const createSchedule = (req, res) => {
 
 const updateSchedule = (req, res) => {
   const { id } = req.params;
-  const { title, date, startTime, endTime, detail, completed } = req.body;
+  const { title, detail, startDate, endDate, startTime, endTime } = req.body;
 
   const sql = `
-        UPDATE schedules
-        SET title = ?, start_date = ?, start_time = ?, end_time = ?, detail = ?, completed = ?
-        WHERE id = ?
-      `;
-  const values = [title, date, startTime, endTime, detail, completed, id];
+    UPDATE schedules
+    SET title = ?, detail = ?, start_date = ?, end_date = ?, start_time = ?, end_time = ?
+    WHERE id = ?
+  `;
+
+  const values = [title, detail, startDate, endDate, startTime, endTime, id];
 
   conn.query(sql, values, (err, results) => {
     if (err) {
@@ -176,7 +237,7 @@ const deleteSchedule = (req, res) => {
     }
 
     if (results.affectedRows === 0) {
-      return res.status(StatusCodes.NOT_FOUND).json({ message: "" });
+      return res.status(StatusCodes.NOT_FOUND).end();
     }
 
     return res.status(StatusCodes.OK).json(results);
