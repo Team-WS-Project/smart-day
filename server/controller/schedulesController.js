@@ -166,6 +166,51 @@ const getMonthlyArray = async (req, res) => {
   });
 };
 
+const createScheduleArray = (year, month) => {
+  return new Promise((resolve, reject) => {
+    const daysInMonth = new Date(year, month, 0).getDate();
+    const monthArray = new Array(daysInMonth).fill(false);
+
+    const sql = `
+      SELECT start_date, end_date 
+      FROM schedules 
+      WHERE YEAR(start_date) = ? AND MONTH(start_date) = ?
+    `;
+    const values = [year, month];
+
+    conn.query(sql, values, (err, results) => {
+      if (err) {
+        console.error(err);
+        reject(err);
+        return;
+      }
+
+      results.forEach((schedule) => {
+        const start = new Date(schedule.start_date);
+        const end = new Date(schedule.end_date);
+
+        for (let d = start.getUTCDate(); d <= end.getUTCDate(); d++) {
+          monthArray[d - 1] = true;
+        }
+      });
+
+      resolve(monthArray);
+    });
+  });
+};
+
+const getMonthlyArray = async (req, res) => {
+  const { year, month } = req.query;
+
+  try {
+    const scheduleArray = await createScheduleArray(year, month);
+    res.status(StatusCodes.OK).json({ monthArray: scheduleArray });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+  }
+};
+
 const getScheduleById = (req, res) => {
   const { id } = req.params;
   ensureAuthorization(req, res, () => {
