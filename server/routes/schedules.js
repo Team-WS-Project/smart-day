@@ -1,21 +1,22 @@
 const express = require("express");
 const router = express.Router();
-const conn = require("../mariadb");
-const { StatusCodes } = require("http-status-codes");
+
 const {
-  getAllSchedules,
+  getSchedules,
+  getMonthlyArray,
   getScheduleById,
-  addSchedule,
+  createSchedule,
   updateSchedule,
   deleteSchedule,
 } = require("../controller/schedulesController");
 
 router.use(express.json());
 
-router.get("/", getAllSchedules);
+router.get("/", getSchedules);
+router.get("/calendar", getMonthlyArray);
 router.get("/detail/:id", getScheduleById);
-router.post("/", addSchedule);
+router.post("/", createSchedule);
 router.put("/:id", updateSchedule);
-router.delete("/delete/:id", deleteSchedule);
+router.delete("/:id", deleteSchedule);
 
 module.exports = router;
