@@ -1,6 +1,17 @@
 import { globalStyle, style } from "@vanilla-extract/css";
 import { vars } from "../../../App.css";
 
+export const wrapper = style({
+  width: "100vw",
+  height: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  position: "absolute",
+  zIndex: 20000,
+  backgroundColor: "rgba(0,0,0,0.3)",
+});
+
 export const scheduleContainer = style({
   padding: "10px 15px",
   backgroundColor: vars.color.main,

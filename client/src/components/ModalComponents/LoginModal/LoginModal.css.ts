@@ -1,6 +1,17 @@
 import { style } from "@vanilla-extract/css";
 import { vars } from "../../../App.css";
 
+export const wrapper = style({
+  width: "100vw",
+  height: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  position: "absolute",
+  zIndex: 20000,
+  backgroundColor: "rgba(0,0,0,0.3)",
+});
+
 export const loginContainer = style({
   backgroundColor: vars.color.main,
   width: "350px",
@@ -33,7 +44,7 @@ export const loginField = style({
 export const inputField = style({
   width: "70%",
   height: "35px",
-  border: "1px solid ${vars.color.secondary}",
+  border: "1px solid black",
   borderRadius: vars.radius.small,
   alignContent: "center",
   margin: "auto",
