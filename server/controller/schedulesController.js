@@ -53,22 +53,6 @@ const getSchedulesQuery = ({ start, end, date, month }) => {
   };
 };
 
-// const getSchedules = (req, res) => {
-//   const { start, end, date, month } = req.query;
-//   const query = getSchedulesQuery({ start, end, date, month });
-
-//   const { sql, value: values } = query;
-
-//   conn.query(sql, values, (err, results) => {
-//     if (err) {
-//       console.error(err);
-//       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
-//     }
-
-//     return res.status(StatusCodes.OK).json(results);
-//   });
-// };
-
 const getSchedules = async (req, res) => {
   const { start, end, date, month } = req.query;
 

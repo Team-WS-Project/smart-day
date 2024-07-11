@@ -1,5 +1,4 @@
 const express = require("express");
-const router = express.Router();
 
 const {
   getSchedules,
@@ -10,6 +9,7 @@ const {
   deleteSchedule,
 } = require("../controller/schedulesController");
 
+const router = express.Router();
 router.use(express.json());
 
 router.get("/", getSchedules);
