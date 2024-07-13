@@ -1,55 +1,95 @@
 .react-calendar__month-view__weekdays__weekday {
-    background-color: white;
-    border-style: none;
-    box-shadow: 0 0 0 1px black;
-    font-weight: bold;
-    text-align: left;
-    height: 5vh;
+  background-color: white;
+  border-style: none;
+  box-shadow: 0 0 0 1px black;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-align: left;
+  height: 5vh;
+}
+
+.react-calendar__month-view__weekdays__weekday:nth-child(6) {
+  color: #0e00d1;
+}
+
+.react-calendar__month-view__weekdays__weekday:nth-child(7) {
+  color: #d10000;
+}
+
+.react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none;
 }
 
 .react-calendar__tile {
-    color: black;
-    background-color: white;
-    border-style: none;
-    box-shadow: 0 0 0 1px black;
-    text-align: left;
-    width: 5vw;
-    height: 8.8vh;
+  color: black;
+  background-color: white;
+  border-style: none;
+  font-weight: bold;
+  box-shadow: 0 0 0 1px black;
+  display: flex;
+  font-size: 1rem;
+  text-align: left;
+  width: 5vw;
+  height: 8.8vh;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.react-calendar button:enabled:hover {
+  color: white;
+  background-color: rgb(20, 35, 91);
 }
 
 .react-calendar__tile--now {
-    color: black;
-    text-decoration: underline;
-    font-weight: bold;
+  color: black;
+  font-size: 15px;
+  text-decoration: underline;
+  font-weight: bold;
 }
   
 .react-calendar__tile--active {
-    background-color: rgb(20, 35, 91);
-    color: white;
+  background-color: rgb(20, 35, 91);
+  color: white;
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+  color: white;
+  background: rgb(20, 35, 91);
 }
 
 .my-calendar {
-    width: 60vw;
-    height: 64.3vh;
-    border: none;
-    box-shadow: 0 0 0 1px black;
+  width: 60vw;
+  height: 64.3vh;
+  border: none;
+  box-shadow: 0 0 0 1px black;
 }
 
 .my-calendar .have-task {
-    background-color: rgb(201, 207, 216);
+  background-color: rgb(210, 216, 224);
+}
+
+.my-calendar .out-of-month {
+  color: rgba(255, 255, 255, 0);
 }
 
 .my-calendar .react-calendar__navigation {
-    border-style: none;
-    height: auto;
-    margin-top : 1%
+  border-style: none;
+  height: auto;
+  margin-top : 1%
+}
+
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+  background-color: rgba(199, 207, 222, 0.4);
+  color: black;
 }
 
 .react-calendar__navigation__label {
-    font-size: 0.9rem;
-    font-weight: bold;
+  font-size: 0.9rem;
+  font-weight: bold;
 }
   
 .react-calendar__navigation__arrow {
-    padding: 0%;
+  padding: 0%;
 }

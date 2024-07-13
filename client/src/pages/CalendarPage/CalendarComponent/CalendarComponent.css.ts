@@ -35,18 +35,26 @@ export const locationChangeText = style({
 export const logoAreaRight = style({
   display: "flex",
   alignItems: "center",
-  marginLeft: "28vw",
+  marginLeft: "25vw",
 });
 
 export const iconArea = style({
   display: "flex",
+  fontSize: vars.fontSizing.H4,
   alignItems: "center",
-  marginLeft: "1vw",
+  marginLeft: "2vw",
+  color: "black",
 });
 
-export const monthText = style({
+export const monthTextSingle = style({
   position: "absolute",
-  padding: "1px 20px",
+  marginLeft: "20px",
+  fontSize: vars.fontSizing.H6,
+});
+
+export const monthTextDouble = style({
+  position: "absolute",
+  marginLeft: "12px",
   fontSize: vars.fontSizing.H6,
 });
 
@@ -77,7 +85,7 @@ export const todolistContainer = style({
 });
 
 export const todoTitle = style({
-  height: "2.4vw",
+  height: "2.2vw",
   textAlign: "center",
   fontSize: "22px",
   fontFamily: vars.font.akshar,
