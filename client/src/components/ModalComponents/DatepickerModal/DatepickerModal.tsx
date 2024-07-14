@@ -14,15 +14,35 @@ import {
 import { useState } from "react";
 import { ko } from "date-fns/locale";
 import { FiX } from "react-icons/fi";
+import { toggleDatepickerModal, toggleTaskModal, useUserInfoStore } from "../../../store/store";
 
 const DatepickerModal = () => {
   const [startDate, setStartDate] = useState(new Date());
+
+  const { setSelectedDate, initializeSelectedDate } = useUserInfoStore((state) => ({
+    setSelectedDate: state.actions.setSelectedDate,
+    initializeSelectedDate: state.actions.initializeSelectedDate,
+  }));
+
+  // const formatDate = (date: Date) => {
+  //   const year = date.getFullYear();
+  //   const month = String(date.getMonth() + 1).padStart(2, "0");
+  //   const day = String(date.getDate()).padStart(2, "0");
+  //   return `${year}-${month}-${day}`;
+  // };
+
   return (
     <div className={wrapper}>
       <div className={modalWindow}>
         <div className={header}>
           <div className={title}>날짜 선택</div>
-          <FiX className={closeButton} />
+          <FiX
+            className={closeButton}
+            onClick={() => {
+              toggleDatepickerModal();
+              initializeSelectedDate();
+            }}
+          />
         </div>
 
         <div className={body}>
@@ -31,6 +51,8 @@ const DatepickerModal = () => {
             onChange={(date) => {
               setStartDate(date);
               console.log(date);
+              date ? setSelectedDate(date) : null;
+              toggleTaskModal();
             }}
             inline
             locale={ko}
@@ -40,7 +62,15 @@ const DatepickerModal = () => {
             className={customCalendar}
           />
         </div>
-        <div className={okButton}>확인</div>
+        <div
+          className={okButton}
+          onClick={() => {
+            toggleDatepickerModal();
+            initializeSelectedDate();
+          }}
+        >
+          확인
+        </div>
       </div>
     </div>
   );
