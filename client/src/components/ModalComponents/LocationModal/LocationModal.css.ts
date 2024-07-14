@@ -102,6 +102,8 @@ export const okButton = style({
 
 //★
 export const starFilledIcon = style({
+  marginLeft: "auto",
+
   ":hover": {
     cursor: "pointer",
   },
@@ -110,6 +112,7 @@ export const starFilledIcon = style({
 
 //☆
 export const starEmptyIcon = style({
+  marginLeft: "auto",
   ":hover": {
     cursor: "pointer",
   },

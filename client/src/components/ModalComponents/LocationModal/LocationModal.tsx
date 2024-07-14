@@ -1,66 +1,74 @@
-// LocationModal.js
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  setSido,
-  setSigungu,
-  setEupmyeon,
-  addFavoriteLocation,
-  setCurrentLocation,
-} from "../../../redux/locationSlice";
 import * as styles from "./LocationModal.css";
 import locationDatas from "./locationDatas.json";
 import { TiStarOutline, TiStarFullOutline } from "react-icons/ti";
 import { FiX } from "react-icons/fi";
+import { useState } from "react";
+import { toggleLocationModal, useUserInfoStore } from "../../../store/store";
 
 const LocationModal = () => {
-  const dispatch = useDispatch();
-  const { sido, sigungu, eupmyeon, favoriteLocations, currentLocation } = useSelector((state) => state.location);
+  const [state, setState] = useState({
+    sido: "",
+    sigungu: "",
+    eupmyeon: "",
+  });
+  const { favoriteLocations, currentLocation } = useUserInfoStore((state) => ({
+    favoriteLocations: state.favoriteLocations,
+    currentLocation: state.currentLocation,
+  }));
+
+  const { addFavoriteLocation, deleteFavoriteLocation, setCurrentLocation } = useUserInfoStore((state) => ({
+    addFavoriteLocation: state.actions.addFavoriteLocation,
+    deleteFavoriteLocation: state.actions.deleteFavoriteLocation,
+    setCurrentLocation: state.actions.setCurrentLocation,
+  }));
 
   const handleSidoChange = (e) => {
-    dispatch(setSido(e.target.value));
-    dispatch(setSigungu(""));
+    if (e.target.value === "") {
+      return;
+    }
+    setState({ ...state, sido: e.target.value, sigungu: "" });
   };
 
   const handleSigunguChange = (e) => {
-    dispatch(setSigungu(e.target.value));
+    if (e.target.value === "") {
+      return;
+    }
+
+    setState({ ...state, sigungu: e.target.value });
+    setCurrentLocation(`${state.sido} ${e.target.value}`);
   };
 
-  const handleEupmyeonChange = (e) => {
-    dispatch(setEupmyeon(e.target.value));
-  };
+  // const handleEupmyeonChange = (e) => {};
 
   const handleAddFavorite = () => {
-    dispatch(addFavoriteLocation(currentLocation));
+    if (favoriteLocations.length < 5) {
+      addFavoriteLocation(currentLocation);
+    } else {
+      alert("즐겨찾기는 최대 5개까지 가능합니다.");
+    }
   };
-
-  const handleSetCurrentLocation = (location) => {
-    dispatch(setCurrentLocation(location));
-  };
-
-  console.log(locationDatas);
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.modalContainer}>
         <div className={styles.header}>
           <div className={styles.title}>지역 선택</div>
-          <FiX className={styles.closeButton} />
+          <FiX className={styles.closeButton} onClick={toggleLocationModal} />
         </div>
 
-        <select name="sido" className={styles.selectBox} value={sido} onChange={handleSidoChange}>
+        <select name="sido" className={styles.selectBox} value={state.sido} onChange={handleSidoChange}>
           <option value="">시/도 선택</option>
           {locationDatas.map((data) => (
             <option value={data.name}>{data.name}</option>
           ))}
         </select>
 
-        <select name="sigungu" className={styles.selectBox} value={sigungu} onChange={handleSigunguChange}>
+        <select name="sigungu" className={styles.selectBox} value={state.sigungu} onChange={handleSigunguChange}>
           <option value="">시/군/구 선택</option>
           {locationDatas.map((data) =>
-            data.name === sido
+            data.name === state.sido
               ? data.subArea.map((subAreaData) => (
-                  <option onClick={handleSetCurrentLocation(`${sido} ${sigungu}`)} value={subAreaData}>
+                  <option key={subAreaData} value={subAreaData}>
                     {subAreaData}
                   </option>
                 ))
@@ -83,7 +91,7 @@ const LocationModal = () => {
           {favoriteLocations.map((location, index) => (
             <div key={index} className={styles.locationItem}>
               {location}
-              <TiStarFullOutline className={styles.starFilledIcon} />
+              <TiStarFullOutline className={styles.starFilledIcon} onClick={() => deleteFavoriteLocation(location)} />
             </div>
           ))}
         </div>
@@ -93,10 +101,19 @@ const LocationModal = () => {
           <div className={styles.subTitle}>현재 위치</div>
           <div className={styles.locationItem}>
             {currentLocation}
-            <TiStarOutline className={styles.starEmptyIcon} onClick={handleAddFavorite} />
+            {favoriteLocations.filter((favoriteLocation) => favoriteLocation === currentLocation).length === 0 ? (
+              <TiStarOutline className={styles.starEmptyIcon} onClick={handleAddFavorite} />
+            ) : (
+              <TiStarFullOutline
+                className={styles.starFilledIcon}
+                onClick={() => deleteFavoriteLocation(currentLocation)}
+              />
+            )}
           </div>
         </div>
-        <button className={styles.okButton}>확인</button>
+        <button className={styles.okButton} onClick={toggleLocationModal}>
+          확인
+        </button>
       </div>
     </div>
   );
