@@ -2,6 +2,7 @@ import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
 export interface DailySchedule {
+  userId?: string;
   startTime: string;
   endTime: string;
   content: string;

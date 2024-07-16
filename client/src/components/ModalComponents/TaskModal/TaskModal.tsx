@@ -27,9 +27,14 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { toggleTaskModal } from "../../../store/store";
+import useTaskStore from "../../../store/taskStore";
 
 const TaskModal = () => {
-  const [startDate, setStartDate] = useState(new Date());
+  const { task } = useTaskStore();
+
+  const [startDate, setStartDate] = useState(new Date(task.date));
+  const [startTime, setStartTime] = useState<dayjs.Dayjs>(dayjs(`${task.date} ${task.startTime}`, "YYYY-MM-DD HH:mm"));
+  const [endTime, setEndTime] = useState<dayjs.Dayjs>(dayjs(`${task.date} ${task.endTime}`, "YYYY-MM-DD HH:mm"));
   return (
     <div className={wrapper}>
       <div className={scheduleContainer}>
@@ -56,20 +61,20 @@ const TaskModal = () => {
             <div className={scheduleTime}>
               <div>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <TimePicker className={timePicker} defaultValue={dayjs("2022-04-17T15:30")} />
+                  <TimePicker className={timePicker} defaultValue={startTime} onChange={(time) => setStartTime(time)} />
                 </LocalizationProvider>
               </div>
               <div>~</div>
               <div>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <TimePicker className={timePicker} defaultValue={dayjs("2022-04-17T15:30")} />
+                  <TimePicker className={timePicker} defaultValue={endTime} onChange={(time) => setEndTime(time)} />
                 </LocalizationProvider>
               </div>
             </div>
           </div>
 
           <div className={scheduleString}>내용 : </div>
-          <textarea className={scheduleContent}></textarea>
+          <textarea className={scheduleContent} defaultValue={task.details}></textarea>
           <div className={scheduleSaveBackground}>
             <button className={scheduleSave}>저장</button>
           </div>

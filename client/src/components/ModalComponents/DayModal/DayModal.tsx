@@ -47,7 +47,7 @@ const DayModal = () => {
           </div>
           <div className={dailyTodoColumn}>
             {dailyTodos.map((todo, index) => (
-              <DayTodoModal key={index} date={todo.date} content={todo.content} />
+              <DayTodoModal key={index} date={todo.date} title={todo.title} />
             ))}
           </div>
         </div>

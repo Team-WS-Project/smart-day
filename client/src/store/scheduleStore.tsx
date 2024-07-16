@@ -1,7 +1,8 @@
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
-interface Schedule {
+export interface Schedule {
+  userId?: string;
   title: string;
   scheduleLists: string[];
 }

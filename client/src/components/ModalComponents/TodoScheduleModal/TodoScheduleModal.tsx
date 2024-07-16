@@ -5,6 +5,7 @@ import {
   todoContent,
   todoDate,
   todoDatePicker,
+  todoInput,
   todoSave,
   todoSaveBackground,
   todoScheduleCenter,
@@ -20,9 +21,12 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import { wrapper } from "../RegisterModal/RegisterModal.css";
 import { toggleTodoScheduleModal } from "../../../store/store";
+import useTodoScheduleStore from "../../../store/todoScheduleStore";
 
 const TodoScheduleModal = () => {
-  const [startDate, setStartDate] = useState(new Date());
+  const { todoSchedule } = useTodoScheduleStore();
+
+  const [startDate, setStartDate] = useState(new Date(todoSchedule.date));
   return (
     <div className={wrapper}>
       <div className={todoScheduleContainer}>
@@ -45,8 +49,13 @@ const TodoScheduleModal = () => {
             </div>
           </div>
 
+          <div className={todoDate}>
+            <div className={todoString}>제목 : </div>
+            <input className={todoInput} defaultValue={todoSchedule.title}></input>
+          </div>
+
           <div className={todoString}>내용 : </div>
-          <textarea className={todoContent}></textarea>
+          <textarea className={todoContent} defaultValue={todoSchedule.details}></textarea>
           <div className={todoSaveBackground}>
             <button className={todoSave}>저장</button>
           </div>

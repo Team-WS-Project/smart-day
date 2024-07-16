@@ -3,11 +3,11 @@ import { dailyTodo, dailyTodoContent, dailyTodoTitle } from "./DailyTodo.css";
 import { toggleTodoScheduleModal } from "../../../../store/store";
 import { DailyTodo } from "../../../../store/todoStore";
 
-const DayTodoModal = ({ date, content }: DailyTodo) => {
+const DayTodoModal = ({ date, title }: DailyTodo) => {
   return (
     <div className={dailyTodo} onClick={toggleTodoScheduleModal}>
       <div className={dailyTodoTitle}>{date}</div>
-      <div className={dailyTodoContent}>{content}</div>
+      <div className={dailyTodoContent}>{title}</div>
     </div>
   );
 };

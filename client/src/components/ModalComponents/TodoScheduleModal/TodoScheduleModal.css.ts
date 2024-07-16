@@ -59,7 +59,11 @@ export const todoString = style({
 
 export const todoDatePicker = style({
   textAlign: "center",
-  width: "80%",
+  width: "85%",
+});
+
+export const todoInput = style({
+  width: "65%",
 });
 
 export const todoContent = style({

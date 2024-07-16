@@ -2,8 +2,10 @@ import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
 export interface DailyTodo {
+  userId?: string;
   date: string;
-  content: string;
+  title: string;
+  details?: string;
 }
 
 interface dailyTodoStore {
@@ -17,15 +19,18 @@ const dailyTodoStore: StateCreator<dailyTodoStore> = (set) => ({
   dailyTodo: [
     {
       date: "2024-08-10",
-      content: "자격증 시험",
+      title: "자격증 시험",
+      details: "",
     },
     {
       date: "2024-09-12",
-      content: "토익",
+      title: "토익",
+      details: "",
     },
     {
       date: "2024-12-25",
-      content: "해외 여행 숙소 결제",
+      title: "해외 여행 숙소 결제",
+      details: "",
     },
   ],
   addTodo: (newTodos: DailyTodo) =>
