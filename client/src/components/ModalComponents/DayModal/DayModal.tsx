@@ -19,10 +19,13 @@ import DaySchedule from "./DailyScheduleModal/DailySchedule";
 import useModalStore, { toggleDayModal } from "../../../store/store";
 import TodoScheduleModal from "../TodoScheduleModal/TodoScheduleModal";
 import TaskModal from "../TaskModal/TaskModal";
+import useDailyScheduleStore from "../../../store/dayStore";
 
 const DayModal = () => {
   const { showTodoScheduleModal } = useModalStore((state) => ({ showTodoScheduleModal: state.todoScheduleModal }));
   const { showTaskModal } = useModalStore((state) => ({ showTaskModal: state.taskModal }));
+
+  const dailySchedules = useDailyScheduleStore((state) => state.dailySchedules);
 
   return (
     <div className={wrapper}>
@@ -45,10 +48,14 @@ const DayModal = () => {
           </div>
         </div>
         <div className={dayModalRight}>
-          <DaySchedule />
-          <DaySchedule />
-          <DaySchedule />
-          <DaySchedule />
+          {dailySchedules.map((schedule, index) => (
+            <DaySchedule
+              key={index}
+              startTime={schedule.startTime}
+              endTime={schedule.endTime}
+              content={schedule.content}
+            />
+          ))}
           <button className={scheduleAddButton}>+ 새 일정 추가</button>
         </div>
         <div className={dayModalClose} onClick={toggleDayModal}>

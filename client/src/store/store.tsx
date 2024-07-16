@@ -1,4 +1,5 @@
-import { create } from "zustand";
+import { create, StateCreator } from "zustand";
+import { devtools } from "zustand/middleware";
 
 type ModalType =
   | "datepickerModal"
@@ -26,7 +27,7 @@ interface ModalState {
   };
 }
 
-const useModalStore = create<ModalState>((set) => ({
+const modalStore: StateCreator<ModalState> = (set) => ({
   datepickerModal: false,
   dayModal: false,
   locationModal: false,
@@ -41,7 +42,9 @@ const useModalStore = create<ModalState>((set) => ({
       set((state) => ({ ...state, [type]: !state[type] }));
     },
   },
-}));
+});
+
+const useModalStore = create<ModalState>()(devtools(modalStore, { name: "Modal Store" }));
 
 export const toggleDatepickerModal = () => useModalStore.getState().actions.changeModalState("datepickerModal");
 export const toggleDayModal = () => useModalStore.getState().actions.changeModalState("dayModal");
