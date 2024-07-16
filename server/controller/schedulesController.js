@@ -58,11 +58,11 @@ const getSchedules = async (req, res) => {
 
   if (start && end) {
     try {
-      const scheduleTitles = await getScheduleTitlesByDateRange(start, end);
+      const scheduleTitles = await getScheduleTitles(start, end);
       return res.status(StatusCodes.OK).json(scheduleTitles);
-    } catch (error) {
-      console.error("Error:", error);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+    } catch (err) {
+      console.err(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
     }
   }
 
@@ -72,15 +72,15 @@ const getSchedules = async (req, res) => {
 
   conn.query(sql, values, (err, results) => {
     if (err) {
-      console.error(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      console.err(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
     }
 
     return res.status(StatusCodes.OK).json(results);
   });
 };
 
-const getScheduleTitlesByDateRange = (startDate, endDate) => {
+const getScheduleTitles = (startDate, endDate) => {
   return new Promise((resolve, reject) => {
     const { sql, value: values } = getScheduleByPeriod(startDate, endDate);
     console.log("Executing query:", sql);
@@ -88,7 +88,7 @@ const getScheduleTitlesByDateRange = (startDate, endDate) => {
 
     conn.query(sql, values, (err, results) => {
       if (err) {
-        console.error("Database query error:", err);
+        console.err(err);
         reject(err);
         return;
       }
@@ -117,7 +117,7 @@ const createScheduleArray = (year, month) => {
 
     conn.query(sql, values, (err, results) => {
       if (err) {
-        console.error(err);
+        console.err(err);
         reject(err);
         return;
       }
@@ -142,9 +142,9 @@ const getMonthlyArray = async (req, res) => {
   try {
     const scheduleArray = await createScheduleArray(year, month);
     res.status(StatusCodes.OK).json({ monthArray: scheduleArray });
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal Server Error" });
+  } catch (err) {
+    console.err(err);
+    res.status(StatusCodes.INTERNAL_SERVER_err).end();
   }
 };
 
@@ -160,8 +160,8 @@ const getScheduleById = (req, res) => {
 
   conn.query(sql, values, (err, results) => {
     if (err) {
-      console.error(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      console.err(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
     }
 
     if (results.affectedRows === 0) {
@@ -180,8 +180,8 @@ const createSchedule = (req, res) => {
 
   conn.query(sql, values, (err, results) => {
     if (err) {
-      console.error(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      console.err(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
     }
 
     return res.status(StatusCodes.CREATED).json(results);
@@ -202,8 +202,8 @@ const updateSchedule = (req, res) => {
 
   conn.query(sql, values, (err, results) => {
     if (err) {
-      console.error(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      console.err(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
     }
 
     return res.status(StatusCodes.OK).json(results);
@@ -216,8 +216,8 @@ const deleteSchedule = (req, res) => {
 
   conn.query(sql, id, (err, results) => {
     if (err) {
-      console.error(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      console.err(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
     }
 
     if (results.affectedRows === 0) {
