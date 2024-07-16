@@ -20,12 +20,15 @@ import useModalStore, { toggleDayModal } from "../../../store/store";
 import TodoScheduleModal from "../TodoScheduleModal/TodoScheduleModal";
 import TaskModal from "../TaskModal/TaskModal";
 import useDailyScheduleStore from "../../../store/dayStore";
+import useDailyTodoStore from "../../../store/todoStore";
 
 const DayModal = () => {
   const { showTodoScheduleModal } = useModalStore((state) => ({ showTodoScheduleModal: state.todoScheduleModal }));
   const { showTaskModal } = useModalStore((state) => ({ showTaskModal: state.taskModal }));
 
   const dailySchedules = useDailyScheduleStore((state) => state.dailySchedules);
+
+  const dailyTodos = useDailyTodoStore((state) => state.dailyTodo);
 
   return (
     <div className={wrapper}>
@@ -43,8 +46,9 @@ const DayModal = () => {
             </div>
           </div>
           <div className={dailyTodoColumn}>
-            <DayTodoModal />
-            <DayTodoModal />
+            {dailyTodos.map((todo, index) => (
+              <DayTodoModal key={index} date={todo.date} content={todo.content} />
+            ))}
           </div>
         </div>
         <div className={dayModalRight}>
