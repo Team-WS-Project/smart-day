@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { BsCalendar4 } from "react-icons/bs";
@@ -14,9 +14,7 @@ import {
   monthTextDouble,
   seeAllSchedules,
   textArea,
-  todo,
   todolistContainer,
-  todolistDetail,
   todolistPannel,
   todoTitle,
 } from "./CalendarComponent.css";
@@ -32,10 +30,13 @@ import {
   TiWeatherWindyCloudy,
 } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
+import useCalendarPageStore from "../../../store/calendarStore";
+import Todo from "./Todo/Todo";
 
 const CalendarComponent: FC = () => {
   const [activeDate, setactiveDate] = useState(new Date());
-  const [isChecked, setIsChecked] = useState(false);
+  const { todolist, isHaveTask } = useCalendarPageStore();
+  const setIsHaveTask = useCalendarPageStore((state) => state.actions.setIsHaveTask);
   const navigate = useNavigate();
 
   const weatherIcons = [
@@ -50,39 +51,42 @@ const CalendarComponent: FC = () => {
     <TiWeatherWindyCloudy />,
   ];
 
-  // 확인용 임시 데이터 -> Todo: fetch(month => { return isHaveTask; }) (@II-122)
-  const isHaveTask = [
-    true,
-    false,
-    false,
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-    false,
-    false,
-    true,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    true,
-    false,
-    false,
-    true,
-    false,
-    false,
-    false,
-    false,
-  ];
+  useEffect(() => {
+    // 확인용 임시 데이터 -> Todo: fetch(month => { return isHaveTask; }) (@II-122)
+    const haveTask = [
+      true,
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+    ];
+    setIsHaveTask(haveTask);
+  }, [setIsHaveTask]);
 
   const onChange = ({activeStartDate}) => {
     setactiveDate(activeStartDate);
@@ -119,10 +123,6 @@ const CalendarComponent: FC = () => {
         return (<div className={iconArea}>{weatherIcons[Math.floor(Math.random() * 9)]}</div>);
       }
     }
-  };
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
   };
 
   const gotoSchedulePage = () => {
@@ -166,27 +166,20 @@ const CalendarComponent: FC = () => {
             {"<"} Todo List {">"}
           </div>
           <div className={todolistPannel}>
-            <div className={todo}>
-              <input type="checkbox" onChange={handleCheckboxChange} />
-              <text
-                style={{
-                  textDecoration: isChecked ? "line-through" : "none",
-                }}
-                onClick={() => alert("투두리스트 모달 열기")}
-              >
-                07/02
-              </text>
-            </div>
-            <div className={todolistDetail}>
-              <text
-                style={{
-                  textDecoration: isChecked ? "line-through" : "none",
-                  padding: "3%",
-                }}
-              >
-                투두리스트 디테일
-              </text>
-            </div>
+            {
+              todolist
+              ?
+              todolist.map((item) => (
+                <Todo
+                  id={item.id}
+                  dueDate={item.dueDate}
+                  isCheck={item.isDone}
+                  title={item.title}
+                  description={item.description}
+                />
+              ))
+              : null
+            }
           </div>
         </div>
       </div>
