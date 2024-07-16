@@ -15,6 +15,7 @@ interface CalendarPageState {
   actions: {
     setIsHaveTask: (newArray: boolean[]) => void;
     changeIsHaveTask: (isEmpty: boolean) => void;
+    setTodolist: (newTodolist: Todo[]) => void;
     toggleTodoIsDone: (id: number) => void;
   };
 }
@@ -38,6 +39,9 @@ const calendarPageStore: StateCreator<CalendarPageState> = ((set) => ({
     },
     changeIsHaveTask: (isEmpty: boolean) => {
 
+    },
+    setTodolist: (newTodolist: Todo[]) => {
+      set(() => ({todolist: newTodolist}));
     },
     toggleTodoIsDone: (id: number) => {
       set((state) => ({
