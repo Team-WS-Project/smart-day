@@ -18,7 +18,7 @@ const MainPage = () => {
 
   return (
     <>
-      {locationModal ? <LocationModal /> : null}
+      {locationModal && <LocationModal />}
       <div className={appContainer}>
         <Header />
         <div className={pageContainer}>

@@ -100,7 +100,6 @@ export const okButton = style({
   },
 });
 
-//★
 export const starFilledIcon = style({
   marginLeft: "auto",
 
@@ -110,7 +109,6 @@ export const starFilledIcon = style({
   color: "yellow",
 });
 
-//☆
 export const starEmptyIcon = style({
   marginLeft: "auto",
   ":hover": {
