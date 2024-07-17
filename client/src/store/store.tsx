@@ -28,20 +28,6 @@ interface ModalState {
   };
 }
 
-interface userInfoState {
-  userId: number | null;
-  selectedDate: Date | undefined;
-  currentLocation: string;
-
-  actions: {
-    setSelectedDate: (date: Date) => void;
-
-    initializeSelectedDate: () => void;
-
-    setCurrentLocation: (currentLocation: string) => void;
-  };
-}
-
 const modalStore: StateCreator<ModalState> = (set) => ({
   datepickerModal: false,
   dayModal: false,
@@ -59,27 +45,7 @@ const modalStore: StateCreator<ModalState> = (set) => ({
   },
 });
 
-const userInfoStore: StateCreator<userInfoState> = (set) => ({
-  userId: null,
-  selectedDate: undefined,
-  currentLocation: "",
-  actions: {
-    setSelectedDate: (date) => {
-      set((state) => ({ ...state, selectedDate: date }));
-    },
-
-    initializeSelectedDate: () => {
-      set((state) => ({ ...state, selectedDate: undefined }));
-    },
-
-    setCurrentLocation: (currentLocation) => {
-      set((state) => ({ ...state, currentLocation: currentLocation }));
-    },
-  },
-});
-
 const useModalStore = create<ModalState>()(devtools(modalStore, { name: "Modal Store" }));
-export const useUserInfoStore = create<userInfoState>()(devtools(userInfoStore, { name: "User Info Store" }));
 
 export const toggleDatepickerModal = () => useModalStore.getState().actions.changeModalState("datepickerModal");
 export const toggleDayModal = () => useModalStore.getState().actions.changeModalState("dayModal");

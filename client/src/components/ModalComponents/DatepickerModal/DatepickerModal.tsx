@@ -14,7 +14,8 @@ import {
 import { useState } from "react";
 import { ko } from "date-fns/locale";
 import { FiX } from "react-icons/fi";
-import { toggleDatepickerModal, toggleTaskModal, useUserInfoStore } from "../../../store/store";
+import { toggleDatepickerModal, toggleTaskModal } from "../../../store/store";
+import { useUserInfoStore } from "../../../store/userInfoStore";
 
 const DatepickerModal = () => {
   const [startDate, setStartDate] = useState(new Date());
