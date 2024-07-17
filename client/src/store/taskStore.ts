@@ -12,6 +12,7 @@ interface task {
 interface TaskStore {
   task: task;
   updateTask: (date: string, startTime: string, endTime: string, details: string) => void;
+  updateDateTask: (date: string) => void;
 }
 
 const taskStore: StateCreator<TaskStore> = (set) => ({
@@ -30,6 +31,14 @@ const taskStore: StateCreator<TaskStore> = (set) => ({
         startTime,
         endTime,
         details,
+      },
+    })),
+
+  updateDateTask: (date) =>
+    set((state) => ({
+      task: {
+        ...state.task,
+        date,
       },
     })),
 });
