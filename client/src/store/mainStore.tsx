@@ -1,18 +1,19 @@
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
-interface Task {
+export type Task = {
   taskId: number;
   listIndex: number;
+  date: Date;
   startTime: string;
   endTime: string;
   title: string;
   description: string;
 }
 
-interface TaskList {
-  listIndex: number,
-  tasks: Task[],
+export type TaskList = {
+  listIndex: number;
+  tasks: Task[];
 }
 
 interface MainState {
@@ -37,6 +38,7 @@ const mainStore: StateCreator<MainState> = ((set) => ({
         {
           taskId: 1,
           listIndex: 0,
+          date: new Date(2024, 7, 16),
           startTime: "09:00",
           endTime: "11:00",
           title: "운동",
