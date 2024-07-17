@@ -16,20 +16,23 @@ import {
   trash,
   scheduleTime,
   timePicker,
+  wrapper,
 } from "./TaskModal.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 
 import dayjs from "dayjs";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { MobileTimePicker } from "@mui/x-date-pickers/MobileTimePicker";
-import { wrapper } from "../RegisterModal/RegisterModal.css";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { toggleTaskModal } from "../../../store/store";
+import { useUserInfoStore } from "../../../store/userInfoStore";
 
 const TaskModal = () => {
-  const [startDate, setStartDate] = useState(new Date());
+  const selectedDate = useUserInfoStore((state) => state.selectedDate);
+  const [startDate, setStartDate] = useState(selectedDate ?? new Date());
+
   return (
     <div className={wrapper}>
       <div className={scheduleContainer}>
@@ -46,7 +49,9 @@ const TaskModal = () => {
               <DatePicker
                 selected={startDate}
                 dateFormat="yyyy-MM-dd"
-                onChange={(date) => setStartDate(date)}
+                onChange={(datePickerDate) => {
+                  setStartDate(datePickerDate);
+                }}
                 className={scheduleDatePicker}
               />
             </div>
@@ -56,19 +61,13 @@ const TaskModal = () => {
             <div className={scheduleTime}>
               <div>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <MobileTimePicker
-                    className={timePicker}
-                    defaultValue={dayjs("2022-04-17T15:30")}
-                  />
+                  <TimePicker className={timePicker} defaultValue={dayjs("2022-04-17T15:30")} />
                 </LocalizationProvider>
               </div>
               <div>~</div>
               <div>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <MobileTimePicker
-                    className={timePicker}
-                    defaultValue={dayjs("2022-04-17T15:30")}
-                  />
+                  <TimePicker className={timePicker} defaultValue={dayjs("2022-04-17T15:30")} />
                 </LocalizationProvider>
               </div>
             </div>
@@ -80,7 +79,9 @@ const TaskModal = () => {
             <button className={scheduleSave}>저장</button>
           </div>
         </div>
-        <VscChromeClose className={scheduleClose} />
+        <div className={scheduleClose} onClick={toggleTaskModal}>
+          <VscChromeClose />
+        </div>
       </div>
     </div>
   );

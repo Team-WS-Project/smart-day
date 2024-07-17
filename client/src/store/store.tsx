@@ -11,6 +11,7 @@ type ModalType =
   | "taskModal"
   | "todoScheduleModal"
   | "userEditModal";
+
 interface ModalState {
   datepickerModal: boolean;
   dayModal: boolean;
@@ -20,7 +21,6 @@ interface ModalState {
   registerModal: boolean;
   taskModal: boolean;
   todoScheduleModal: boolean;
-  selectedTodoScheduleId: number | null;
   userEditModal: boolean;
 
   actions: {
@@ -37,7 +37,6 @@ const modalStore: StateCreator<ModalState> = (set) => ({
   registerModal: false,
   taskModal: false,
   todoScheduleModal: false,
-  selectedTodoScheduleId: null,
   userEditModal: false,
   actions: {
     changeModalState: (type) => {
