@@ -49,7 +49,7 @@ const LocationModal = () => {
   };
 
   const isCurrentInFavorites = (favoriteLocations, currentLocation) => {
-    return favoriteLocations.filter((favoriteLocation) => favoriteLocation === currentLocation).length === 0;
+    return !(favoriteLocations.filter((favoriteLocation) => favoriteLocation === currentLocation).length === 0);
   };
 
   return (
@@ -100,12 +100,12 @@ const LocationModal = () => {
           <div className={styles.locationItem}>
             {currentLocation}
             {isCurrentInFavorites(favoriteLocations, currentLocation) ? (
-              <TiStarOutline className={styles.starEmptyIcon} onClick={handleAddFavorite} />
-            ) : (
               <TiStarFullOutline
                 className={styles.starFilledIcon}
                 onClick={() => deleteFavoriteLocation(currentLocation)}
               />
+            ) : (
+              <TiStarOutline className={styles.starEmptyIcon} onClick={handleAddFavorite} />
             )}
           </div>
         </div>
