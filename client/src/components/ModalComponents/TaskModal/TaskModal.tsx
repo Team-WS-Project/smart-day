@@ -33,7 +33,7 @@ import useTaskStore from "../../../store/taskStore";
 
 const TaskModal = () => {
   const { task } = useTaskStore();
-    
+
   // const selectedDate = useUserInfoStore((state) => state.selectedDate);
   // const [startDate, setStartDate] = useState(selectedDate ?? new Date());
 
