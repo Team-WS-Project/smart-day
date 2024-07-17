@@ -34,7 +34,7 @@ import useCalendarPageStore from "../../../store/calendarStore";
 import Todo from "./Todo/Todo";
 
 const CalendarComponent = () => {
-  const [activeDate, setactiveDate] = useState(new Date());
+  const [activeDate, setActiveDate] = useState(new Date());
   const { todolist, isHaveTask } = useCalendarPageStore();
   const setIsHaveTask = useCalendarPageStore((state) => state.actions.setIsHaveTask);
   const navigate = useNavigate();
