@@ -1,36 +1,46 @@
 import { FC } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { taskDetail, taskStyle, trashIcon } from "./Task.css";
+import { toggleTaskModal } from "../../../store/store";
+import useMainStore from "../../../store/mainStore";
 
 // 임시 타입
 type TTaskProps = {
-  taskId : number;
+  taskId: number;
+  listIndex: number;
   startTime: string;
   endTime: string;
-  date: string;
-  taskTitle: string,
-  taskDescription: string;
-  userId : number;
+  title: string,
+  description: string;
+  userId: number;
 };
 
-const Task : FC<TTaskProps>= ({
+const Task = ({
   taskId,
+  listIndex,
   startTime,
   endTime,
   userId,
-  date,
-  taskTitle,
-  taskDescription
-}) => {
+  title,
+  description,
+}: TTaskProps) => {
+  const { deleteTask } = useMainStore((state) => state.actions);
+
   return (
     <div>
       <div className={taskStyle}>
-        <div className={taskDetail}>
+        <div
+          className={taskDetail}
+          onClick={toggleTaskModal}
+        >
           {startTime} ~ {endTime}
           <br />
-          {taskTitle}
+          {title}
         </div>
-        <FaRegTrashAlt className={trashIcon} />
+        <FaRegTrashAlt
+          className={trashIcon}
+          onClick={() => deleteTask(listIndex, taskId)}
+        />
       </div>
     </div>
   )

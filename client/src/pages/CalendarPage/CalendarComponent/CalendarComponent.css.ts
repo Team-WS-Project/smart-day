@@ -93,10 +93,6 @@ export const todoTitle = style({
   boxShadow: "0.1px 1px 0.4px rgba(0, 0, 0, 1.0)",
 });
 
-export const todo = style({
-  cursor: "pointer",
-});
-
 export const todolistPannel = style({
   padding: "5%",
   height: "55vh",
@@ -106,10 +102,4 @@ export const todolistPannel = style({
   //     width: "1px"
   // },
   ...myScrollbar,
-});
-
-export const todolistDetail = style({
-  width: "100%",
-  border: "1px solid rgb(201, 207, 216)",
-  cursor: "pointer",
 });

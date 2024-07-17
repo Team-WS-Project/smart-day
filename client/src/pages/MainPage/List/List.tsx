@@ -8,36 +8,56 @@ import {
   taskListArea,
   taskListsContainerBox,
 } from "./List.css";
-import { useNavigate } from "react-router-dom";
 import Task from "../Task/Task";
+import useMainStore from "../../../store/mainStore";
 import { toggleTaskModal } from "../../../store/store";
 
-const List = () => {
-  const navigate = useNavigate();
+type Task = {
+  taskId: number;
+  listIndex: number;
+  startTime: string;
+  endTime: string;
+  title: string;
+  description: string;
+}
 
-  const openTaskModal = () => {
-    navigate("./taskmodal");
-  };
+type TaskList = {
+  listIndex: number;
+  tasks: Task[];
+}
 
+const List = ({listIndex, tasks}: TaskList) => {
+  const dayOfTheWeek = ["일", "월", "화", "수", "목", "금", "토"];
+  const { standardDate } = useMainStore();
+  
   return (
     <div className={taskListsContainerBox}>
       <div className={containerTitle}>
-        <text className={text1}>날짜</text>
-        <text className={text2}>요일</text>
+        <text className={text1}>{standardDate.getDate() + listIndex}</text>
+        <text className={text2}>{dayOfTheWeek[(standardDate.getDay() + listIndex) % 7]}</text>
         <TiWeatherWindyCloudy className={weatherIcon} />
       </div>
       <div className={taskListArea}>
-        <Task
-          taskId={1}
-          startTime={"09:00"}
-          endTime={"11:00"}
-          userId={1}
-          date={"2024-07-07"}
-          taskTitle={"운동"}
-          taskDescription={"내용"}
-        />
-
-        <div className={newTaskButton} onClick={toggleTaskModal}>
+        {
+          tasks
+          ?
+          tasks.map((item) => (
+            <Task
+              taskId={item.taskId}
+              listIndex={listIndex}
+              startTime={item.startTime}
+              endTime={item.endTime}
+              userId={0}
+              title={item.title}
+              description={item.description}
+            />
+          ))
+          : null
+        }
+        <div
+          className={newTaskButton}
+          onClick={toggleTaskModal}
+        >
           + 새 일정 추가
         </div>
       </div>

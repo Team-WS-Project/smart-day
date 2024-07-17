@@ -4,10 +4,12 @@ import Footer from "../../components/PageComponents/Footer/Footer";
 import ListContainer from "./ListContainer/ListContainer";
 import { datePick, linkCalendarPage, locationTextArea, pageContainer, textArea, weatherText } from "./MainPage.css";
 import { appContainer } from "../../App.css";
-import useModalStore, { toggleDatepickerModal, toggleLocationModal } from "../../store/store";
-import LocationModal from "../../components/ModalComponents/LocationModal/LocationModal";
 import DatepickerModal from "../../components/ModalComponents/DatepickerModal/DatepickerModal";
 import TaskModal from "../../components/ModalComponents/TaskModal/TaskModal";
+import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
+import UserEditModal from "../../components/ModalComponents/UserEditModal/UserEditModal";
+import useModalStore, { toggleDatepickerModal, toggleLocationModal } from "../../store/store";
+import LocationModal from "../../components/ModalComponents/LocationModal/LocationModal";
 
 const MainPage = () => {
   const datepickerModal = useModalStore((state) => state.datepickerModal);
@@ -15,16 +17,29 @@ const MainPage = () => {
   const taskModal = useModalStore((state) => state.taskModal);
 
   const navigate = useNavigate();
-
   const gotoCalendarPage = () => {
     navigate("/calendar");
   };
 
+  const { loginModal, userEditModal, datepickerModal, taskModal, } = useModalStore();
+
   return (
     <>
-      {locationModal && <LocationModal />}
-      {datepickerModal && <DatepickerModal />}
-      {taskModal && <TaskModal />}
+      {
+        loginModal && <LoginModal />
+      }
+      {
+        userEditModal && <UserEditModal />
+      }
+      {
+        locationModal && <LocationModal />
+      }
+      {
+        datepickerModal && <DatepickerModal />
+      }
+      {
+        taskModal && <TaskModal />
+      }
       <div className={appContainer}>
         <Header />
         <div className={pageContainer}>
