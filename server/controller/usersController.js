@@ -47,9 +47,9 @@ const join = (req, res) => {
     }
 
     if (results.affectedRows === 0) {
-      return res.status(StatusCodes.CREATED).json(results);
-    } else {
       return res.status(StatusCodes.BAD_REQUEST).end();
+    } else {
+      return res.status(StatusCodes.CREATED).json(results);
     }
   });
 };

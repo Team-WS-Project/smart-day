@@ -10,7 +10,6 @@ const {
 
 router.use(express.json());
 
-// router.get("/", getUser); // 메인페이지 location, nickname 조회
 router.get("/", getUser); // 회원 정보 수정창 email, nickname, location 조회, 메인페이지 location, nickname 조회
 router.post("/join", join);
 router.post("/login", login);
