@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { BsCalendar4 } from "react-icons/bs";
@@ -33,8 +33,8 @@ import {
 } from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
 
-const CalendarComponent: FC = () => {
-  const [activeDate, setactiveDate] = useState(new Date());
+const CalendarComponent = () => {
+  const [activeDate, setActiveDate] = useState(new Date());
   const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
 
@@ -85,7 +85,7 @@ const CalendarComponent: FC = () => {
   ];
 
   const onChange = ({activeStartDate}) => {
-    setactiveDate(activeStartDate);
+    setActiveDate(activeStartDate);
     // Todo: fetch(month => { isHaveTask = newIsHaveTask; }) 작업 필요 (@II-122)
   };
 
