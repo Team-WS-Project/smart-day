@@ -28,43 +28,6 @@ interface ModalState {
   };
 }
 
-// type todo = {
-//   todoId: number;
-//   isChecked: boolean;
-//   dueDate: Date;
-// };
-
-// type todos = {
-//   failureTodos: todo[];
-//   completedTodos: todo[];
-//   todayTodos: todo[];
-// };
-
-interface userInfoState {
-  userId: number | null;
-  selectedDate: Date | undefined;
-  currentLocation: string;
-  favoriteLocations: string[];
-  // todos: todos;
-
-  actions: {
-    // 1. 선택된 날짜를 저장하는 리듀서
-    setSelectedDate: (arg1: Date) => void;
-
-    // 2. 선택된 날짜를 초기화하는 리듀서
-    initializeSelectedDate: () => void;
-
-    // 3. 현재 위치를 선택하는 리듀서
-    setCurrentLocation: (currentLocation: string) => void;
-
-    // 4. 현재 위치를 즐겨찾기하는 리듀서
-    addFavoriteLocation: (location: string) => void;
-
-    // 5. 즐겨찾기한 위치를 삭제하는 리듀서
-    deleteFavoriteLocation: (location: string) => void;
-  };
-}
-
 const modalStore: StateCreator<ModalState> = (set) => ({
   datepickerModal: false,
   dayModal: false,
@@ -83,65 +46,7 @@ const modalStore: StateCreator<ModalState> = (set) => ({
   },
 });
 
-const userInfoStore: StateCreator<userInfoState> = (set) => ({
-  userId: null,
-  selectedDate: undefined,
-  currentLocation: "",
-  favoriteLocations: [],
-
-  actions: {
-    setSelectedDate: (date) => {
-      set((state) => ({ ...state, selectedDate: date }));
-    },
-
-    initializeSelectedDate: () => {
-      set((state) => ({ ...state, selectedDate: undefined }));
-    },
-
-    setCurrentLocation: (currentLocation) => {
-      set((state) => ({ ...state, currentLocation: currentLocation }));
-    },
-
-    addFavoriteLocation: (location) => {
-      set((state) => {
-        if (location.trim() === "") {
-          return { ...state };
-        }
-
-        let isOverlapped = false;
-
-        state.favoriteLocations.forEach((favoriteLocation) => {
-          if (favoriteLocation === location) {
-            isOverlapped = true;
-          }
-        });
-
-        if (isOverlapped) {
-          return { ...state };
-        }
-
-        return {
-          ...state,
-          favoriteLocations: [...state.favoriteLocations, location],
-        };
-      });
-    },
-
-    deleteFavoriteLocation: (location) => {
-      set((state) => {
-        return {
-          ...state,
-          favoriteLocations: state.favoriteLocations.filter((favoriteLocation) => {
-            return favoriteLocation !== location;
-          }),
-        };
-      });
-    },
-  },
-});
-
 const useModalStore = create<ModalState>()(devtools(modalStore, { name: "Modal Store" }));
-export const useUserInfoStore = create<userInfoState>()(devtools(userInfoStore, { name: "User Info Store" }));
 
 export const toggleDatepickerModal = () => useModalStore.getState().actions.changeModalState("datepickerModal");
 export const toggleDayModal = () => useModalStore.getState().actions.changeModalState("dayModal");

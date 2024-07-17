@@ -15,11 +15,13 @@ import { useState } from "react";
 import useModalStore from "../../store/store";
 import TodoScheduleModal from "../../components/ModalComponents/TodoScheduleModal/TodoScheduleModal";
 
+const [FAILURE, TODAY, COMPLETED] = ["failure", "today", "completed"];
+
 const TodoListPage = () => {
   const todoScheduleModal = useModalStore((state) => state.todoScheduleModal);
 
   // 초기 todo 상태
-  const [todoState, setTodoState] = useState({
+  const [todos, setTodos] = useState({
     failureTodos: [
       {
         id: 1,
@@ -96,20 +98,20 @@ const TodoListPage = () => {
     const dueDate = new Date(todo.dueDate);
     const timeDiff = dueDate.getTime() - today.getTime();
 
-    if (fromList === "failure") {
-      setTodoState((prevState) => ({
+    if (fromList === FAILURE) {
+      setTodos((prevState) => ({
         ...prevState,
         failureTodos: prevState.failureTodos.filter((t) => t !== todo),
         completedTodos: [...prevState.completedTodos, { ...todo, completed: true }],
       }));
-    } else if (fromList === "today") {
-      setTodoState((prevState) => ({
+    } else if (fromList === TODAY) {
+      setTodos((prevState) => ({
         ...prevState,
         todayTodos: prevState.todayTodos.filter((t) => t !== todo),
         completedTodos: [...prevState.completedTodos, { ...todo, completed: true }],
       }));
-    } else if (fromList === "completed") {
-      setTodoState((prevState) => {
+    } else if (fromList === COMPLETED) {
+      setTodos((prevState) => {
         const updatedCompleted = prevState.completedTodos.filter((t) => t !== todo);
         if (timeDiff < 0) {
           return {
@@ -137,13 +139,14 @@ const TodoListPage = () => {
           <div className={leftPanel}>
             <div className={uncompletedList}>
               <div className={formTitle}>기간 내 완료하지 못한 일들</div>
-              {todoState.failureTodos.map((elem, index) => (
+              {/* DB에서 데이터받으면, ID를 key값으로 사용 */}
+              {todos.failureTodos.map((elem, index) => (
                 <div key={index}>
                   <Todo
                     completed={elem.completed}
                     description={elem.description}
                     dueDate={elem.dueDate}
-                    onCheckboxChange={() => handleCheckboxChange(elem, "failure")}
+                    onCheckboxChange={() => handleCheckboxChange(elem, FAILURE)}
                   />
                 </div>
               ))}
@@ -151,13 +154,14 @@ const TodoListPage = () => {
 
             <div className={completedList}>
               <div className={formTitle}>완료한 일들</div>
-              {todoState.completedTodos.map((elem, index) => (
+              {/* DB에서 데이터받으면, ID를 key값으로 사용 */}
+              {todos.completedTodos.map((elem, index) => (
                 <div key={index}>
                   <Todo
                     completed={elem.completed}
                     description={elem.description}
                     dueDate={elem.dueDate}
-                    onCheckboxChange={() => handleCheckboxChange(elem, "completed")}
+                    onCheckboxChange={() => handleCheckboxChange(elem, COMPLETED)}
                   />
                 </div>
               ))}
@@ -167,13 +171,14 @@ const TodoListPage = () => {
           <div className={rightPanel}>
             <div className={todoList}>
               <div className={formTitle}>해야할 일들</div>
-              {todoState.todayTodos.map((elem, index) => (
+              {/* DB에서 데이터받으면, ID를 key값으로 사용 */}
+              {todos.todayTodos.map((elem, index) => (
                 <div key={index}>
                   <Todo
                     completed={elem.completed}
                     description={elem.description}
                     dueDate={elem.dueDate}
-                    onCheckboxChange={() => handleCheckboxChange(elem, "today")}
+                    onCheckboxChange={() => handleCheckboxChange(elem, TODAY)}
                   />
                 </div>
               ))}
