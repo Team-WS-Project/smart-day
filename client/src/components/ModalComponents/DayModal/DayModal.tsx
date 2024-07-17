@@ -16,7 +16,7 @@ import { TiWeatherDownpour } from "react-icons/ti";
 import { VscChromeClose } from "react-icons/vsc";
 import DayTodoModal from "./DailyTodo/DailyTodo";
 import DaySchedule from "./DailyScheduleModal/DailySchedule";
-import useModalStore, { toggleDayModal } from "../../../store/store";
+import useModalStore, { toggleDayModal } from "../../../store/modalStore";
 import TodoScheduleModal from "../TodoScheduleModal/TodoScheduleModal";
 import TaskModal from "../TaskModal/TaskModal";
 import useDailyScheduleStore from "../../../store/dayStore";

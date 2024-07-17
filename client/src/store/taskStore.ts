@@ -43,6 +43,6 @@ const taskStore: StateCreator<TaskStore> = (set) => ({
     })),
 });
 
-const useTaskStore = create<TaskStore>()(devtools(taskStore));
+const useTaskStore = create<TaskStore>()(devtools(taskStore, { name: "Task Store" }));
 
 export default useTaskStore;

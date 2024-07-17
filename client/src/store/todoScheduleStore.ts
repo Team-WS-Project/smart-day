@@ -31,6 +31,6 @@ const todoScheduleStore: StateCreator<TodoScheduleStore> = (set) => ({
     })),
 });
 
-const useTodoScheduleStore = create<TodoScheduleStore>()(devtools(todoScheduleStore));
+const useTodoScheduleStore = create<TodoScheduleStore>()(devtools(todoScheduleStore, { name: "TodoSchedule Store" }));
 
 export default useTodoScheduleStore;

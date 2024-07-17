@@ -9,16 +9,16 @@ export type Task = {
   endTime: string;
   title: string;
   description: string;
-}
+};
 
 export type TaskList = {
   listIndex: number;
   tasks: Task[];
-}
+};
 
 interface MainState {
-  dailyTaskLists: TaskList[],
-  standardDate: Date,
+  dailyTaskLists: TaskList[];
+  standardDate: Date;
   actions: {
     changeDateBefore: () => void;
     changeDateAfter: () => void;
@@ -29,7 +29,7 @@ interface MainState {
   };
 }
 
-const mainStore: StateCreator<MainState> = ((set) => ({
+const mainStore: StateCreator<MainState> = (set) => ({
   standardDate: new Date(),
   dailyTaskLists: [
     {
@@ -44,7 +44,7 @@ const mainStore: StateCreator<MainState> = ((set) => ({
           title: "운동",
           description: "러닝",
         },
-      ]
+      ],
     },
     {
       listIndex: 1,
@@ -76,13 +76,12 @@ const mainStore: StateCreator<MainState> = ((set) => ({
     },
     changeTaskLists: () =>
       set((state) => ({
-        dailyTaskLists: state.dailyTaskLists
-      })
-    ),
+        dailyTaskLists: state.dailyTaskLists,
+      })),
     addTask: (listIndex: number, newTask: Task) => {
       set((state) => {
         const updateDailyTaskLists = state.dailyTaskLists.map((lists) => {
-          if(lists.listIndex === listIndex) {
+          if (lists.listIndex === listIndex) {
             return {
               ...lists,
               tasks: [...lists.tasks, newTask],
@@ -96,12 +95,10 @@ const mainStore: StateCreator<MainState> = ((set) => ({
     updateTask: (listIndex: number, updateTask: Task) => {
       set((state) => {
         const updateDailyTaskLists = state.dailyTaskLists.map((lists) => {
-          if(lists.listIndex === listIndex) {
+          if (lists.listIndex === listIndex) {
             return {
               ...lists,
-              tasks: lists.tasks.map((task) =>
-                task.taskId === updateTask.taskId ? updateTask : task
-              ),
+              tasks: lists.tasks.map((task) => (task.taskId === updateTask.taskId ? updateTask : task)),
             };
           }
           return lists;
@@ -112,11 +109,11 @@ const mainStore: StateCreator<MainState> = ((set) => ({
     deleteTask: (listIndex: number, taskId: number) => {
       set((state) => {
         const updateDailyTaskLists = state.dailyTaskLists.map((lists) => {
-          if(lists.listIndex === listIndex) {
+          if (lists.listIndex === listIndex) {
             return {
               ...lists,
               tasks: lists.tasks.filter((task) => task.taskId !== taskId),
-            }
+            };
           }
           return lists;
         });
@@ -124,9 +121,9 @@ const mainStore: StateCreator<MainState> = ((set) => ({
       });
     },
   },
-}));
+});
 
-const useMainStore = create<MainState>()(devtools(mainStore));
+const useMainStore = create<MainState>()(devtools(mainStore, { name: "MainPage Store" }));
 
 export const changeDateBefore = () => useMainStore.getState().actions.changeDateBefore();
 export const changeDateAfter = () => useMainStore.getState().actions.changeDateAfter();

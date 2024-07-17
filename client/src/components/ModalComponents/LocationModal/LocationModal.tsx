@@ -3,7 +3,7 @@ import locationDatas from "./locationDatas.json";
 import { TiStarOutline, TiStarFullOutline } from "react-icons/ti";
 import { FiX } from "react-icons/fi";
 import { useState } from "react";
-import { toggleLocationModal } from "../../../store/store";
+import { toggleLocationModal } from "../../../store/modalStore";
 import { useUserInfoStore } from "../../../store/userInfoStore";
 
 const FAVORITE_MAX_COUNT = 5;

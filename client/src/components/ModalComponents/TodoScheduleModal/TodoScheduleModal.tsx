@@ -20,7 +20,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import { wrapper } from "../RegisterModal/RegisterModal.css";
-import { toggleTodoScheduleModal } from "../../../store/store";
+import { toggleTodoScheduleModal } from "../../../store/modalStore";
 import useTodoScheduleStore from "../../../store/todoScheduleStore";
 
 const TodoScheduleModal = () => {

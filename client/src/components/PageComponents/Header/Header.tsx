@@ -7,7 +7,7 @@ import {
   headerTwoButtons,
   mainLogo,
 } from "./Header.css";
-import { toggleLoginModal, toggleRegisterModal } from "../../../store/store";
+import { toggleLoginModal, toggleRegisterModal } from "../../../store/modalStore";
 
 const Header = () => {
   const navigate = useNavigate();

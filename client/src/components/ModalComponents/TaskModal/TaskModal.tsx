@@ -26,20 +26,25 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { toggleTaskModal } from "../../../store/store";
-// import { useUserInfoStore } from "../../../store/userInfoStore";
+import { toggleTaskModal } from "../../../store/modalStore";
+import { useUserInfoStore } from "../../../store/userInfoStore";
 
 import useTaskStore from "../../../store/taskStore";
 
 const TaskModal = () => {
   const { task } = useTaskStore();
 
-  // const selectedDate = useUserInfoStore((state) => state.selectedDate);
-  // const [startDate, setStartDate] = useState(selectedDate ?? new Date());
+  const selectedDate = useUserInfoStore((state) => state.selectedDate);
 
-  const [startDate, setStartDate] = useState(new Date(task.date));
-  const [startTime, setStartTime] = useState<dayjs.Dayjs>(dayjs(`${task.date} ${task.startTime}`, "YYYY-MM-DD HH:mm"));
-  const [endTime, setEndTime] = useState<dayjs.Dayjs>(dayjs(`${task.date} ${task.endTime}`, "YYYY-MM-DD HH:mm"));
+  const [startDate, setStartDate] = useState(() => {
+    if (selectedDate) {
+      return selectedDate;
+    } else {
+      return new Date(task.date);
+    }
+  });
+  const [startTime, setStartTime] = useState<dayjs.Dayjs>(dayjs(`${startDate} ${task.startTime}`, "YYYY-MM-DD HH:mm"));
+  const [endTime, setEndTime] = useState<dayjs.Dayjs>(dayjs(`${startDate} ${task.endTime}`, "YYYY-MM-DD HH:mm"));
   return (
     <div className={wrapper}>
       <div className={scheduleContainer}>

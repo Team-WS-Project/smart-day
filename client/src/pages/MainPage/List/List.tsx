@@ -9,7 +9,7 @@ import {
   taskListsContainerBox,
 } from "./List.css";
 import useMainStore from "../../../store/mainStore";
-import { toggleTaskModal } from "../../../store/store";
+import { toggleTaskModal } from "../../../store/modalStore";
 import Task from "../Task/Task";
 
 type TTask = {
@@ -20,17 +20,17 @@ type TTask = {
   endTime: string;
   title: string;
   description: string;
-}
+};
 
 type TaskList = {
   listIndex: number;
   tasks: TTask[];
-}
+};
 
-const List = ({listIndex, tasks}: TaskList) => {
+const List = ({ listIndex, tasks }: TaskList) => {
   const dayOfTheWeek = ["일", "월", "화", "수", "목", "금", "토"];
   const { standardDate } = useMainStore();
-  
+
   return (
     <div className={taskListsContainerBox}>
       <div className={containerTitle}>
@@ -39,26 +39,20 @@ const List = ({listIndex, tasks}: TaskList) => {
         <TiWeatherWindyCloudy className={weatherIcon} />
       </div>
       <div className={taskListArea}>
-        {
-          tasks
-          ?
-          tasks.map((item) => (
-            <Task
-              taskId={item.taskId}
-              listIndex={listIndex}
-              date={item.date}
-              startTime={item.startTime}
-              endTime={item.endTime}
-              title={item.title}
-              description={item.description}
-            />
-          ))
-          : null
-        }
-        <div
-          className={newTaskButton}
-          onClick={toggleTaskModal}
-        >
+        {tasks
+          ? tasks.map((item) => (
+              <Task
+                taskId={item.taskId}
+                listIndex={listIndex}
+                date={item.date}
+                startTime={item.startTime}
+                endTime={item.endTime}
+                title={item.title}
+                description={item.description}
+              />
+            ))
+          : null}
+        <div className={newTaskButton} onClick={toggleTaskModal}>
           + 새 일정 추가
         </div>
       </div>

@@ -15,7 +15,7 @@ import { VscChromeClose } from "react-icons/vsc";
 import { CiMail } from "react-icons/ci";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { toggleLoginModal, toggleRegisterModal } from "../../../store/store";
+import { toggleLoginModal, toggleRegisterModal } from "../../../store/modalStore";
 
 const LoginModal = () => {
   const [type, setType] = useState("password");

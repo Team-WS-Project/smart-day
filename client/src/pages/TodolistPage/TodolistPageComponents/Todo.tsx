@@ -1,4 +1,4 @@
-import { toggleTodoScheduleModal } from "../../../store/store";
+import { toggleTodoScheduleModal } from "../../../store/modalStore";
 import { checkBox, descriptionArea, dueDateArea, todoContainer } from "./Todo.css";
 
 type TodoProps = {

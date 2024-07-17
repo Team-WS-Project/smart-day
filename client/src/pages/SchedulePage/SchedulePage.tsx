@@ -16,7 +16,7 @@ import Header from "../../components/PageComponents/Header/Header";
 import Footer from "../../components/PageComponents/Footer/Footer";
 import DailyScheduleContainer from "./DailyScheduleContainer/DailyScheduleContainer";
 import DayModal from "../../components/ModalComponents/DayModal/DayModal";
-import useModalStore from "../../store/store";
+import useModalStore from "../../store/modalStore";
 import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
 import RegisterModal from "../../components/ModalComponents/RegisterModal/RegisterModal";
 import useScheduleStore from "../../store/scheduleStore";
