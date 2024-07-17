@@ -10,6 +10,7 @@ import {
 } from "./List.css";
 import { useNavigate } from "react-router-dom";
 import Task from "../Task/Task";
+import { toggleTaskModal } from "../../../store/store";
 
 const List = () => {
   const navigate = useNavigate();
@@ -35,8 +36,8 @@ const List = () => {
           taskTitle={"운동"}
           taskDescription={"내용"}
         />
-      
-        <div className={newTaskButton} onClick={openTaskModal}>
+
+        <div className={newTaskButton} onClick={toggleTaskModal}>
           + 새 일정 추가
         </div>
       </div>

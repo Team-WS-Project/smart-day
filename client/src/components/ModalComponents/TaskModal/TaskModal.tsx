@@ -27,9 +27,12 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { toggleTaskModal } from "../../../store/store";
+import { useUserInfoStore } from "../../../store/userInfoStore";
 
 const TaskModal = () => {
-  const [startDate, setStartDate] = useState(new Date());
+  const selectedDate = useUserInfoStore((state) => state.selectedDate);
+  const [startDate, setStartDate] = useState(selectedDate ?? new Date());
+
   return (
     <div className={wrapper}>
       <div className={scheduleContainer}>
@@ -46,7 +49,9 @@ const TaskModal = () => {
               <DatePicker
                 selected={startDate}
                 dateFormat="yyyy-MM-dd"
-                onChange={(date) => setStartDate(date)}
+                onChange={(datePickerDate) => {
+                  setStartDate(datePickerDate);
+                }}
                 className={scheduleDatePicker}
               />
             </div>

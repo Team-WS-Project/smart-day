@@ -11,6 +11,7 @@ type ModalType =
   | "taskModal"
   | "todoScheduleModal"
   | "userEditModal";
+
 interface ModalState {
   datepickerModal: boolean;
   dayModal: boolean;
@@ -44,7 +45,7 @@ const modalStore: StateCreator<ModalState> = (set) => ({
   },
 });
 
-const useModalStore = create<ModalState>()(devtools(modalStore));
+const useModalStore = create<ModalState>()(devtools(modalStore, { name: "Modal Store" }));
 
 export const toggleDatepickerModal = () => useModalStore.getState().actions.changeModalState("datepickerModal");
 export const toggleDayModal = () => useModalStore.getState().actions.changeModalState("dayModal");
