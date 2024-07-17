@@ -112,7 +112,7 @@ export const scheduleSave = style({
 });
 
 export const timePicker = style({
-  width: "120px",
+  width: "90px",
 });
 
 globalStyle(`${timePicker} > div > input`, {
@@ -133,10 +133,20 @@ globalStyle(`.MuiFormControl-root`, {
 globalStyle(`.MuiSvgIcon-root`, {
   fontSize: "15px !important",
   color: vars.color.darkIcon,
+  padding: "0 !important",
 });
 
 globalStyle(`.MuiPickersPopper-root `, {
   zIndex: "20000 !important",
+});
+
+globalStyle(`.css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root`, {
+  padding: "0 !important",
+  paddingRight: "2px !important",
+});
+
+globalStyle(`.TaskModal_scheduleTime__1e5u3jl8`, {
+  paddingLeft: "3%",
 });
 
 export const scheduleClose = style({

@@ -25,7 +25,7 @@ export const dayModalLeft = style({
 });
 
 export const dayModalRight = style({
-  width: "55%",
+  width: "100%",
   margin: "2.5%",
   backgroundColor: vars.color.mainBright,
   borderRadius: vars.radius.small,
