@@ -49,6 +49,7 @@ export const inputIcon = style({
   marginTop: vars.spacing.medium,
   marginLeft: vars.spacing.medium,
   marginRight: vars.spacing.medium,
+  cursor: "pointer",
 });
 
 export const inputBox = style({

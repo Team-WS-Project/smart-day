@@ -67,7 +67,7 @@ const RegisterModal = () => {
             <IoLockClosedOutline />
           </div>
           <input className={inputBox} placeholder="비밀번호 확인" type={typeConfirmPassword} />
-          <div className={inputIcon} onClick={handleToggleConfirmPassword} style={{ cursor: "pointer" }}>
+          <div className={inputIcon} onClick={handleToggleConfirmPassword}>
             {iconConfirmPassword}
           </div>
         </div>
