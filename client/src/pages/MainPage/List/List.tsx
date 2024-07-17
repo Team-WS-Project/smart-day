@@ -8,13 +8,14 @@ import {
   taskListArea,
   taskListsContainerBox,
 } from "./List.css";
-import Task from "../Task/Task";
 import useMainStore from "../../../store/mainStore";
 import { toggleTaskModal } from "../../../store/store";
+import Task from "../Task/Task";
 
-type Task = {
+type TTask = {
   taskId: number;
   listIndex: number;
+  date: Date;
   startTime: string;
   endTime: string;
   title: string;
@@ -23,7 +24,7 @@ type Task = {
 
 type TaskList = {
   listIndex: number;
-  tasks: Task[];
+  tasks: TTask[];
 }
 
 const List = ({listIndex, tasks}: TaskList) => {
@@ -45,9 +46,9 @@ const List = ({listIndex, tasks}: TaskList) => {
             <Task
               taskId={item.taskId}
               listIndex={listIndex}
+              date={item.date}
               startTime={item.startTime}
               endTime={item.endTime}
-              userId={0}
               title={item.title}
               description={item.description}
             />
