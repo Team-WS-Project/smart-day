@@ -1,13 +1,10 @@
 import React from "react";
-import {
-  dailyContainer,
-  dateTitle,
-  scheduleList,
-} from "./DailyScheduleContainer.css";
+import { dailyContainer, dateTitle, scheduleList } from "./DailyScheduleContainer.css";
+import { toggleDayModal } from "../../../store/store";
 
 const DailyScheduleContainer = () => {
   return (
-    <div className={dailyContainer}>
+    <div className={dailyContainer} onClick={toggleDayModal}>
       <div className={dateTitle}>2024-07-01</div>
       <div className={scheduleList}>
         <ul>

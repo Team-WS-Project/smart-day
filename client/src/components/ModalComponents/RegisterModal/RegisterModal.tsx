@@ -15,6 +15,7 @@ import { CiMail } from "react-icons/ci";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { GoTag } from "react-icons/go";
+import { toggleRegisterModal } from "../../../store/store";
 
 const RegisterModal = () => {
   const [type, setType] = useState("password");
@@ -23,34 +24,24 @@ const RegisterModal = () => {
 
   const [typeConfirmPassword, setTypeConfirmPassword] = useState("password");
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [iconConfirmPassword, setIconConfirmPassword] = useState(
-    <FaEyeSlash />
-  );
+  const [iconConfirmPassword, setIconConfirmPassword] = useState(<FaEyeSlash />);
 
   const handleToggle = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
     setType((prevType) => (prevType === "password" ? "text" : "password"));
-    setIcon((prevIcon) =>
-      prevIcon.type === FaEyeSlash ? <FaEye /> : <FaEyeSlash />
-    );
+    setIcon((prevIcon) => (prevIcon.type === FaEyeSlash ? <FaEye /> : <FaEyeSlash />));
   };
 
   const handleToggleConfirmPassword = () => {
-    setShowConfirmPassword(
-      (prevShowConfirmPassword) => !prevShowConfirmPassword
-    );
-    setTypeConfirmPassword((prevType) =>
-      prevType === "password" ? "text" : "password"
-    );
-    setIconConfirmPassword((prevIcon) =>
-      prevIcon.type === FaEyeSlash ? <FaEye /> : <FaEyeSlash />
-    );
+    setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
+    setTypeConfirmPassword((prevType) => (prevType === "password" ? "text" : "password"));
+    setIconConfirmPassword((prevIcon) => (prevIcon.type === FaEyeSlash ? <FaEye /> : <FaEyeSlash />));
   };
 
   return (
     <div className={wrapper}>
       <div className={registerContainer}>
-        <div className={loginClose}>
+        <div className={loginClose} onClick={toggleRegisterModal}>
           <VscChromeClose />
         </div>
         <div className={loginMain}>SMART DAY</div>
@@ -67,11 +58,7 @@ const RegisterModal = () => {
             <IoLockClosedOutline />
           </div>
           <input className={inputBox} placeholder="비밀번호" type={type} />
-          <div
-            className={inputIcon}
-            onClick={handleToggle}
-            style={{ cursor: "pointer" }}
-          >
+          <div className={inputIcon} onClick={handleToggle} style={{ cursor: "pointer" }}>
             {icon}
           </div>
         </div>
@@ -79,16 +66,8 @@ const RegisterModal = () => {
           <div className={inputIcon}>
             <IoLockClosedOutline />
           </div>
-          <input
-            className={inputBox}
-            placeholder="비밀번호 확인"
-            type={typeConfirmPassword}
-          />
-          <div
-            className={inputIcon}
-            onClick={handleToggleConfirmPassword}
-            style={{ cursor: "pointer" }}
-          >
+          <input className={inputBox} placeholder="비밀번호 확인" type={typeConfirmPassword} />
+          <div className={inputIcon} onClick={handleToggleConfirmPassword} style={{ cursor: "pointer" }}>
             {iconConfirmPassword}
           </div>
         </div>

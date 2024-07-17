@@ -7,6 +7,7 @@ import {
   headerTwoButtons,
   mainLogo,
 } from "./Header.css";
+import { toggleLoginModal, toggleRegisterModal } from "../../../store/store";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -28,13 +29,13 @@ const Header = () => {
   };
 
   /* 모달들은 스타일을 확인할 수 있게 새 페이지로 연결만 시켜놓았습니다. */
-  const openLoginModal = () => {
-    navigate("/loginmodal");
-  };
+  // const openLoginModal = () => {
+  //   navigate("/loginmodal");
+  // };
 
-  const openUserEditModal = () => {
-    navigate("/usereditmodal");
-  };
+  // const openUserEditModal = () => {
+  //   navigate("/usereditmodal");
+  // };
   /* ............................................................... */
 
   return (
@@ -60,13 +61,13 @@ const Header = () => {
       <div className={headerTwoButtons}>
         <button
           className={headerButton}
-          onClick={openLoginModal} //
+          onClick={toggleLoginModal} //
         >
           로그인
         </button>
         <button
           className={headerButton}
-          onClick={openUserEditModal} //
+          onClick={toggleRegisterModal} //
         >
           회원가입
         </button>

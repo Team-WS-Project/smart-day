@@ -1,12 +1,23 @@
 import { style } from "@vanilla-extract/css";
 import { vars } from "../../../App.css";
 
+export const wrapper = style({
+  width: "100vw",
+  height: "100vh",
+  position: "absolute",
+  zIndex: 10000,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "rgba(0,0,0,0.3)",
+});
+
 export const modal = style({
   backgroundColor: vars.color.main,
   borderRadius: vars.radius.medium,
   color: vars.color.brightText,
   display: "flex",
-}); // global로 해야할 듯...?
+});
 
 export const dayModalLeft = style({
   width: "30%",
