@@ -6,6 +6,7 @@ export const dailySchedule = style({
   color: vars.color.darkText,
   borderRadius: vars.radius.small,
   width: "25%",
+  height: "25%",
   padding: "5px",
   margin: "20px 5px",
   marginRight: vars.spacing.big1,
@@ -20,7 +21,7 @@ export const dailySchedule = style({
 export const dailyScheduleTitle = style({
   padding: "3px 16px",
   fontFamily: vars.font.inter,
-  fontSize: vars.fontSizing.H8,
+  fontSize: vars.fontSizing.P1,
   textAlign: "center",
 });
 
@@ -29,7 +30,7 @@ export const dailyScheduleContent = style({
   borderRadius: vars.radius.small,
   padding: "5px 8px",
   margin: "5px 8px",
-  height: "60px",
+  height: "60%",
   fontFamily: vars.font.inter,
   fontSize: vars.fontSizing.H9,
 });

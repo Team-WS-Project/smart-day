@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { BsCalendar4 } from "react-icons/bs";
@@ -33,7 +33,7 @@ import { useNavigate } from "react-router-dom";
 import useCalendarPageStore from "../../../store/calendarStore";
 import Todo from "./Todo/Todo";
 
-const CalendarComponent: FC = () => {
+const CalendarComponent = () => {
   const [activeDate, setactiveDate] = useState(new Date());
   const { todolist, isHaveTask } = useCalendarPageStore();
   const setIsHaveTask = useCalendarPageStore((state) => state.actions.setIsHaveTask);
@@ -89,7 +89,7 @@ const CalendarComponent: FC = () => {
   }, [setIsHaveTask]);
 
   const onChange = ({activeStartDate}) => {
-    setactiveDate(activeStartDate);
+    setActiveDate(activeStartDate);
     // Todo: fetch(month => { isHaveTask = newIsHaveTask; }) 작업 필요 (@II-122)
   };
 

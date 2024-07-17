@@ -1,6 +1,17 @@
 import { globalStyle, style } from "@vanilla-extract/css";
 import { vars } from "../../../App.css";
 
+export const wrapper = style({
+  width: "100vw",
+  height: "100vh",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  position: "absolute",
+  zIndex: 20000,
+  backgroundColor: "rgba(0,0,0,0.3)",
+});
+
 export const scheduleContainer = style({
   padding: "10px 15px",
   backgroundColor: vars.color.main,
@@ -101,21 +112,41 @@ export const scheduleSave = style({
 });
 
 export const timePicker = style({
-  width: "100px",
-});
-
-globalStyle(`${timePicker} > div`, {
-  margin: "0 5px",
-  padding: "0 5px",
+  width: "90px",
 });
 
 globalStyle(`${timePicker} > div > input`, {
-  textAlign: "center",
+  textAlign: "right",
   backgroundColor: vars.color.brightIcon,
   height: "1px",
   fontSize: vars.fontSizing.P1,
   padding: "10px",
+  paddingRight: "0",
   borderRadius: vars.radius.large,
+});
+
+globalStyle(`.MuiFormControl-root`, {
+  backgroundColor: vars.color.brightIcon,
+  borderRadius: vars.radius.large,
+});
+
+globalStyle(`.MuiSvgIcon-root`, {
+  fontSize: "15px !important",
+  color: vars.color.darkIcon,
+  padding: "0 !important",
+});
+
+globalStyle(`.MuiPickersPopper-root `, {
+  zIndex: "20000 !important",
+});
+
+globalStyle(`.css-1yq5fb3-MuiButtonBase-root-MuiIconButton-root`, {
+  padding: "0 !important",
+  paddingRight: "2px !important",
+});
+
+globalStyle(`.TaskModal_scheduleTime__1e5u3jl8`, {
+  paddingLeft: "3%",
 });
 
 export const scheduleClose = style({

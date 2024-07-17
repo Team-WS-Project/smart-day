@@ -1,15 +1,15 @@
 import React from "react";
-import {
-  dailySchedule,
-  dailyScheduleContent,
-  dailyScheduleTitle,
-} from "./DailySchedule.css";
+import { dailySchedule, dailyScheduleContent, dailyScheduleTitle } from "./DailySchedule.css";
+import { toggleTaskModal } from "../../../../store/store";
+import { DailySchedule } from "../../../../store/dayStore";
 
-const DaySchedule = () => {
+const DaySchedule = ({ startTime, endTime, content }: DailySchedule) => {
   return (
-    <div className={dailySchedule}>
-      <div className={dailyScheduleTitle}>09:00 ~ 11:00</div>
-      <div className={dailyScheduleContent}>일정</div>
+    <div className={dailySchedule} onClick={toggleTaskModal}>
+      <div className={dailyScheduleTitle}>
+        {startTime} ~ {endTime}
+      </div>
+      <div className={dailyScheduleContent}>{content}</div>
     </div>
   );
 };

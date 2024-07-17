@@ -8,7 +8,8 @@ export const wrapper = style({
   justifyContent: "center",
   alignItems: "center",
   position: "absolute",
-  zIndex: 10000,
+  zIndex: 30000,
+  backgroundColor: "rgba(0,0,0,0.3)",
 });
 
 export const registerContainer = style({
@@ -48,6 +49,7 @@ export const inputIcon = style({
   marginTop: vars.spacing.medium,
   marginLeft: vars.spacing.medium,
   marginRight: vars.spacing.medium,
+  cursor: "pointer",
 });
 
 export const inputBox = style({

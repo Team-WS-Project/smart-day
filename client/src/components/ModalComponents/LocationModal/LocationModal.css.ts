@@ -100,16 +100,17 @@ export const okButton = style({
   },
 });
 
-//★
 export const starFilledIcon = style({
+  marginLeft: "auto",
+
   ":hover": {
     cursor: "pointer",
   },
   color: "yellow",
 });
 
-//☆
 export const starEmptyIcon = style({
+  marginLeft: "auto",
   ":hover": {
     cursor: "pointer",
   },

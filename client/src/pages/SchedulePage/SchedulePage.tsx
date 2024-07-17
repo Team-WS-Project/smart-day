@@ -15,12 +15,29 @@ import "react-datepicker/dist/react-datepicker.css";
 import Header from "../../components/PageComponents/Header/Header";
 import Footer from "../../components/PageComponents/Footer/Footer";
 import DailyScheduleContainer from "./DailyScheduleContainer/DailyScheduleContainer";
+import DayModal from "../../components/ModalComponents/DayModal/DayModal";
+import useModalStore from "../../store/store";
+import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
+import RegisterModal from "../../components/ModalComponents/RegisterModal/RegisterModal";
+import useScheduleStore from "../../store/scheduleStore";
 
 const SchedulePage = () => {
   const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(() => {
+    const date = new Date();
+    date.setDate(date.getDate() + 15);
+    return date;
+  });
+  const { showDayModal } = useModalStore((state) => ({ showDayModal: state.dayModal }));
+  const { showLoginModal } = useModalStore((state) => ({ showLoginModal: state.loginModal }));
+  const { showRegisterModal } = useModalStore((state) => ({ showRegisterModal: state.registerModal }));
+  const schedules = useScheduleStore((state) => state.schedules);
+
   return (
     <div className={pageContainer}>
+      {showDayModal && <DayModal />}
+      {showLoginModal && <LoginModal />}
+      {showRegisterModal && <RegisterModal />}
       <Header />
       <div className={schedulePageContainer}>
         <div className={schedulePageTitle}>전체 일정</div>
@@ -53,16 +70,9 @@ const SchedulePage = () => {
         </div>
 
         <div className={schedulersContainer}>
-          <DailyScheduleContainer />
-          <DailyScheduleContainer />
-          <DailyScheduleContainer />
-          <DailyScheduleContainer />
-          <DailyScheduleContainer />
-          <DailyScheduleContainer />
-          <DailyScheduleContainer />
-          <DailyScheduleContainer />
-          <DailyScheduleContainer />
-          <DailyScheduleContainer />
+          {schedules.map((schedule, index) => (
+            <DailyScheduleContainer key={index} title={schedule.title} scheduleLists={schedule.scheduleLists} />
+          ))}
         </div>
       </div>
       <Footer />
