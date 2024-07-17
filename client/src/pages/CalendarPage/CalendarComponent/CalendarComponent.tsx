@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { BsCalendar4 } from "react-icons/bs";
@@ -10,7 +10,8 @@ import {
   locationChangeText,
   logoArea,
   logoAreaRight,
-  monthText,
+  monthTextSingle,
+  monthTextDouble,
   seeAllSchedules,
   textArea,
   todo,
@@ -19,14 +20,37 @@ import {
   todolistPannel,
   todoTitle,
 } from "./CalendarComponent.css";
+import {
+  TiWeatherCloudy,
+  TiWeatherDownpour,
+  TiWeatherPartlySunny,
+  TiWeatherShower,
+  TiWeatherSnow,
+  TiWeatherStormy,
+  TiWeatherSunny,
+  TiWeatherWindy,
+  TiWeatherWindyCloudy,
+} from "react-icons/ti";
 import { useNavigate } from "react-router-dom";
 
-const CalendarComponent: FC = () => {
-  const [value, setValue] = useState(new Date());
+const CalendarComponent = () => {
+  const [activeDate, setActiveDate] = useState(new Date());
   const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
 
-  // 확인용 데이터
+  const weatherIcons = [
+    <TiWeatherCloudy />,
+    <TiWeatherDownpour />,
+    <TiWeatherPartlySunny />,
+    <TiWeatherShower />,
+    <TiWeatherSnow />,
+    <TiWeatherStormy />,
+    <TiWeatherSunny />,
+    <TiWeatherWindy />,
+    <TiWeatherWindyCloudy />,
+  ];
+
+  // 확인용 임시 데이터 -> Todo: fetch(month => { return isHaveTask; }) (@II-122)
   const isHaveTask = [
     true,
     false,
@@ -40,8 +64,8 @@ const CalendarComponent: FC = () => {
     true,
     false,
     false,
-    true,
     false,
+    true,
     false,
     false,
     false,
@@ -60,20 +84,41 @@ const CalendarComponent: FC = () => {
     false,
   ];
 
-  let month = value.getMonth();
-
-  const onChange = (nextValue: Date) => {
-    setValue(nextValue);
+  const onChange = ({activeStartDate}) => {
+    setActiveDate(activeStartDate);
+    // Todo: fetch(month => { isHaveTask = newIsHaveTask; }) 작업 필요 (@II-122)
   };
 
-  const tileClassName = ({ date, view }) => {
-    if (view === "month" && date.getMonth() === month && date.getDate() >= 1 && date.getDate() <= 30) {
+  const logoTextCenter = () => {
+    if(activeDate.getMonth() + 1 < 10) {
+      return monthTextSingle;
+    } else {
+      return monthTextDouble;
+    }
+  };
+
+  const formatDay = (locale, date) => {
+    return date.getDate().toString();
+  };
+
+  const tileClassName = ({date, view}) => {
+    if (view === "month" && date.getMonth() === activeDate.getMonth() && date.getDate() >= 1 && date.getDate() <= 31) {
       const index = date.getDate() - 1;
       if (isHaveTask[index]) {
         return "have-task";
+      } 
+      return "default";
+    }
+    return "out-of-month";
+  };
+
+  const tileContent = ({date, view}) => {
+    const today = new Date();
+    if (view === "month" && date.getMonth() === today.getMonth()) {
+      if(today.getDate() <= date.getDate() && date.getDate() < today.getDate() + 7){
+        return (<div className={iconArea}>{weatherIcons[Math.floor(Math.random() * 9)]}</div>);
       }
     }
-    return "default";
   };
 
   const handleCheckboxChange = () => {
@@ -94,14 +139,14 @@ const CalendarComponent: FC = () => {
               위치 변경
             </text>
           </div>
-          <div>오늘은 날씨가 weather이므로, textObj 하시는건 어때요?</div>
+          <div>" .................. 하드 코딩 된 데이터 ................. "</div>
         </div>
         <div className={logoAreaRight}>
           <div className={seeAllSchedules} onClick={gotoSchedulePage}>
             전체 일정 보기
           </div>
           <div className={iconArea}>
-            <div className={monthText}>{month + 1}</div>
+            <div className={logoTextCenter()}>{activeDate.getMonth() + 1}</div>
             <div className={iconStyle}>
               <BsCalendar4 />
             </div>
@@ -111,9 +156,10 @@ const CalendarComponent: FC = () => {
       <div className={calendarContainer}>
         <Calendar
           className="my-calendar"
+          formatDay={formatDay}
           tileClassName={tileClassName}
-          onChange={onChange}
-          value={value}
+          tileContent={tileContent}
+          onActiveStartDateChange={onChange}
         />
         <div className={todolistContainer}>
           <div className={todoTitle}>
@@ -141,28 +187,6 @@ const CalendarComponent: FC = () => {
                 투두리스트 디테일
               </text>
             </div>
-            .<br />
-            <br />
-            .<br />
-            <br />
-            .<br />
-            <br />
-            .<br />
-            <br />
-            .<br />
-            <br />
-            .<br />
-            <br />
-            .<br />
-            <br />
-            .<br />
-            <br />
-            .<br />
-            <br />
-            .<br />
-            <br />
-            .<br />
-            <br />
           </div>
         </div>
       </div>

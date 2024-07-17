@@ -19,6 +19,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { VscChromeClose } from "react-icons/vsc";
 import { wrapper } from "../RegisterModal/RegisterModal.css";
+import { toggleTodoScheduleModal } from "../../../store/store";
 
 const TodoScheduleModal = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -50,7 +51,7 @@ const TodoScheduleModal = () => {
             <button className={todoSave}>저장</button>
           </div>
         </div>
-        <VscChromeClose className={todoClose} />
+        <VscChromeClose className={todoClose} onClick={toggleTodoScheduleModal} />
       </div>
     </div>
   );
