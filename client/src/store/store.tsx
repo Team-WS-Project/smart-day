@@ -11,6 +11,7 @@ type ModalType =
   | "taskModal"
   | "todoScheduleModal"
   | "userEditModal";
+
 interface ModalState {
   datepickerModal: boolean;
   dayModal: boolean;
@@ -33,13 +34,10 @@ interface userInfoState {
   currentLocation: string;
 
   actions: {
-    // 1. 선택된 날짜를 저장하는 리듀서
-    setSelectedDate: (arg1: Date) => void;
+    setSelectedDate: (date: Date) => void;
 
-    // 2. 선택된 날짜를 초기화하는 리듀서
     initializeSelectedDate: () => void;
 
-    // 3. 현재 위치를 선택하는 리듀서
     setCurrentLocation: (currentLocation: string) => void;
   };
 }

@@ -30,8 +30,7 @@ import { toggleTaskModal, useUserInfoStore } from "../../../store/store";
 
 const TaskModal = () => {
   const selectedDate = useUserInfoStore((state) => state.selectedDate);
-  const date = selectedDate ? selectedDate : new Date();
-  const [startDate, setStartDate] = useState(date);
+  const [startDate, setStartDate] = useState(selectedDate ?? new Date());
 
   return (
     <div className={wrapper}>
