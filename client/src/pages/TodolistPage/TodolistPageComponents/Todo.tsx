@@ -1,15 +1,28 @@
-import { useState } from "react";
+import { toggleTodoScheduleModal } from "../../../store/store";
 import { checkBox, descriptionArea, dueDateArea, todoContainer } from "./Todo.css";
 
-const Todo = ({ isChecked, description, dueDate }) => {
-  const [checked, setChecked] = useState(isChecked);
+type TodoProps = {
+  completed: boolean;
+  description: string;
+  dueDate: Date;
+  onCheckboxChange: () => void; // 부모에서 전달된 체크박스 변경 핸들러
+};
 
+const Todo = ({ completed, description, dueDate, onCheckboxChange }: TodoProps) => {
   return (
     <div className={todoContainer}>
-      <input type={"checkbox"} className={checkBox} checked={checked} onClick={() => setChecked(!checked)} />
-      <div className={descriptionArea}>{description}</div>
-      {/* dueDate가 어떤 형식으로 오느냐에 따라 바꿔야함 */}
-      <div className={dueDateArea}>{dueDate.slice(-5)}</div>
+      <input
+        type="checkbox"
+        className={checkBox}
+        checked={completed} // 부모에서 전달된 completed 상태 사용
+        onChange={onCheckboxChange} // onChange로 처리
+      />
+      <div className={descriptionArea} onClick={toggleTodoScheduleModal}>
+        {description}
+      </div>
+      <div
+        className={dueDateArea}
+      >{`${String(dueDate.getMonth() + 1).padStart(2, "0")}-${String(dueDate.getDate()).padStart(2, "0")}`}</div>
     </div>
   );
 };

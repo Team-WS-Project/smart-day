@@ -27,10 +27,15 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { toggleTaskModal } from "../../../store/store";
+// import { useUserInfoStore } from "../../../store/userInfoStore";
+
 import useTaskStore from "../../../store/taskStore";
 
 const TaskModal = () => {
   const { task } = useTaskStore();
+    
+  // const selectedDate = useUserInfoStore((state) => state.selectedDate);
+  // const [startDate, setStartDate] = useState(selectedDate ?? new Date());
 
   const [startDate, setStartDate] = useState(new Date(task.date));
   const [startTime, setStartTime] = useState<dayjs.Dayjs>(dayjs(`${task.date} ${task.startTime}`, "YYYY-MM-DD HH:mm"));
@@ -51,7 +56,9 @@ const TaskModal = () => {
               <DatePicker
                 selected={startDate}
                 dateFormat="yyyy-MM-dd"
-                onChange={(date) => setStartDate(date)}
+                onChange={(datePickerDate) => {
+                  setStartDate(datePickerDate);
+                }}
                 className={scheduleDatePicker}
               />
             </div>

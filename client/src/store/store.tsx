@@ -11,6 +11,7 @@ type ModalType =
   | "taskModal"
   | "todoScheduleModal"
   | "userEditModal";
+
 interface ModalState {
   datepickerModal: boolean;
   dayModal: boolean;
