@@ -4,13 +4,14 @@ import Footer from "../../components/PageComponents/Footer/Footer";
 import ListContainer from "./ListContainer/ListContainer";
 import { datePick, linkCalendarPage, locationTextArea, pageContainer, textArea, weatherText } from "./MainPage.css";
 import { appContainer } from "../../App.css";
-import useModalStore, { toggleDatepickerModal } from "../../store/store";
+import useModalStore, { toggleDatepickerModal, toggleLocationModal } from "../../store/store";
+import LocationModal from "../../components/ModalComponents/LocationModal/LocationModal";
 import DatepickerModal from "../../components/ModalComponents/DatepickerModal/DatepickerModal";
 import TaskModal from "../../components/ModalComponents/TaskModal/TaskModal";
 
 const MainPage = () => {
   const datepickerModal = useModalStore((state) => state.datepickerModal);
-
+  const locationModal = useModalStore((state) => state.locationModal);
   const taskModal = useModalStore((state) => state.taskModal);
 
   const navigate = useNavigate();
@@ -21,12 +22,16 @@ const MainPage = () => {
 
   return (
     <>
+      {locationModal && <LocationModal />}
       {datepickerModal && <DatepickerModal />}
       {taskModal && <TaskModal />}
       <div className={appContainer}>
         <Header />
         <div className={pageContainer}>
-          <div className={locationTextArea}>현재 지역은 location 입니다.</div>
+          <div className={locationTextArea}>
+            현재 지역은 location 입니다.
+            <div onClick={toggleLocationModal}>위치변경</div>
+          </div>
           <div>
             <ListContainer />
           </div>
