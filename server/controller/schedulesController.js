@@ -2,7 +2,6 @@ const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
 const ensureAuthorization = require("../auth");
 
-//기간별 스케쥴 조회 SQL쿼리
 const getScheduleByPeriod = (id, start, end) => {
   return {
     sql: `
@@ -17,7 +16,6 @@ const getScheduleByPeriod = (id, start, end) => {
   };
 };
 
-//월별 스케쥴 조회 SQL 쿼리
 const getScheduleByMonth = (id, month) => {
   return {
     sql: `
@@ -30,7 +28,6 @@ const getScheduleByMonth = (id, month) => {
   };
 };
 
-//일별 스케쥴 조회 SQL 쿼리
 const getScheduleByDate = (id, date) => {
   return {
     sql: `
@@ -43,7 +40,6 @@ const getScheduleByDate = (id, date) => {
   };
 };
 
-//들어오는 매개변수에 따라 스케쥴 조회 쿼리 반환
 const getSchedulesQuery = ({ id, start, end, date, month }) => {
   if (id && start && end) {
     return getScheduleByPeriod(id, start, end);
@@ -55,7 +51,6 @@ const getSchedulesQuery = ({ id, start, end, date, month }) => {
     return getScheduleByDate(id, date);
   }
 
-  //전체 스케쥴 조회 쿼리
   return {
     sql: `SELECT id, user_id, title, detail, start_time, end_time, start_date 
     FROM schedules
@@ -65,7 +60,6 @@ const getSchedulesQuery = ({ id, start, end, date, month }) => {
   };
 };
 
-//클라이언트의 요청을 처리하여 적절한 스케쥴 데이터 반환
 const getSchedules = (req, res) => {
   const { start, end, date, month } = req.query;
 
@@ -96,7 +90,6 @@ const getSchedules = (req, res) => {
   });
 };
 
-//특정 기간의 스케쥴 조회해서 반환
 const getScheduleTitles = (startDate, endDate) => {
   return new Promise((resolve, reject) => {
     const { sql, value: values } = getScheduleByPeriod(startDate, endDate);
@@ -120,7 +113,6 @@ const getScheduleTitles = (startDate, endDate) => {
   });
 };
 
-//특정 연도와 월에 대한 스케쥴 배열 생성
 const createScheduleArray = (year, month) => {
   return new Promise((resolve, reject) => {
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -154,7 +146,6 @@ const createScheduleArray = (year, month) => {
   });
 };
 
-//특정 연도와 월에 대한 스케쥴 배열 반환
 const getMonthlyArray = async (req, res) => {
   const { year, month } = req.query;
 
@@ -169,7 +160,6 @@ const getMonthlyArray = async (req, res) => {
   });
 };
 
-//특정 스케쥴 조회
 const getScheduleById = (req, res) => {
   const { id } = req.params;
   ensureAuthorization(req, res, () => {
@@ -195,7 +185,6 @@ const getScheduleById = (req, res) => {
   });
 };
 
-//스케쥴 생성
 const createSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
     const { title, detail, startDate, endDate, startTime, endTime } = req.body;
@@ -214,7 +203,6 @@ const createSchedule = (req, res) => {
   });
 };
 
-//스케쥴 수정
 const updateSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
     const { id } = req.params;
@@ -239,7 +227,6 @@ const updateSchedule = (req, res) => {
   });
 };
 
-//스케쥴 삭제
 const deleteSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
     const { id } = req.params;
