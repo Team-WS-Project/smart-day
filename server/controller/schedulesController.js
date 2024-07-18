@@ -61,8 +61,8 @@ const getSchedules = async (req, res) => {
       const scheduleTitles = await getScheduleTitles(start, end);
       return res.status(StatusCodes.OK).json(scheduleTitles);
     } catch (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
+      console.error(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
   }
 
@@ -72,8 +72,8 @@ const getSchedules = async (req, res) => {
 
   conn.query(sql, values, (err, results) => {
     if (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
+      console.error(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
 
     return res.status(StatusCodes.OK).json(results);
@@ -88,7 +88,7 @@ const getScheduleTitles = (startDate, endDate) => {
 
     conn.query(sql, values, (err, results) => {
       if (err) {
-        console.err(err);
+        console.error(err);
         reject(err);
         return;
       }
@@ -117,7 +117,7 @@ const createScheduleArray = (year, month) => {
 
     conn.query(sql, values, (err, results) => {
       if (err) {
-        console.err(err);
+        console.error(err);
         reject(err);
         return;
       }
@@ -143,8 +143,8 @@ const getMonthlyArray = async (req, res) => {
     const scheduleArray = await createScheduleArray(year, month);
     res.status(StatusCodes.OK).json({ monthArray: scheduleArray });
   } catch (err) {
-    console.err(err);
-    res.status(StatusCodes.INTERNAL_SERVER_err).end();
+    console.error(err);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
   }
 };
 
@@ -160,11 +160,12 @@ const getScheduleById = (req, res) => {
 
   conn.query(sql, values, (err, results) => {
     if (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
+      console.error(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
 
-    if (results.affectedRows === 0) {
+    if (results.length === 0) {
+      // affectedRows 대신 length 사용
       return res.status(StatusCodes.NOT_FOUND).end();
     }
 
@@ -180,8 +181,8 @@ const createSchedule = (req, res) => {
 
   conn.query(sql, values, (err, results) => {
     if (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
+      console.error(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
 
     return res.status(StatusCodes.CREATED).json(results);
@@ -202,8 +203,8 @@ const updateSchedule = (req, res) => {
 
   conn.query(sql, values, (err, results) => {
     if (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
+      console.error(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
 
     return res.status(StatusCodes.OK).json(results);
@@ -216,8 +217,8 @@ const deleteSchedule = (req, res) => {
 
   conn.query(sql, id, (err, results) => {
     if (err) {
-      console.err(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_err).end();
+      console.error(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
 
     if (results.affectedRows === 0) {
