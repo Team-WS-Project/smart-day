@@ -47,6 +47,6 @@ const dailyTodoStore: StateCreator<dailyTodoStore> = (set) => ({
     })),
 });
 
-const useDailyTodoStore = create<dailyTodoStore>()(devtools(dailyTodoStore));
+const useDailyTodoStore = create<dailyTodoStore>()(devtools(dailyTodoStore, { name: "Todo Store" }));
 
 export default useDailyTodoStore;

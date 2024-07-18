@@ -39,6 +39,6 @@ const scheduleStore: StateCreator<ScheduleStore> = (set) => ({
     })),
 });
 
-const useScheduleStore = create<ScheduleStore>()(devtools(scheduleStore));
+const useScheduleStore = create<ScheduleStore>()(devtools(scheduleStore, { name: "Schedule Store" }));
 
 export default useScheduleStore;

@@ -47,6 +47,8 @@ const dailyScheduleStore: StateCreator<DailySchedulesStore> = (set) => ({
     })),
 });
 
-const useDailyScheduleStore = create<DailySchedulesStore>()(devtools(dailyScheduleStore));
+const useDailyScheduleStore = create<DailySchedulesStore>()(
+  devtools(dailyScheduleStore, { name: "DailyScheduleStore" }),
+);
 
 export default useDailyScheduleStore;

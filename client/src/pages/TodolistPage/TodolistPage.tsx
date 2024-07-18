@@ -12,7 +12,7 @@ import Todo from "./TodolistPageComponents/Todo";
 import Footer from "../../components/PageComponents/Footer/Footer";
 import Header from "../../components/PageComponents/Header/Header";
 import { useState } from "react";
-import useModalStore from "../../store/store";
+import useModalStore from "../../store/modalStore";
 import TodoScheduleModal from "../../components/ModalComponents/TodoScheduleModal/TodoScheduleModal";
 
 const [FAILURE, TODAY, COMPLETED] = ["failure", "today", "completed"];

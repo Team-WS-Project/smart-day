@@ -15,7 +15,7 @@ import { CiMail } from "react-icons/ci";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { GoTag } from "react-icons/go";
-import { toggleRegisterModal } from "../../../store/store";
+import { toggleRegisterModal } from "../../../store/modalStore";
 
 const RegisterModal = () => {
   const [type, setType] = useState("password");

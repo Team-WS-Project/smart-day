@@ -20,7 +20,7 @@ interface CalendarPageState {
   };
 }
 
-const calendarPageStore: StateCreator<CalendarPageState> = ((set) => ({
+const calendarPageStore: StateCreator<CalendarPageState> = (set) => ({
   todolist: [
     {
       id: 1,
@@ -37,22 +37,18 @@ const calendarPageStore: StateCreator<CalendarPageState> = ((set) => ({
         isHaveTask: newArray,
       });
     },
-    changeIsHaveTask: (isEmpty: boolean) => {
-
-    },
+    changeIsHaveTask: (isEmpty: boolean) => {},
     setTodolist: (newTodolist: Todo[]) => {
-      set(() => ({todolist: newTodolist}));
+      set(() => ({ todolist: newTodolist }));
     },
     toggleTodoIsDone: (id: number) => {
       set((state) => ({
-        todolist: state.todolist.map((todo) =>
-          todo.id === id ? { ...todo, isDone: !(todo.isDone) } : todo
-        ),
+        todolist: state.todolist.map((todo) => (todo.id === id ? { ...todo, isDone: !todo.isDone } : todo)),
       }));
     },
-  }
-}));
+  },
+});
 
-const useCalendarPageStore = create<CalendarPageState>()(devtools(calendarPageStore));
+const useCalendarPageStore = create<CalendarPageState>()(devtools(calendarPageStore, { name: "Calendar Page Store" }));
 
 export default useCalendarPageStore;
