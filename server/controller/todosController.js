@@ -2,67 +2,65 @@ const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
 const ensureAuthorization = require("../auth");
 
-//TODO: SQL로 테이블과 연결되는 부분은 나중에 파일 분리할 예정 (@ hyoeun0001)
-function getTodayTodos({ email, today, month, completed }) {
-  const sql = `SELECT id, due_date, title, completed FROM todos WHERE user_email = ? AND due_date >= ? AND completed = 0`;
-  const values = [email, today];
+function getTodayTodos({ id, today }) {
+  const sql = `SELECT id, due_date, title, completed FROM todos WHERE user_id = ? AND due_date >= ? AND completed = 0`;
+  const values = [id, today];
 
   return [sql, values];
 }
 
-function getMonthTodos({ email, today, month, completed }) {
-  const sql = `SELECT id, due_date, title, completed FROM todos WHERE user_email = ? AND due_date LIKE ?`;
-  const values = [email, month + "%"];
+function getMonthTodos({ id, month }) {
+  const sql = `SELECT id, due_date, title, completed FROM todos WHERE user_id = ? AND due_date LIKE ?`;
+  const values = [id, month + "%"];
 
   return [sql, values];
 }
 
-function getDefaultTodos({ email, today, month, completed }) {
-  const sql = `SELECT id, due_date, title, completed FROM todos WHERE user_email = ? `;
-  const values = [email];
+function getDefaultTodos({ id }) {
+  const sql = `SELECT id, due_date, title, completed FROM todos WHERE user_id = ? `;
+  const values = [id];
 
   return [sql, values];
 }
 
-function getFailureTodos({ email, today, month, completed }) {
-  const sql = `SELECT id, title, due_date, completed FROM todos WHERE user_email = ? AND due_date < ? AND completed = 0`;
-  const values = [email, today];
+function getFailureTodos({ id, today }) {
+  const sql = `SELECT id, title, due_date, completed FROM todos WHERE user_id = ? AND due_date < ? AND completed = 0`;
+  const values = [id, today];
 
   return [sql, values];
 }
 
-function getCompletedTodos({ email, today, month, completed }) {
-  const sql = `SELECT id, title, due_date, completed FROM todos WHERE user_email = ? AND completed = 1`;
-  const values = [email];
+function getCompletedTodos({ id }) {
+  const sql = `SELECT id, title, due_date, completed FROM todos WHERE user_id = ? AND completed = 1`;
+  const values = [id];
 
   return [sql, values];
 }
 
-function getTodosQuery({ email, today, month, completed }) {
+function getTodosQuery({ id, today, month, completed }) {
   if (today) {
     if (completed === undefined) {
-      return getTodayTodos({ email, today, month, completed });
+      return getTodayTodos({ id, today, month, completed });
     }
     if (completed === "true") {
-      return getCompletedTodos({ email, today, month, completed });
+      return getCompletedTodos({ id, today, month, completed });
     }
     if (completed === "false") {
-      return getFailureTodos({ email, today, month, completed });
+      return getFailureTodos({ id, today, month, completed });
     }
   } else if (month) {
-    return getMonthTodos({ email, today, month, completed });
+    return getMonthTodos({ id, today, month, completed });
   } else {
-    return getDefaultTodos({ email, today, month, completed });
+    return getDefaultTodos({ id, today, month, completed });
   }
 }
 
 const getTodos = (req, res) => {
-  // TODO: user_id는 users랑 합칠때 authorization.id로 변경될 것 (@ hyoeun0001)
   const { today, month, completed } = req.query;
 
   ensureAuthorization(req, res, () => {
-    const email = req.authorization.email;
-    const [sql, values] = getTodosQuery({ email, today, month, completed });
+    const id = req.authorization.id;
+    const [sql, values] = getTodosQuery({ id, today, month, completed });
 
     conn.query(sql, values, (err, results) => {
       if (err) {
@@ -99,26 +97,26 @@ const getTodoDetail = (req, res) => {
   });
 };
 
-function addDefaultTodos({ title, detail, dueDate, email }) {
-  const sql = `INSERT INTO todos (title, detail, due_date, user_email) VALUES(?, ?, ?, ?)`;
-  const values = [title, detail, dueDate, email];
+function addDefaultTodos({ title, detail, dueDate, id }) {
+  const sql = `INSERT INTO todos (title, detail, due_date, user_id) VALUES(?, ?, ?, ?)`;
+  const values = [title, detail, dueDate, id];
 
   return [sql, values];
 }
 
-function addTodosAsDetailNull({ title, detail, dueDate, email }) {
-  const sql = `INSERT INTO todos (title, due_date, user_email) VALUES(?, ?, ?)`;
-  const values = [title, dueDate, email];
+function addTodosAsDetailNull({ title, dueDate, id }) {
+  const sql = `INSERT INTO todos (title, due_date, user_id) VALUES(?, ?, ?)`;
+  const values = [title, dueDate, id];
 
   return [sql, values];
 }
 
-function addTodosQuery({ title, detail, dueDate, email }) {
+function addTodosQuery({ title, detail, dueDate, id }) {
   if (detail == undefined) {
-    return addTodosAsDetailNull({ title, detail, dueDate, email });
+    return addTodosAsDetailNull({ title, detail, dueDate, id });
   }
 
-  return addDefaultTodos({ title, detail, dueDate, email });
+  return addDefaultTodos({ title, detail, dueDate, id });
 }
 
 const addTodos = (req, res) => {
@@ -126,8 +124,8 @@ const addTodos = (req, res) => {
   const { title, detail, dueDate } = req.body;
 
   ensureAuthorization(req, res, () => {
-    const email = req.authorization.email;
-    const [sql, values] = addTodosQuery({ title, detail, dueDate, email });
+    const id = req.authorization.id;
+    const [sql, values] = addTodosQuery({ title, detail, dueDate, id });
 
     conn.query(sql, values, (err, results) => {
       if (err) {
@@ -150,7 +148,7 @@ function updateDefaultTodos({ id, title, detail, dueDate }) {
   return [sql, values];
 }
 
-function updateTodosAsDetailNull({ id, title, detail, dueDate }) {
+function updateTodosAsDetailNull({ id, title, dueDate }) {
   const sql = `UPDATE todos SET title = ?, due_date = ? WHERE id = ?`;
   const values = [title, dueDate, id];
 
