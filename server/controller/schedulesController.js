@@ -60,14 +60,14 @@ const getSchedulesQuery = ({ id, start, end, date, month }) => {
   };
 };
 
-const getSchedules = (req, res) => {
+const getSchedules = async (req, res) => {
   const { start, end, date, month } = req.query;
 
-  ensureAuthorization(req, res, () => {
+  ensureAuthorization(req, res, async () => {
     const id = req.authorization.id;
     if (id && start && end) {
       try {
-        const scheduleTitles = getScheduleTitles(id, start, end);
+        const scheduleTitles = await getScheduleTitles(id, start, end);
         return res.status(StatusCodes.OK).json(scheduleTitles);
       } catch (err) {
         console.error(err);
@@ -90,27 +90,33 @@ const getSchedules = (req, res) => {
   });
 };
 
-const getScheduleTitles = (startDate, endDate) => {
-  return new Promise((resolve, reject) => {
-    const { sql, value: values } = getScheduleByPeriod(startDate, endDate);
+const getScheduleTitles = async (id, startDate, endDate) => {
+  try {
+    const { sql, values } = getScheduleByPeriod(id, startDate, endDate);
     console.log("Executing query:", sql);
     console.log("With values:", values);
 
-    conn.query(sql, values, (err, results) => {
-      if (err) {
-        console.error(err);
-        reject(err);
-        return;
-      }
-
-      const formattedResults = results.map((schedule) => ({
-        start_date: new Date(schedule.start_date).toISOString().split("T")[0],
-        titles: schedule.titles.split(", "),
-      }));
-
-      resolve(formattedResults);
+    const results = await new Promise((resolve, reject) => {
+      conn.query(sql, values, (err, results) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+          return;
+        }
+        resolve(results);
+      });
     });
-  });
+
+    const formattedResults = results.map((schedule) => ({
+      start_date: new Date(schedule.start_date).toISOString().split("T")[0],
+      titles: schedule.titles.split(", "),
+    }));
+
+    return formattedResults;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
 };
 
 const createScheduleArray = (year, month) => {
@@ -168,9 +174,8 @@ const getScheduleById = (req, res) => {
       FROM schedules
       WHERE id = ?
       `;
-    const values = [id];
 
-    conn.query(sql, values, (err, results) => {
+    conn.query(sql, id, (err, results) => {
       if (err) {
         console.error(err);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
