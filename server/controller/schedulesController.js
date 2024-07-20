@@ -195,10 +195,11 @@ const createSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
     const { title, detail, startDate, endDate, startTime, endTime } = req.body;
     const sql = `
-      INSERT INTO schedules (title, detail, start_date, end_date, start_time, end_time) 
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO schedules (title, detail, start_date, end_date, start_time, end_time, user_id) 
+      VALUES (?, ?, ?, ?, ?, ?,?)
     `;
-    const values = [title, detail, startDate, endDate, startTime, endTime];
+    const id = req.authorization.id;
+    const values = [title, detail, startDate, endDate, startTime, endTime, id];
 
     conn.query(sql, values, (err, results) => {
       if (err) {
