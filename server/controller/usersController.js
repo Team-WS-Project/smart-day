@@ -90,7 +90,7 @@ const login = (req, res) => {
         {
           expiresIn: process.env.TOKEN_EXPIRED_TIME,
           issuer: "SmartDay",
-        }
+        },
       );
 
       res.cookie("access_token", access_token, {
@@ -129,9 +129,7 @@ const updateUserInformation = (req, res) => {
 };
 
 const hashPassword = (password, salt) => {
-  return crypto
-    .pbkdf2Sync(password, salt, 10000, 10, "sha512")
-    .toString("base64");
+  return crypto.pbkdf2Sync(password, salt, 10000, 10, "sha512").toString("base64");
 };
 
 module.exports = {
