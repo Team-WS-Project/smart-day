@@ -1,6 +1,7 @@
 const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
 const ensureAuthorization = require("../auth");
+const ensureAuthorization = require("../auth");
 
 const getScheduleByPeriod = (id, start, end) => {
   return {
@@ -29,8 +30,10 @@ const getScheduleByMonth = (id, month) => {
 };
 
 const getScheduleByDate = (id, date) => {
+const getScheduleByDate = (id, date) => {
   return {
     sql: `
+    SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time, completed 
     SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time, completed 
     FROM schedules 
     WHERE user_id = ?
@@ -77,9 +80,16 @@ const getSchedules = async (req, res) => {
     }
 
     const query = getSchedulesQuery({ id, start, end, date, month });
+    const query = getSchedulesQuery({ id, start, end, date, month });
 
     const { sql, values } = query;
+    const { sql, values } = query;
 
+    conn.query(sql, values, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      }
     conn.query(sql, values, (err, results) => {
       if (err) {
         console.error(err);
@@ -88,15 +98,30 @@ const getSchedules = async (req, res) => {
 
       return res.status(StatusCodes.OK).json(results);
     });
+      return res.status(StatusCodes.OK).json(results);
+    });
   });
 };
 
 const getScheduleTitles = async (id, startDate, endDate) => {
   try {
     const { sql, values } = getScheduleByPeriod(id, startDate, endDate);
+const getScheduleTitles = async (id, startDate, endDate) => {
+  try {
+    const { sql, values } = getScheduleByPeriod(id, startDate, endDate);
     console.log("Executing query:", sql);
     console.log("With values:", values);
 
+    const results = await new Promise((resolve, reject) => {
+      conn.query(sql, values, (err, results) => {
+        if (err) {
+          console.error(err);
+          reject(err);
+          return;
+        }
+        resolve(results);
+      });
+    });
     const results = await new Promise((resolve, reject) => {
       conn.query(sql, values, (err, results) => {
         if (err) {
