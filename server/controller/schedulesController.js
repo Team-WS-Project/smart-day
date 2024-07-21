@@ -16,7 +16,7 @@ const getScheduleByPeriod = (id, start, end) => ({
 
 const getScheduleByMonth = (id, month) => ({
   sql: `
-    SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time 
+    SELECT user_id, start_date, end_date
     FROM schedules 
     WHERE user_id = ?
     AND DATE_FORMAT(start_date, '%Y-%m') = ?
@@ -94,8 +94,6 @@ const getSchedules = async (req, res) => {
 const getScheduleTitles = async (id, startDate, endDate) => {
   try {
     const { sql, values } = getScheduleByPeriod(id, startDate, endDate);
-    console.log("Executing query:", sql);
-    console.log("With values:", values);
 
     const results = await new Promise((resolve, reject) => {
       conn.query(sql, values, (err, results) => {
@@ -120,17 +118,16 @@ const getScheduleTitles = async (id, startDate, endDate) => {
   }
 };
 
-const createScheduleArray = (year, month) => {
+const createScheduleArray = (year, month, userId) => {
   return new Promise((resolve, reject) => {
     const daysInMonth = new Date(year, month, 0).getDate();
     const monthArray = new Array(daysInMonth).fill(false);
-
     const sql = `
       SELECT start_date, end_date 
       FROM schedules 
-      WHERE YEAR(start_date) = ? AND MONTH(start_date) = ?
+      WHERE YEAR(start_date) = ? AND MONTH(start_date) = ? AND user_id = ?
     `;
-    const values = [year, month];
+    const values = [year, month, userId];
 
     conn.query(sql, values, (err, results) => {
       if (err) {
@@ -144,7 +141,9 @@ const createScheduleArray = (year, month) => {
         const end = new Date(schedule.end_date);
 
         for (let d = start.getUTCDate(); d <= end.getUTCDate(); d++) {
-          monthArray[d - 1] = true;
+          if (start.getMonth() + 1 === month) {
+            monthArray[d - 1] = true;
+          }
         }
       });
 
@@ -154,10 +153,12 @@ const createScheduleArray = (year, month) => {
 };
 
 const getMonthlyArray = async (req, res) => {
-  const { year, month } = req.query;
   ensureAuthorization(req, res, async () => {
+    const { year, month } = req.query;
+    const userId = req.authorization.id;
+
     try {
-      const scheduleArray = await createScheduleArray(year, month);
+      const scheduleArray = await createScheduleArray(year, parseInt(month, 10), userId);
       res.status(StatusCodes.OK).json({ monthArray: scheduleArray });
     } catch (err) {
       console.error(err);
