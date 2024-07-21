@@ -1,47 +1,38 @@
 const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
 const ensureAuthorization = require("../auth");
-const ensureAuthorization = require("../auth");
 
-const getScheduleByPeriod = (id, start, end) => {
-  return {
-    sql: `
+const getScheduleByPeriod = (id, start, end) => ({
+  sql: `
     SELECT user_id, start_date, GROUP_CONCAT(title ORDER BY title ASC SEPARATOR ', ') AS titles
     FROM schedules
     WHERE user_id = ?
     AND start_date BETWEEN ? AND ?
     GROUP BY start_date
     ORDER BY start_date ASC
-    `,
-    values: [id, start, end],
-  };
-};
+  `,
+  values: [id, start, end],
+});
 
-const getScheduleByMonth = (id, month) => {
-  return {
-    sql: `
-    SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time, completed 
+const getScheduleByMonth = (id, month) => ({
+  sql: `
+    SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time 
     FROM schedules 
     WHERE user_id = ?
     AND DATE_FORMAT(start_date, '%Y-%m') = ?
-    `,
-    values: [id, month],
-  };
-};
+  `,
+  values: [id, month],
+});
 
-const getScheduleByDate = (id, date) => {
-const getScheduleByDate = (id, date) => {
-  return {
-    sql: `
-    SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time, completed 
-    SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time, completed 
+const getScheduleByDate = (id, date) => ({
+  sql: `
+    SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time 
     FROM schedules 
     WHERE user_id = ?
     AND start_date = ?
-    `,
-    values: [id, date],
-  };
-};
+  `,
+  values: [id, date],
+});
 
 const getSchedulesQuery = ({ id, start, end, date, month }) => {
   if (id && start && end) {
@@ -56,72 +47,56 @@ const getSchedulesQuery = ({ id, start, end, date, month }) => {
 
   return {
     sql: `
-    SELECT id, user_id, title, detail, start_time, end_time, start_date 
-    FROM schedules
-    WHERE user_id = ?
+      SELECT id, user_id, title, detail, start_time, end_time, start_date, end_date
+      FROM schedules
+      WHERE user_id = ?
     `,
     values: [id],
   };
 };
 
 const getSchedules = async (req, res) => {
-  const { start, end, date, month } = req.query;
-
   ensureAuthorization(req, res, async () => {
     const id = req.authorization.id;
-    if (id && start && end) {
+    const { start, end, date, month } = req.query;
+
+    if (id) {
+      const query = getSchedulesQuery({ id, start, end, date, month });
+      const { sql, values } = query;
+
       try {
-        const scheduleTitles = await getScheduleTitles(id, start, end);
-        return res.status(StatusCodes.OK).json(scheduleTitles);
+        const results = await new Promise((resolve, reject) => {
+          conn.query(sql, values, (err, results) => {
+            if (err) {
+              reject(err);
+              return;
+            }
+            resolve(results);
+          });
+        });
+
+        if (start && end) {
+          const scheduleTitles = await getScheduleTitles(id, start, end);
+          return res.status(StatusCodes.OK).json(scheduleTitles);
+        }
+
+        return res.status(StatusCodes.OK).json(results);
       } catch (err) {
         console.error(err);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
       }
+    } else {
+      return res.status(StatusCodes.UNAUTHORIZED).end();
     }
-
-    const query = getSchedulesQuery({ id, start, end, date, month });
-    const query = getSchedulesQuery({ id, start, end, date, month });
-
-    const { sql, values } = query;
-    const { sql, values } = query;
-
-    conn.query(sql, values, (err, results) => {
-      if (err) {
-        console.error(err);
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
-      }
-    conn.query(sql, values, (err, results) => {
-      if (err) {
-        console.error(err);
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
-      }
-
-      return res.status(StatusCodes.OK).json(results);
-    });
-      return res.status(StatusCodes.OK).json(results);
-    });
   });
 };
 
 const getScheduleTitles = async (id, startDate, endDate) => {
   try {
     const { sql, values } = getScheduleByPeriod(id, startDate, endDate);
-const getScheduleTitles = async (id, startDate, endDate) => {
-  try {
-    const { sql, values } = getScheduleByPeriod(id, startDate, endDate);
     console.log("Executing query:", sql);
     console.log("With values:", values);
 
-    const results = await new Promise((resolve, reject) => {
-      conn.query(sql, values, (err, results) => {
-        if (err) {
-          console.error(err);
-          reject(err);
-          return;
-        }
-        resolve(results);
-      });
-    });
     const results = await new Promise((resolve, reject) => {
       conn.query(sql, values, (err, results) => {
         if (err) {
@@ -180,7 +155,6 @@ const createScheduleArray = (year, month) => {
 
 const getMonthlyArray = async (req, res) => {
   const { year, month } = req.query;
-
   ensureAuthorization(req, res, async () => {
     try {
       const scheduleArray = await createScheduleArray(year, month);
@@ -193,15 +167,19 @@ const getMonthlyArray = async (req, res) => {
 };
 
 const getScheduleById = (req, res) => {
-  const { id } = req.params;
   ensureAuthorization(req, res, () => {
+    const scheduleId = req.params.id;
+    const userId = req.authorization.id;
+
     const sql = `
-      SELECT title, detail, start_date, end_date, start_time, end_time, completed
+      SELECT title, detail, start_date, end_date, start_time, end_time
       FROM schedules
-      WHERE id = ?
+      WHERE id = ? AND user_id = ?
     `;
 
-    conn.query(sql, id, (err, results) => {
+    const values = [scheduleId, userId];
+
+    conn.query(sql, values, (err, results) => {
       if (err) {
         console.error(err);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
@@ -218,12 +196,14 @@ const getScheduleById = (req, res) => {
 
 const createSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
+    const id = req.authorization.id;
     const { title, detail, startDate, endDate, startTime, endTime } = req.body;
     const sql = `
-      INSERT INTO schedules (title, detail, start_date, end_date, start_time, end_time) 
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO schedules (user_id, title, detail, start_date, end_date, start_time, end_time) 
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
-    const values = [title, detail, startDate, endDate, startTime, endTime];
+
+    const values = [id, title, detail, startDate, endDate, startTime, endTime];
 
     conn.query(sql, values, (err, results) => {
       if (err) {
@@ -238,21 +218,26 @@ const createSchedule = (req, res) => {
 
 const updateSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
-    const { id } = req.params;
+    const userId = req.authorization.id;
+    const scheduleId = req.params.id;
     const { title, detail, startDate, endDate, startTime, endTime } = req.body;
 
     const sql = `
       UPDATE schedules
       SET title = ?, detail = ?, start_date = ?, end_date = ?, start_time = ?, end_time = ?
-      WHERE id = ?
+      WHERE id = ? AND user_id = ?
     `;
 
-    const values = [title, detail, startDate, endDate, startTime, endTime, id];
+    const values = [title, detail, startDate, endDate, startTime, endTime, scheduleId, userId];
 
     conn.query(sql, values, (err, results) => {
       if (err) {
         console.error(err);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+      }
+
+      if (results.affectedRows === 0) {
+        return res.status(StatusCodes.NOT_FOUND).end();
       }
 
       return res.status(StatusCodes.OK).json(results);
@@ -262,14 +247,17 @@ const updateSchedule = (req, res) => {
 
 const deleteSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
-    const { id } = req.params;
+    const userId = req.authorization.id;
+    const scheduleId = req.params.id;
 
     const sql = `
       DELETE FROM schedules 
-      WHERE id = ?
+      WHERE id = ? AND user_id = ?
     `;
 
-    conn.query(sql, id, (err, results) => {
+    const values = [scheduleId, userId];
+
+    conn.query(sql, values, (err, results) => {
       if (err) {
         console.error(err);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();

@@ -13,7 +13,7 @@ const router = express.Router();
 router.use(express.json());
 
 router.get("/", getSchedules);
-router.get("/calendar", getMonthlyArray);
+router.get("/", getMonthlyArray);
 router.get("/detail/:id", getScheduleById);
 router.post("/", createSchedule);
 router.put("/:id", updateSchedule);
