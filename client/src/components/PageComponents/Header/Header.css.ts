@@ -63,3 +63,7 @@ export const headerNaviButtons = style({
     transition: "transform 100ms",
   },
 });
+
+export const afterLogin = style({
+  marginRight: "30px",
+});

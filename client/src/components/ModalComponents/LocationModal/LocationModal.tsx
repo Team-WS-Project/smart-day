@@ -4,7 +4,12 @@ import { TiStarOutline, TiStarFullOutline } from "react-icons/ti";
 import { FiX } from "react-icons/fi";
 import { useState } from "react";
 import { toggleLocationModal } from "../../../store/modalStore";
-import { useUserInfoStore } from "../../../store/userInfoStore";
+import { FavoriteLocation, useUserInfoStore } from "../../../store/userInfoStore";
+import {
+  addServerFavoriteLocation,
+  deleteServerFavoriteLocation,
+  putCurrentLocation,
+} from "../../../apis/locationAPIs";
 
 const FAVORITE_MAX_COUNT = 5;
 
@@ -12,7 +17,6 @@ const LocationModal = () => {
   const [selectedLocation, setSelectedLocation] = useState({
     sido: "",
     sigungu: "",
-    // eupmyeon: "",
   });
   const { favoriteLocations, currentLocation } = useUserInfoStore((state) => ({
     favoriteLocations: state.favoriteLocations,
@@ -32,25 +36,34 @@ const LocationModal = () => {
     setSelectedLocation({ ...selectedLocation, sido: e.target.value, sigungu: "" });
   };
 
-  const handleSigunguChange = (e) => {
+  const handleSigunguChange = async (e) => {
     if (e.target.value === "") {
       return;
     }
 
     setSelectedLocation({ ...selectedLocation, sigungu: e.target.value });
+
+    await putCurrentLocation(`${selectedLocation.sido} ${e.target.value}`);
     setCurrentLocation(`${selectedLocation.sido} ${e.target.value}`);
   };
 
-  const handleAddFavorite = () => {
+  const handleAddFavorite = async () => {
     if (favoriteLocations.length < FAVORITE_MAX_COUNT) {
-      return addFavoriteLocation(currentLocation);
+      await addServerFavoriteLocation(currentLocation);
+      addFavoriteLocation(currentLocation);
+
+      return;
     }
 
     alert(`즐겨찾기는 최대 ${FAVORITE_MAX_COUNT}개까지 가능합니다.`);
   };
 
-  const isCurrentInFavorites = (favoriteLocations, currentLocation) => {
-    return !(favoriteLocations.filter((favoriteLocation) => favoriteLocation === currentLocation).length === 0);
+  const isCurrentInFavorites = (favoriteLocations: FavoriteLocation[], currentLocation: string) => {
+    return !(
+      favoriteLocations.filter(
+        (favoriteLocation: FavoriteLocation) => favoriteLocation.location_name === currentLocation,
+      ).length === 0
+    );
   };
 
   return (
@@ -88,10 +101,19 @@ const LocationModal = () => {
 
         <div className={styles.favoriteArea}>
           <div className={styles.subTitle}>즐겨찾기한 위치</div>
-          {favoriteLocations.map((location, index) => (
+          {favoriteLocations.map((location: FavoriteLocation, index) => (
             <div key={index} className={styles.locationItem}>
-              {location}
-              <TiStarFullOutline className={styles.starFilledIcon} onClick={() => deleteFavoriteLocation(location)} />
+              {location.location_name}
+              <TiStarFullOutline
+                className={styles.starFilledIcon}
+                onClick={async (e) => {
+                  try {
+                    await deleteServerFavoriteLocation(location.location_name);
+                    deleteFavoriteLocation(location.location_name);
+                  } catch (err) {}
+                  // e.stopPropagation();
+                }}
+              />
             </div>
           ))}
         </div>
@@ -103,7 +125,12 @@ const LocationModal = () => {
             {isCurrentInFavorites(favoriteLocations, currentLocation) ? (
               <TiStarFullOutline
                 className={styles.starFilledIcon}
-                onClick={() => deleteFavoriteLocation(currentLocation)}
+                onClick={async () => {
+                  try {
+                    await deleteServerFavoriteLocation(currentLocation);
+                    deleteFavoriteLocation(currentLocation);
+                  } catch (err) {}
+                }}
               />
             ) : (
               <TiStarOutline className={styles.starEmptyIcon} onClick={handleAddFavorite} />

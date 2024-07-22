@@ -15,12 +15,21 @@ import { CiMail } from "react-icons/ci";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { GoTag } from "react-icons/go";
-import { toggleRegisterModal } from "../../../store/modalStore";
+import { toggleLocationModal, toggleLoginModal, toggleRegisterModal } from "../../../store/modalStore";
+import axios from "axios";
+import { requestRegisterAPI } from "../../../apis/registerAPI";
 
 const RegisterModal = () => {
   const [type, setType] = useState("password");
   const [showPassword, setShowPassword] = useState(false);
   const [icon, setIcon] = useState(<FaEyeSlash />);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [nickname, setNickname] = useState("");
+
+  const [location, setLocation] = useState("");
 
   const [typeConfirmPassword, setTypeConfirmPassword] = useState("password");
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -38,6 +47,26 @@ const RegisterModal = () => {
     setIconConfirmPassword((prevIcon) => (prevIcon.type === FaEyeSlash ? <FaEye /> : <FaEyeSlash />));
   };
 
+  const handleRegister = async (email: string, password: string, location: string, nickname: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      alert("올바른 이메일 형식을 입력해주세요.");
+    } else if (password !== confirmPassword) {
+      alert("비밀번호가 일치하지 않습니다.");
+    } else {
+      try {
+        await requestRegisterAPI(email, password, location, nickname);
+
+        alert("회원가입에 성공하였습니다! 로그인을 진행해주세요.");
+        toggleRegisterModal();
+        toggleLoginModal();
+      } catch (error) {
+        alert("회원가입에 실패했습니다.");
+      }
+    }
+  };
+
   return (
     <div className={wrapper}>
       <div className={registerContainer}>
@@ -51,13 +80,24 @@ const RegisterModal = () => {
             <CiMail />
           </div>
 
-          <input className={inputBox} placeholder="아이디 (email)" />
+          <input
+            className={inputBox}
+            placeholder="아이디 (email)"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
         <div className={inputField}>
           <div className={inputIcon}>
             <IoLockClosedOutline />
           </div>
-          <input className={inputBox} placeholder="비밀번호" type={type} />
+          <input
+            className={inputBox}
+            placeholder="비밀번호"
+            type={type}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <div className={inputIcon} onClick={handleToggle} style={{ cursor: "pointer" }}>
             {icon}
           </div>
@@ -66,7 +106,13 @@ const RegisterModal = () => {
           <div className={inputIcon}>
             <IoLockClosedOutline />
           </div>
-          <input className={inputBox} placeholder="비밀번호 확인" type={typeConfirmPassword} />
+          <input
+            className={inputBox}
+            placeholder="비밀번호 확인"
+            type={typeConfirmPassword}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
           <div className={inputIcon} onClick={handleToggleConfirmPassword}>
             {iconConfirmPassword}
           </div>
@@ -75,10 +121,19 @@ const RegisterModal = () => {
           <div className={inputIcon}>
             <GoTag />
           </div>
-          <input className={inputBox} placeholder="닉네임" />
+          <input
+            className={inputBox}
+            placeholder="닉네임"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+          />
         </div>
-        <div className={locationButton}>위치 설정</div>
-        <div className={registerButton}>회원가입</div>
+        <div className={locationButton} onClick={toggleLocationModal}>
+          위치 설정
+        </div>
+        <div className={registerButton} onClick={() => handleRegister(email, password, location, nickname)}>
+          회원가입
+        </div>
       </div>
     </div>
   );

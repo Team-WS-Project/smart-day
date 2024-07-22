@@ -23,6 +23,9 @@ export const loginClose = style({
   color: vars.color.brightIcon,
   textAlign: "end",
   width: "96%",
+  ":hover": {
+    cursor: "pointer",
+  },
 });
 
 export const loginMain = style({
