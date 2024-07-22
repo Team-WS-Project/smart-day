@@ -4,11 +4,11 @@ import { devtools } from "zustand/middleware";
 export type Task = {
   taskId: number;
   listIndex: number;
-  date: Date;
+  date: string;
   startTime: string;
   endTime: string;
   title: string;
-  description: string;
+  details: string;
 };
 
 export type TaskList = {
@@ -22,7 +22,7 @@ interface MainState {
   actions: {
     changeDateBefore: () => void;
     changeDateAfter: () => void;
-    changeTaskLists: () => void;
+    changeTaskLists: (newTaskLists: TaskList[]) => void;
     addTask: (listIndex: number, newTask: Task) => void;
     updateTask: (listIndex: number, updateTask: Task) => void;
     deleteTask: (listIndex: number, taskId: number) => void;
@@ -38,11 +38,11 @@ const mainStore: StateCreator<MainState> = (set) => ({
         {
           taskId: 1,
           listIndex: 0,
-          date: new Date(2024, 7, 16),
+          date: "2024-07-22",
           startTime: "09:00",
           endTime: "11:00",
-          title: "운동",
-          description: "러닝",
+          title: "",
+          details: "운동",
         },
       ],
     },
@@ -74,9 +74,9 @@ const mainStore: StateCreator<MainState> = (set) => ({
         return { standardDate: newDate };
       });
     },
-    changeTaskLists: () =>
-      set((state) => ({
-        dailyTaskLists: state.dailyTaskLists,
+    changeTaskLists: (newTaskLists: TaskList[]) =>
+      set(() => ({
+        dailyTaskLists: newTaskLists,
       })),
     addTask: (listIndex: number, newTask: Task) => {
       set((state) => {
