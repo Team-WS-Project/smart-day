@@ -193,8 +193,6 @@ const createScheduleArray = (year, month, userId) => {
         return;
       }
 
-      console.log("Query Results:", results); // Add this line
-
       results.forEach((schedule) => {
         const start = new Date(schedule.start_date);
         const end = new Date(schedule.end_date);
@@ -205,8 +203,6 @@ const createScheduleArray = (year, month, userId) => {
           }
         }
       });
-
-      console.log("Final monthArray:", monthArray); // Add this line
 
       resolve(monthArray);
     });
