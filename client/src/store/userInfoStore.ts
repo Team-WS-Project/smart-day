@@ -1,18 +1,30 @@
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
+import { getFavorites } from "../apis/locationAPIs";
+
+export type FavoriteLocation = {
+  location_name: string;
+};
 
 interface userInfoState {
   userId: number | null;
   selectedDate: Date | undefined;
   currentLocation: string;
-  favoriteLocations: string[];
+  favoriteLocations: FavoriteLocation[];
+  nickname: string | null;
 
   actions: {
-    setSelectedDate: (arg1: Date) => void;
+    setUserId: (userId: number) => void;
+
+    setNickname: (nickname: string) => void;
+
+    setSelectedDate: (date: Date) => void;
 
     initializeSelectedDate: () => void;
 
     setCurrentLocation: (currentLocation: string) => void;
+
+    setFavoriteLocation: () => void;
 
     addFavoriteLocation: (location: string) => void;
 
@@ -25,8 +37,17 @@ const userInfoStore: StateCreator<userInfoState> = (set) => ({
   selectedDate: undefined,
   currentLocation: "",
   favoriteLocations: [],
+  nickname: null,
 
   actions: {
+    setUserId(userId) {
+      set((state) => ({ ...state, userId }));
+    },
+
+    setNickname: (nickname) => {
+      set((state) => ({ ...state, nickname }));
+    },
+
     setSelectedDate: (date) => {
       set((state) => ({ ...state, selectedDate: date }));
     },
@@ -39,18 +60,26 @@ const userInfoStore: StateCreator<userInfoState> = (set) => ({
       set((state) => ({ ...state, currentLocation: currentLocation }));
     },
 
+    setFavoriteLocation: async () => {
+      try {
+        const res = await getFavorites();
+        const favorites = res?.data;
+        set((state) => {
+          return { ...state, favoriteLocations: favorites };
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    },
+
     addFavoriteLocation: (location) => {
       set((state) => {
         if (location.trim() === "") {
           return { ...state };
         }
 
-        let isOverlapped = false;
-
-        state.favoriteLocations.forEach((favoriteLocation) => {
-          if (favoriteLocation === location) {
-            isOverlapped = true;
-          }
+        const isOverlapped = state.favoriteLocations.some((favoriteLocation) => {
+          favoriteLocation.location_name === location;
         });
 
         if (isOverlapped) {
@@ -59,7 +88,7 @@ const userInfoStore: StateCreator<userInfoState> = (set) => ({
 
         return {
           ...state,
-          favoriteLocations: [...state.favoriteLocations, location],
+          favoriteLocations: [...state.favoriteLocations, { location_name: location }],
         };
       });
     },
@@ -69,7 +98,7 @@ const userInfoStore: StateCreator<userInfoState> = (set) => ({
         return {
           ...state,
           favoriteLocations: state.favoriteLocations.filter((favoriteLocation) => {
-            return favoriteLocation !== location;
+            return favoriteLocation.location_name !== location;
           }),
         };
       });
