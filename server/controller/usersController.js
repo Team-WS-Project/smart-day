@@ -95,6 +95,8 @@ const login = (req, res) => {
 
       res.cookie("access_token", access_token, {
         httpOnly: true,
+        secure: false,
+        sameSite: "lax",
       });
 
       return res.status(StatusCodes.OK).json(results);
@@ -112,17 +114,23 @@ const login = (req, res) => {
 // 회원 정보 수정
 const updateUserInformation = (req, res) => {
   const { location, nickname } = req.body;
-
   ensureAuthorization(req, res, () => {
-    const sql = `UPDATE users SET location=?, nickname=? WHERE email=?`;
+    let sql;
+    let values;
 
-    const values = [location, nickname, req.authorization.email];
+    if (nickname === undefined) {
+      sql = `UPDATE users SET location=? WHERE id=?`;
+      values = [location, req.authorization.id];
+    } else {
+      sql = `UPDATE users SET location=?, nickname=? WHERE id=?`;
+      values = [location, nickname, req.authorization.id];
+    }
+    
     conn.query(sql, values, (err, results) => {
       if (err) {
         console.error(err);
         return res.status(StatusCodes.BAD_REQUEST).end();
       }
-
       return res.status(StatusCodes.OK).json(results);
     });
   });

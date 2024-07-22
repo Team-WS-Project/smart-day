@@ -6,7 +6,7 @@ dotenv.config();
 
 const ensureAuthorization = (req, res, next) => {
   try {
-    const receivedJwt = req.headers["authorization"];
+    const receivedJwt = req.cookies["access_token"];
 
     if (!receivedJwt) {
       throw new ReferenceError("jwt must be provided");
