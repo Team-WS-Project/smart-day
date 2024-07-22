@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import {
+  afterLogin,
   headerButton,
   headerFooterContainer,
   headerNaviButtons,
@@ -8,8 +9,11 @@ import {
   mainLogo,
 } from "./Header.css";
 import { toggleLoginModal, toggleRegisterModal } from "../../../store/modalStore";
+import { useUserInfoStore } from "../../../store/userInfoStore";
 
 const Header = () => {
+  const userId = useUserInfoStore((state) => state.userId);
+
   const navigate = useNavigate();
 
   const gotoMainPage = () => {
@@ -58,20 +62,24 @@ const Header = () => {
           TodoList
         </div>
       </div>
-      <div className={headerTwoButtons}>
-        <button
-          className={headerButton}
-          onClick={toggleLoginModal} //
-        >
-          로그인
-        </button>
-        <button
-          className={headerButton}
-          onClick={toggleRegisterModal} //
-        >
-          회원가입
-        </button>
-      </div>
+      {userId !== null ? (
+        <div className={afterLogin}>{userId}님, 안녕하세요!</div>
+      ) : (
+        <div className={headerTwoButtons}>
+          <button
+            className={headerButton}
+            onClick={toggleLoginModal} //
+          >
+            로그인
+          </button>
+          <button
+            className={headerButton}
+            onClick={toggleRegisterModal} //
+          >
+            회원가입
+          </button>
+        </div>
+      )}
     </div>
   );
 };
