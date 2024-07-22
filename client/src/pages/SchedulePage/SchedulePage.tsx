@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   dateContainer,
   datePickerContainer,
@@ -19,8 +19,8 @@ import DayModal from "../../components/ModalComponents/DayModal/DayModal";
 import useModalStore from "../../store/modalStore";
 import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
 import RegisterModal from "../../components/ModalComponents/RegisterModal/RegisterModal";
-import useScheduleStore from "../../store/scheduleStore";
-import useFetchSchedules from "../../hooks/getSchedules";
+import useScheduleStore, { Schedule } from "../../store/scheduleStore";
+import { getSchedulesAPI } from "../../apis/getSchedulesAPI";
 
 const SchedulePage = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -33,8 +33,22 @@ const SchedulePage = () => {
   const { showLoginModal } = useModalStore((state) => ({ showLoginModal: state.loginModal }));
   const { showRegisterModal } = useModalStore((state) => ({ showRegisterModal: state.registerModal }));
   const schedules = useScheduleStore((state) => state.schedules);
+  const { actions } = useScheduleStore();
 
-  useFetchSchedules(startDate, endDate);
+  useEffect(() => {
+    const fetchSchedules = async () => {
+      try {
+        actions.clearSchedule();
+        const data = await getSchedulesAPI(startDate, endDate);
+        data.forEach((item: Schedule) => {
+          actions.addSchedule(item);
+        });
+      } catch (error) {
+        console.error("Failed to fetch schedules:", error);
+      }
+    };
+    fetchSchedules();
+  }, [startDate, endDate, actions]);
 
   const handleStartDateChange = (date: Date | null) => {
     if (date) {
