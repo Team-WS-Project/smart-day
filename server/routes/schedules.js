@@ -1,6 +1,7 @@
 const express = require("express");
 
 const {
+  getSchedulesByFourDays,
   getSchedules,
   getMonthlyArray,
   getScheduleById,
@@ -12,6 +13,7 @@ const {
 const router = express.Router();
 router.use(express.json());
 
+router.get("/fourdays", getSchedulesByFourDays);
 router.get("/", getSchedules);
 router.get("/", getMonthlyArray);
 router.get("/detail/:id", getScheduleById);

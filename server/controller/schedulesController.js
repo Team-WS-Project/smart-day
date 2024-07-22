@@ -2,6 +2,63 @@ const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
 const ensureAuthorization = require("../auth");
 
+const getSchedulesByFourDays = async (req, res) => {
+  ensureAuthorization(req, res, async () => {
+    const userId = req.authorization.id;
+    const today = new Date();
+    const daysToAdd = 4;
+
+    const formatDate = (date) => {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    };
+
+    const addDays = (date, days) => {
+      const result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result;
+    };
+
+    const endDate = addDays(today, daysToAdd - 1);
+
+    const sql = `
+      SELECT id, start_date, start_time, end_time, title, detail 
+      FROM schedules 
+      WHERE user_id = ? 
+      AND start_date BETWEEN ? AND ?
+    `;
+
+    const values = [userId, formatDate(today), formatDate(endDate)];
+
+    try {
+      const results = await new Promise((resolve, reject) => {
+        conn.query(sql, values, (err, results) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(results);
+        });
+      });
+
+      const tasks = results.map((result) => ({
+        date: new Date(result.start_date).toISOString().split("T")[0],
+        startTime: result.start_time,
+        endTime: result.end_time,
+        title: result.title,
+        description: result.detail,
+      }));
+
+      return res.status(StatusCodes.OK).json(tasks);
+    } catch (err) {
+      console.error(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+    }
+  });
+};
+
 const getScheduleByPeriod = (id, start, end) => ({
   sql: `
     SELECT user_id, start_date, GROUP_CONCAT(title ORDER BY title ASC SEPARATOR ', ') AS titles
@@ -131,10 +188,12 @@ const createScheduleArray = (year, month, userId) => {
 
     conn.query(sql, values, (err, results) => {
       if (err) {
-        console.error(err);
+        console.error("SQL Query Error:", err);
         reject(err);
         return;
       }
+
+      console.log("Query Results:", results); // Add this line
 
       results.forEach((schedule) => {
         const start = new Date(schedule.start_date);
@@ -146,6 +205,8 @@ const createScheduleArray = (year, month, userId) => {
           }
         }
       });
+
+      console.log("Final monthArray:", monthArray); // Add this line
 
       resolve(monthArray);
     });
@@ -274,6 +335,7 @@ const deleteSchedule = (req, res) => {
 };
 
 module.exports = {
+  getSchedulesByFourDays,
   getSchedules,
   getMonthlyArray,
   getScheduleById,
