@@ -2,10 +2,13 @@ const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
 const ensureAuthorization = require("../auth");
 
+// 4일 동안의 일정을 조회하는 함수
 const getSchedulesByFourDays = async (req, res) => {
   ensureAuthorization(req, res, async () => {
     const userId = req.authorization.id;
-    const today = new Date();
+    const { standardDate } = req.query;
+
+    const startDate = new Date(standardDate);
     const daysToAdd = 4;
 
     const formatDate = (date) => {
@@ -21,7 +24,7 @@ const getSchedulesByFourDays = async (req, res) => {
       return result;
     };
 
-    const endDate = addDays(today, daysToAdd - 1);
+    const endDate = addDays(startDate, daysToAdd - 1);
 
     const sql = `
       SELECT id, start_date, start_time, end_time, title, detail 
@@ -30,7 +33,7 @@ const getSchedulesByFourDays = async (req, res) => {
       AND start_date BETWEEN ? AND ?
     `;
 
-    const values = [userId, formatDate(today), formatDate(endDate)];
+    const values = [userId, formatDate(startDate), formatDate(endDate)];
 
     try {
       const results = await new Promise((resolve, reject) => {
@@ -59,6 +62,7 @@ const getSchedulesByFourDays = async (req, res) => {
   });
 };
 
+// 특정 기간의 일정을 조회하는 SQL 쿼리 객체를 반환하는 함수
 const getScheduleByPeriod = (id, start, end) => ({
   sql: `
     SELECT user_id, start_date, GROUP_CONCAT(title ORDER BY title ASC SEPARATOR ', ') AS titles
@@ -71,6 +75,7 @@ const getScheduleByPeriod = (id, start, end) => ({
   values: [id, start, end],
 });
 
+// 특정 달의 일정을 조회하는 SQL 쿼리 객체를 반환하는 함수
 const getScheduleByMonth = (id, month) => ({
   sql: `
     SELECT user_id, start_date, end_date
@@ -81,6 +86,7 @@ const getScheduleByMonth = (id, month) => ({
   values: [id, month],
 });
 
+// 특정 날짜의 일정을 조회하는 SQL 쿼리 객체를 반환하는 함수
 const getScheduleByDate = (id, date) => ({
   sql: `
     SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time 
@@ -91,6 +97,7 @@ const getScheduleByDate = (id, date) => ({
   values: [id, date],
 });
 
+// 여러 조건에 따른 일정 조회 SQL 쿼리 객체를 반환하는 함수
 const getSchedulesQuery = ({ id, start, end, date, month }) => {
   if (id && start && end) {
     return getScheduleByPeriod(id, start, end);
@@ -112,6 +119,7 @@ const getSchedulesQuery = ({ id, start, end, date, month }) => {
   };
 };
 
+// 여러 조건에 따른 일정을 조회하는 함수
 const getSchedules = async (req, res) => {
   ensureAuthorization(req, res, async () => {
     const id = req.authorization.id;
@@ -148,6 +156,7 @@ const getSchedules = async (req, res) => {
   });
 };
 
+// 특정 기간의 일정 타이틀을 조회하는 함수
 const getScheduleTitles = async (id, startDate, endDate) => {
   try {
     const { sql, values } = getScheduleByPeriod(id, startDate, endDate);
@@ -175,6 +184,7 @@ const getScheduleTitles = async (id, startDate, endDate) => {
   }
 };
 
+// 특정 달의 일정이 있는 날을 배열로 반환하는 함수
 const createScheduleArray = (year, month, userId) => {
   return new Promise((resolve, reject) => {
     const daysInMonth = new Date(year, month, 0).getDate();
@@ -188,7 +198,7 @@ const createScheduleArray = (year, month, userId) => {
 
     conn.query(sql, values, (err, results) => {
       if (err) {
-        console.error("SQL Query Error:", err);
+        console.error(err);
         reject(err);
         return;
       }
@@ -209,6 +219,7 @@ const createScheduleArray = (year, month, userId) => {
   });
 };
 
+// 특정 달의 일정 배열을 반환하는 함수
 const getMonthlyArray = async (req, res) => {
   ensureAuthorization(req, res, async () => {
     const { year, month } = req.query;
@@ -224,6 +235,7 @@ const getMonthlyArray = async (req, res) => {
   });
 };
 
+// 특정 일정 ID로 일정을 조회하는 함수
 const getScheduleById = (req, res) => {
   ensureAuthorization(req, res, () => {
     const scheduleId = req.params.id;
@@ -252,6 +264,7 @@ const getScheduleById = (req, res) => {
   });
 };
 
+// 새로운 일정을 생성하는 함수
 const createSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
     const id = req.authorization.id;
@@ -274,6 +287,7 @@ const createSchedule = (req, res) => {
   });
 };
 
+// 기존 일정을 업데이트하는 함수
 const updateSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
     const userId = req.authorization.id;
@@ -303,6 +317,7 @@ const updateSchedule = (req, res) => {
   });
 };
 
+// 기존 일정을 삭제하는 함수
 const deleteSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
     const userId = req.authorization.id;
