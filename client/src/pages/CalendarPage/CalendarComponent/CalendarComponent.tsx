@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { BsCalendar4 } from "react-icons/bs";
@@ -32,12 +32,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import useCalendarPageStore from "../../../store/calendarStore";
 import Todo from "./Todo/Todo";
-import { getIsHaveTask } from "../../../apis/calenderPageAPI";
+import { getIsHaveTask, getTodolist } from "../../../apis/calenderPageAPI";
 
 const CalendarComponent = () => {
   const [activeDate, setActiveDate] = useState(new Date());
   const { todolist, isHaveTask } = useCalendarPageStore();
-  const setIsHaveTask = useCalendarPageStore((state) => state.actions.setIsHaveTask);
+  const { setIsHaveTask, setTodolist } = useCalendarPageStore((state) => state.actions);
   const navigate = useNavigate();
 
   const weatherIcons = [
@@ -58,8 +58,8 @@ const CalendarComponent = () => {
 
     try {
       const res = await getIsHaveTask(nowYear, nowMonth);
-      console.log(res.data);
-      const updatedIsHaveTask = res.data; // res.data는 array[0]~[30 or 31] 형태
+      console.log(res?.data);
+      const updatedIsHaveTask = res?.data; // res.data는 array[0]~[30 or 31] 형태
 
       // store 업데이트
       setIsHaveTask(updatedIsHaveTask);
@@ -68,7 +68,15 @@ const CalendarComponent = () => {
     }
   };
 
-  const fetchTodolist = async () => {};
+  const fetchTodolist = async () => {
+    const nowDate = String(activeDate.getFullYear()) + "-" + activeDate.getMonth();
+    const res = await getTodolist(nowDate);
+    // console.log(res.data);
+
+    // 아래 코드 수정 필요 -> res.data와 Todo[] interface 비교하여 형식 정해주기
+    const newTodoList = res?.data;
+    setTodolist(newTodoList);
+  };
 
   useEffect(() => {
     // 확인용 임시 데이터 -> Todo: fetch(month => { return isHaveTask; }) (@II-122)
