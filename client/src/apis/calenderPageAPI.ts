@@ -2,7 +2,7 @@ import { baseAxios } from "./baseAPI";
 
 export const getIsHaveTask = async (nowYear, nowMonth) => {
   try {
-    const res = await baseAxios.get("/schedules?year=2024&month=06", {
+    const res = await baseAxios.get("/schedules", {
       params: {
         year: nowYear,
         month: nowMonth,
