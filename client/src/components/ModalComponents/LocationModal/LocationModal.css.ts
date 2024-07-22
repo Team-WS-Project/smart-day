@@ -77,6 +77,9 @@ export const locationItem = style({
   justifyContent: "space-between",
   alignItems: "center",
   color: "white",
+  ":hover": {
+    cursor: "pointer",
+  },
 });
 
 export const currentLocationArea = style({

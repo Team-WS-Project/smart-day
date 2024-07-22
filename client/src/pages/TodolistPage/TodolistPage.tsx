@@ -7,123 +7,92 @@ import {
   rightPanel,
   todoList,
   formTitle,
+  noContent,
 } from "./TodolistPage.css";
 import Todo from "./TodolistPageComponents/Todo";
 import Footer from "../../components/PageComponents/Footer/Footer";
 import Header from "../../components/PageComponents/Header/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useModalStore from "../../store/modalStore";
 import TodoScheduleModal from "../../components/ModalComponents/TodoScheduleModal/TodoScheduleModal";
+import { getCompletedTodos, getFailureTodos, getTodayTodos } from "../../apis/todolistAPIs";
 
-const [FAILURE, TODAY, COMPLETED] = ["failure", "today", "completed"];
+type TTodo = {
+  id: number;
+  title: string;
+  due_date: string;
+  completed: boolean;
+};
+
+type Todos = {
+  todayTodos: TTodo[] | undefined;
+  completedTodos: TTodo[] | undefined;
+  failureTodos: TTodo[] | undefined;
+};
+
+type TodoDivision = "failure" | "today" | "completed";
+
+const [FAILURE, TODAY, COMPLETED]: TodoDivision[] = ["failure", "today", "completed"];
 
 const TodoListPage = () => {
   const todoScheduleModal = useModalStore((state) => state.todoScheduleModal);
 
-  // 초기 todo 상태
-  const [todos, setTodos] = useState({
-    failureTodos: [
-      {
-        id: 1,
-        completed: false,
-        description: "프로젝트프로젝트프로젝트프로젝트프로젝트",
-        dueDate: new Date("2024-05-10"),
-        updatedAt: "2024-05-10",
-      },
-      {
-        id: 2,
-        completed: false,
-        description: "프로젝트3",
-        dueDate: new Date("2024-07-10"),
-        updatedAt: undefined,
-      },
-      {
-        id: 3,
-        completed: false,
-        description: "프로젝트4",
-        dueDate: new Date("2024-04-10"),
-        updatedAt: undefined,
-      },
-    ],
-    completedTodos: [
-      {
-        id: 4,
-        completed: true,
-        description: "프로젝트2",
-        dueDate: new Date("2024-08-10"),
-        updatedAt: undefined,
-      },
-      {
-        id: 5,
-        completed: true,
-        description: "프로젝트2",
-        dueDate: new Date("2024-03-10"),
-        updatedAt: undefined,
-      },
-      {
-        id: 6,
-        completed: true,
-        description: "프로젝트2",
-        dueDate: new Date("2024-06-10"),
-        updatedAt: undefined,
-      },
-    ],
-    todayTodos: [
-      {
-        id: 7,
-        completed: false,
-        description: "프로젝트3",
-        dueDate: new Date("2024-12-10"),
-        updatedAt: undefined,
-      },
-      {
-        id: 8,
-        completed: false,
-        description: "프로젝트5",
-        dueDate: new Date("2024-08-10"),
-        updatedAt: "05-10",
-      },
-      {
-        id: 9,
-        completed: false,
-        description: "프로젝트7",
-        dueDate: new Date("2024-09-10"),
-        updatedAt: "2024-05-10",
-      },
-    ],
+  const [todos, setTodos] = useState<Todos>({
+    todayTodos: undefined,
+    completedTodos: undefined,
+    failureTodos: undefined,
   });
 
-  const handleCheckboxChange = (todo, fromList) => {
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const todayResponse = await getTodayTodos();
+        const completedResponse = await getCompletedTodos();
+        const failureResponse = await getFailureTodos();
+        setTodos({
+          todayTodos: todayResponse?.data,
+          completedTodos: completedResponse?.data,
+          failureTodos: failureResponse?.data,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTodos();
+  }, []);
+
+  const handleCheckboxChange = (todo: TTodo, todoDivision: TodoDivision) => {
     const today = new Date();
-    const dueDate = new Date(todo.dueDate);
+    const dueDate = new Date(todo.due_date);
     const timeDiff = dueDate.getTime() - today.getTime();
 
-    if (fromList === FAILURE) {
+    if (todoDivision === FAILURE) {
+      setTodos((prevState: Todos) => ({
+        ...prevState,
+        failureTodos: (prevState.failureTodos || []).filter((t) => t !== todo),
+        completedTodos: [...(prevState.completedTodos || []), { ...todo, completed: true }],
+      }));
+    } else if (todoDivision === TODAY) {
       setTodos((prevState) => ({
         ...prevState,
-        failureTodos: prevState.failureTodos.filter((t) => t !== todo),
-        completedTodos: [...prevState.completedTodos, { ...todo, completed: true }],
+        todayTodos: (prevState.todayTodos || []).filter((t) => t !== todo),
+        completedTodos: [...(prevState.completedTodos || []), { ...todo, completed: true }],
       }));
-    } else if (fromList === TODAY) {
-      setTodos((prevState) => ({
-        ...prevState,
-        todayTodos: prevState.todayTodos.filter((t) => t !== todo),
-        completedTodos: [...prevState.completedTodos, { ...todo, completed: true }],
-      }));
-    } else if (fromList === COMPLETED) {
+    } else if (todoDivision === COMPLETED) {
       setTodos((prevState) => {
-        const updatedCompleted = prevState.completedTodos.filter((t) => t !== todo);
+        const updatedCompleted = (prevState.completedTodos || []).filter((t) => t !== todo);
         if (timeDiff < 0) {
           return {
             ...prevState,
             completedTodos: updatedCompleted,
-            failureTodos: [...prevState.failureTodos, { ...todo, completed: false }],
+            failureTodos: [...(prevState.failureTodos || []), { ...todo, completed: false }],
           };
         } else {
           return {
             ...prevState,
             completedTodos: updatedCompleted,
-            todayTodos: [...prevState.todayTodos, { ...todo, completed: false }],
+            todayTodos: [...(prevState.todayTodos || []), { ...todo, completed: false }],
           };
         }
       });
@@ -139,49 +108,63 @@ const TodoListPage = () => {
           <div className={leftPanel}>
             <div className={uncompletedList}>
               <div className={formTitle}>기간 내 완료하지 못한 일들</div>
-              {/* DB에서 데이터받으면, ID를 key값으로 사용 */}
-              {todos.failureTodos.map((elem, index) => (
-                <div key={index}>
-                  <Todo
-                    completed={elem.completed}
-                    description={elem.description}
-                    dueDate={elem.dueDate}
-                    onCheckboxChange={() => handleCheckboxChange(elem, FAILURE)}
-                  />
-                </div>
-              ))}
+              {todos.failureTodos ? (
+                todos.failureTodos.map((elem) => {
+                  return (
+                    <div key={elem.id}>
+                      <Todo
+                        id={elem.id}
+                        completed={elem.completed}
+                        title={elem.title}
+                        dueDate={elem.due_date}
+                        onCheckboxChange={() => handleCheckboxChange(elem, FAILURE)}
+                      />
+                    </div>
+                  );
+                })
+              ) : (
+                <div className={noContent}>기간 내 완료하지 못한 일이 없습니다.</div>
+              )}
             </div>
 
             <div className={completedList}>
               <div className={formTitle}>완료한 일들</div>
-              {/* DB에서 데이터받으면, ID를 key값으로 사용 */}
-              {todos.completedTodos.map((elem, index) => (
-                <div key={index}>
-                  <Todo
-                    completed={elem.completed}
-                    description={elem.description}
-                    dueDate={elem.dueDate}
-                    onCheckboxChange={() => handleCheckboxChange(elem, COMPLETED)}
-                  />
-                </div>
-              ))}
+              {todos.completedTodos ? (
+                todos.completedTodos.map((elem) => (
+                  <div key={elem.id}>
+                    <Todo
+                      id={elem.id}
+                      completed={elem.completed}
+                      title={elem.title}
+                      dueDate={elem.due_date}
+                      onCheckboxChange={() => handleCheckboxChange(elem, COMPLETED)}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className={noContent}>완료한 일이 없습니다.</div>
+              )}
             </div>
           </div>
 
           <div className={rightPanel}>
             <div className={todoList}>
               <div className={formTitle}>해야할 일들</div>
-              {/* DB에서 데이터받으면, ID를 key값으로 사용 */}
-              {todos.todayTodos.map((elem, index) => (
-                <div key={index}>
-                  <Todo
-                    completed={elem.completed}
-                    description={elem.description}
-                    dueDate={elem.dueDate}
-                    onCheckboxChange={() => handleCheckboxChange(elem, TODAY)}
-                  />
-                </div>
-              ))}
+              {todos.todayTodos ? (
+                todos.todayTodos.map((elem) => (
+                  <div key={elem.id}>
+                    <Todo
+                      id={elem.id}
+                      completed={elem.completed}
+                      title={elem.title}
+                      dueDate={elem.due_date}
+                      onCheckboxChange={() => handleCheckboxChange(elem, TODAY)}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className={noContent}>해야할 일이 없습니다.</div>
+              )}
             </div>
           </div>
         </div>

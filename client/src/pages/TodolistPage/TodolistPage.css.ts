@@ -108,3 +108,9 @@ export const viewAllButton = style({
     cursor: "pointer",
   },
 });
+
+export const noContent = style({
+  textAlign: "center",
+  margin: "auto",
+  color: "blue",
+});
