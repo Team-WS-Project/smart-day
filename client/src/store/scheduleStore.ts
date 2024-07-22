@@ -3,8 +3,8 @@ import { devtools } from "zustand/middleware";
 
 export interface Schedule {
   userId?: string;
-  title: string;
-  scheduleLists: string[];
+  start_date: string;
+  titles: string[];
 }
 
 interface ScheduleStore {
@@ -12,19 +12,11 @@ interface ScheduleStore {
   addSchedule: (newSchedule: Schedule) => void;
   updateSchedule: (index: number, updateSchedule: Schedule) => void;
   removeSchedule: (index: number) => void;
+  clearSchedule: () => void;
 }
 
 const scheduleStore: StateCreator<ScheduleStore> = (set) => ({
-  schedules: [
-    {
-      title: "2024-07-01",
-      scheduleLists: ["일1", "일2"],
-    },
-    {
-      title: "2024-07-02",
-      scheduleLists: ["일1", "일2"],
-    },
-  ],
+  schedules: [],
   addSchedule: (newSchedule: Schedule) =>
     set((state) => ({
       schedules: [...state.schedules, newSchedule],
@@ -36,6 +28,10 @@ const scheduleStore: StateCreator<ScheduleStore> = (set) => ({
   removeSchedule: (index: number) =>
     set((state) => ({
       schedules: state.schedules.filter((_, i) => i !== index),
+    })),
+  clearSchedule: () =>
+    set(() => ({
+      schedules: [],
     })),
 });
 

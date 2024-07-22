@@ -3,13 +3,13 @@ import { dailyContainer, dateTitle, scheduleList } from "./DailyScheduleContaine
 import { toggleDayModal } from "../../../store/modalStore";
 import { Schedule } from "../../../store/scheduleStore";
 
-const DailyScheduleContainer = ({ title, scheduleLists }: Schedule) => {
+const DailyScheduleContainer = ({ start_date, titles }: Schedule) => {
   return (
     <div className={dailyContainer} onClick={toggleDayModal}>
-      <div className={dateTitle}>{title}</div>
+      <div className={dateTitle}>{start_date}</div>
       <div className={scheduleList}>
         <ul>
-          {scheduleLists.map((schedule, index) => (
+          {titles.map((schedule, index) => (
             <li key={index}>{schedule}</li>
           ))}
         </ul>

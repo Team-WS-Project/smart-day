@@ -20,6 +20,7 @@ import useModalStore from "../../store/modalStore";
 import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
 import RegisterModal from "../../components/ModalComponents/RegisterModal/RegisterModal";
 import useScheduleStore from "../../store/scheduleStore";
+import useFetchSchedules from "../../hooks/getSchedules";
 
 const SchedulePage = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -32,6 +33,20 @@ const SchedulePage = () => {
   const { showLoginModal } = useModalStore((state) => ({ showLoginModal: state.loginModal }));
   const { showRegisterModal } = useModalStore((state) => ({ showRegisterModal: state.registerModal }));
   const schedules = useScheduleStore((state) => state.schedules);
+
+  useFetchSchedules(startDate, endDate);
+
+  const handleStartDateChange = (date: Date | null) => {
+    if (date) {
+      setStartDate(date);
+    }
+  };
+
+  const handleEndDateChange = (date: Date | null) => {
+    if (date) {
+      setEndDate(date);
+    }
+  };
 
   return (
     <div className={pageContainer}>
@@ -48,7 +63,7 @@ const SchedulePage = () => {
               showIcon
               selected={startDate}
               dateFormat="yyyy-MM-dd"
-              onChange={(date) => setStartDate(date)}
+              onChange={(date) => handleStartDateChange(date)}
               icon={<FiCalendar />}
               className={datePickerContainer}
             />
@@ -60,7 +75,7 @@ const SchedulePage = () => {
               showIcon
               selected={endDate}
               dateFormat="yyyy-MM-dd"
-              onChange={(date) => setEndDate(date)}
+              onChange={(date) => handleEndDateChange(date)}
               icon={<FiCalendar />}
               className={datePickerContainer}
             />
@@ -71,7 +86,7 @@ const SchedulePage = () => {
 
         <div className={schedulersContainer}>
           {schedules.map((schedule, index) => (
-            <DailyScheduleContainer key={index} title={schedule.title} scheduleLists={schedule.scheduleLists} />
+            <DailyScheduleContainer key={index} start_date={schedule.start_date} titles={schedule.titles} />
           ))}
         </div>
       </div>
