@@ -15,7 +15,7 @@ router.use(express.json());
 
 router.get("/fourdays", getSchedulesByFourDays);
 router.get("/", getSchedules);
-router.get("/", getMonthlyArray);
+router.get("/calendar", getMonthlyArray);
 router.get("/detail/:id", getScheduleById);
 router.post("/", createSchedule);
 router.put("/:id", updateSchedule);
