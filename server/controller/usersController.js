@@ -111,6 +111,13 @@ const login = (req, res) => {
   });
 };
 
+const logout = (req, res) => {
+  ensureAuthorization(req, res, () => {
+    res.clearCookie("access_token");
+    return res.status(StatusCodes.OK).json({ message: "로그아웃 되었습니다." });
+  });
+};
+
 // 회원 정보 수정
 const updateUserInformation = (req, res) => {
   const { location, nickname } = req.body;
@@ -125,7 +132,7 @@ const updateUserInformation = (req, res) => {
       sql = `UPDATE users SET location=?, nickname=? WHERE id=?`;
       values = [location, nickname, req.authorization.id];
     }
-    
+
     conn.query(sql, values, (err, results) => {
       if (err) {
         console.error(err);
@@ -145,4 +152,5 @@ module.exports = {
   join,
   login,
   updateUserInformation,
+  logout,
 };
