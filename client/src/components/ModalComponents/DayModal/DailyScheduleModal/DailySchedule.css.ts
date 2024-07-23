@@ -19,7 +19,7 @@ export const dailySchedule = style({
 });
 
 export const dailyScheduleTitle = style({
-  padding: "3px 16px",
+  padding: "3px 14px",
   fontFamily: vars.font.inter,
   fontSize: vars.fontSizing.P1,
   textAlign: "center",

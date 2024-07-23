@@ -9,30 +9,34 @@ export interface Schedule {
 
 interface ScheduleStore {
   schedules: Schedule[];
-  addSchedule: (newSchedule: Schedule) => void;
-  updateSchedule: (index: number, updateSchedule: Schedule) => void;
-  removeSchedule: (index: number) => void;
-  clearSchedule: () => void;
+  actions: {
+    addSchedule: (newSchedule: Schedule) => void;
+    updateSchedule: (index: number, updateSchedule: Schedule) => void;
+    removeSchedule: (index: number) => void;
+    clearSchedule: () => void;
+  };
 }
 
 const scheduleStore: StateCreator<ScheduleStore> = (set) => ({
   schedules: [],
-  addSchedule: (newSchedule: Schedule) =>
-    set((state) => ({
-      schedules: [...state.schedules, newSchedule],
-    })),
-  updateSchedule: (index: number, updatedSchedule: Schedule) =>
-    set((state) => ({
-      schedules: state.schedules.map((schedule, i) => (i === index ? updatedSchedule : schedule)),
-    })),
-  removeSchedule: (index: number) =>
-    set((state) => ({
-      schedules: state.schedules.filter((_, i) => i !== index),
-    })),
-  clearSchedule: () =>
-    set(() => ({
-      schedules: [],
-    })),
+  actions: {
+    addSchedule: (newSchedule: Schedule) =>
+      set((state) => ({
+        schedules: [...state.schedules, newSchedule],
+      })),
+    updateSchedule: (index: number, updatedSchedule: Schedule) =>
+      set((state) => ({
+        schedules: state.schedules.map((schedule, i) => (i === index ? updatedSchedule : schedule)),
+      })),
+    removeSchedule: (index: number) =>
+      set((state) => ({
+        schedules: state.schedules.filter((_, i) => i !== index),
+      })),
+    clearSchedule: () =>
+      set(() => ({
+        schedules: [],
+      })),
+  },
 });
 
 const useScheduleStore = create<ScheduleStore>()(devtools(scheduleStore, { name: "Schedule Store" }));

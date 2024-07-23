@@ -21,6 +21,8 @@ import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
 import RegisterModal from "../../components/ModalComponents/RegisterModal/RegisterModal";
 import useScheduleStore, { Schedule } from "../../store/scheduleStore";
 import { getSchedulesAPI } from "../../apis/getSchedulesAPI";
+import { useUserInfoStore } from "../../store/userInfoStore";
+import CheckPasswordModal from "../../components/ModalComponents/RegisterEditModal/CheckPasswordModal/CheckPasswordModal";
 
 const SchedulePage = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -32,8 +34,11 @@ const SchedulePage = () => {
   const { showDayModal } = useModalStore((state) => ({ showDayModal: state.dayModal }));
   const { showLoginModal } = useModalStore((state) => ({ showLoginModal: state.loginModal }));
   const { showRegisterModal } = useModalStore((state) => ({ showRegisterModal: state.registerModal }));
+  const { showPWCheckModal } = useModalStore((state) => ({ showPWCheckModal: state.pwCheckModal }));
+  // const { userEditModal } = useModalStore((state) => ({ pwCheckModal: state.userEditModal }));
   const schedules = useScheduleStore((state) => state.schedules);
-  const { actions } = useScheduleStore();
+  const actions = useScheduleStore((state) => state.actions);
+  const userId = useUserInfoStore((state) => state.userId);
 
   useEffect(() => {
     const fetchSchedules = async () => {
@@ -47,8 +52,10 @@ const SchedulePage = () => {
         console.error("Failed to fetch schedules:", error);
       }
     };
-    fetchSchedules();
-  }, [startDate, endDate, actions]);
+    if (userId !== null) {
+      fetchSchedules();
+    }
+  }, [startDate, endDate, actions, userId]);
 
   const handleStartDateChange = (date: Date | null) => {
     if (date) {
@@ -67,6 +74,7 @@ const SchedulePage = () => {
       {showDayModal && <DayModal />}
       {showLoginModal && <LoginModal />}
       {showRegisterModal && <RegisterModal />}
+      {showPWCheckModal && <CheckPasswordModal />}
       <Header />
       <div className={schedulePageContainer}>
         <div className={schedulePageTitle}>전체 일정</div>
@@ -99,9 +107,13 @@ const SchedulePage = () => {
         </div>
 
         <div className={schedulersContainer}>
-          {schedules.map((schedule, index) => (
-            <DailyScheduleContainer key={index} start_date={schedule.start_date} titles={schedule.titles} />
-          ))}
+          {userId !== null ? (
+            schedules.map((schedule, index) => (
+              <DailyScheduleContainer key={index} start_date={schedule.start_date} titles={schedule.titles} />
+            ))
+          ) : (
+            <h1>일정을 보시려면 로그인을 해주세요</h1>
+          )}
         </div>
       </div>
       <Footer />
