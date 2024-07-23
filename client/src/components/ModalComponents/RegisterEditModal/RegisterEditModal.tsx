@@ -9,7 +9,7 @@ import {
   inputIcon,
   registerButton,
   wrapper,
-} from "./RegisterModal.css";
+} from "./RegisterEditModal.css";
 import { VscChromeClose } from "react-icons/vsc";
 import { CiMail } from "react-icons/ci";
 import { IoLockClosedOutline } from "react-icons/io5";

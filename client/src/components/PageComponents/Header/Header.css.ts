@@ -66,4 +66,43 @@ export const headerNaviButtons = style({
 
 export const afterLogin = style({
   marginRight: "30px",
+  ":hover": {
+    textUnderlineOffset: "5px",
+    fontWeight: "bold",
+    textDecoration: "underline",
+  },
+});
+
+export const afterLoginContainer = style({
+  position: "relative",
+  display: "inline-block",
+});
+
+export const afterLoginDropdown = style({
+  position: "absolute",
+  marginTop: "3%",
+  marginRight: "10%",
+  backgroundColor: vars.color.brightIcon,
+  boxShadow: "0px 8px 16px 0px rgba(0,0,0,0.2)",
+  zIndex: "1",
+  right: "0",
+  minWidth: "160px",
+});
+
+export const afterLoginDropdownButton = style({
+  color: vars.color.darkIcon,
+  fontFamily: vars.font.julius,
+  fontSize: vars.fontSizing.H9,
+  padding: "12px 16px",
+  textDecoration: "none",
+  display: "block",
+  width: "100%",
+  border: "none",
+  background: "none",
+  textAlign: "center",
+  cursor: "pointer",
+
+  ":hover": {
+    backgroundColor: vars.color.darkIconHover,
+  },
 });
