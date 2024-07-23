@@ -1,8 +1,16 @@
 const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
 const ensureAuthorization = require("../auth");
+const {
+  getSchedulesQuery,
+  getScheduleByPeriod,
+  deleteScheduleQuery,
+  updateScheduleQuery,
+  createScheduleQuery,
+  getScheduleByIdQuery,
+  createScheduleArray,
+} = require("../models/schedulesQueries");
 
-// 4일 동안의 일정을 조회하는 함수
 const getSchedulesByFourDays = async (req, res) => {
   ensureAuthorization(req, res, async () => {
     const userId = req.authorization.id;
@@ -62,64 +70,6 @@ const getSchedulesByFourDays = async (req, res) => {
   });
 };
 
-// 특정 기간의 일정을 조회하는 SQL 쿼리 객체를 반환하는 함수
-const getScheduleByPeriod = (id, start, end) => ({
-  sql: `
-    SELECT user_id, start_date, GROUP_CONCAT(title ORDER BY title ASC SEPARATOR ', ') AS titles
-    FROM schedules
-    WHERE user_id = ?
-    AND start_date BETWEEN ? AND ?
-    GROUP BY start_date
-    ORDER BY start_date ASC
-  `,
-  values: [id, start, end],
-});
-
-// 특정 달의 일정을 조회하는 SQL 쿼리 객체를 반환하는 함수
-const getScheduleByMonth = (id, month) => ({
-  sql: `
-    SELECT user_id, start_date, end_date
-    FROM schedules 
-    WHERE user_id = ?
-    AND DATE_FORMAT(start_date, '%Y-%m') = ?
-  `,
-  values: [id, month],
-});
-
-// 특정 날짜의 일정을 조회하는 SQL 쿼리 객체를 반환하는 함수
-const getScheduleByDate = (id, date) => ({
-  sql: `
-    SELECT user_id, id, title, detail, start_date, end_date, start_time, end_time 
-    FROM schedules 
-    WHERE user_id = ?
-    AND start_date = ?
-  `,
-  values: [id, date],
-});
-
-// 여러 조건에 따른 일정 조회 SQL 쿼리 객체를 반환하는 함수
-const getSchedulesQuery = ({ id, start, end, date, month }) => {
-  if (id && start && end) {
-    return getScheduleByPeriod(id, start, end);
-  }
-  if (id && month) {
-    return getScheduleByMonth(id, month);
-  }
-  if (id && date) {
-    return getScheduleByDate(id, date);
-  }
-
-  return {
-    sql: `
-      SELECT id, user_id, title, detail, start_time, end_time, start_date, end_date
-      FROM schedules
-      WHERE user_id = ?
-    `,
-    values: [id],
-  };
-};
-
-// 여러 조건에 따른 일정을 조회하는 함수
 const getSchedules = async (req, res) => {
   ensureAuthorization(req, res, async () => {
     const id = req.authorization.id;
@@ -156,7 +106,6 @@ const getSchedules = async (req, res) => {
   });
 };
 
-// 특정 기간의 일정 타이틀을 조회하는 함수
 const getScheduleTitles = async (id, startDate, endDate) => {
   try {
     const { sql, values } = getScheduleByPeriod(id, startDate, endDate);
@@ -184,42 +133,6 @@ const getScheduleTitles = async (id, startDate, endDate) => {
   }
 };
 
-// 특정 달의 일정이 있는 날을 배열로 반환하는 함수
-const createScheduleArray = (year, month, userId) => {
-  return new Promise((resolve, reject) => {
-    const daysInMonth = new Date(year, month, 0).getDate();
-    const monthArray = new Array(daysInMonth).fill(false);
-    const sql = `
-      SELECT start_date, end_date 
-      FROM schedules 
-      WHERE YEAR(start_date) = ? AND MONTH(start_date) = ? AND user_id = ?
-    `;
-    const values = [year, month, userId];
-
-    conn.query(sql, values, (err, results) => {
-      if (err) {
-        console.error(err);
-        reject(err);
-        return;
-      }
-
-      results.forEach((schedule) => {
-        const start = new Date(schedule.start_date);
-        const end = new Date(schedule.end_date);
-
-        for (let d = start.getUTCDate(); d <= end.getUTCDate(); d++) {
-          if (start.getMonth() + 1 === month) {
-            monthArray[d - 1] = true;
-          }
-        }
-      });
-
-      resolve(monthArray);
-    });
-  });
-};
-
-// 특정 달의 일정 배열을 반환하는 함수
 const getMonthlyArray = async (req, res) => {
   ensureAuthorization(req, res, async () => {
     const { year, month } = req.query;
@@ -235,19 +148,11 @@ const getMonthlyArray = async (req, res) => {
   });
 };
 
-// 특정 일정 ID로 일정을 조회하는 함수
 const getScheduleById = (req, res) => {
   ensureAuthorization(req, res, () => {
     const scheduleId = req.params.id;
     const userId = req.authorization.id;
-
-    const sql = `
-      SELECT title, detail, start_date, end_date, start_time, end_time
-      FROM schedules
-      WHERE id = ? AND user_id = ?
-    `;
-
-    const values = [scheduleId, userId];
+    const { sql, values } = getScheduleByIdQuery(scheduleId, userId);
 
     conn.query(sql, values, (err, results) => {
       if (err) {
@@ -264,17 +169,11 @@ const getScheduleById = (req, res) => {
   });
 };
 
-// 새로운 일정을 생성하는 함수
 const createSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
     const id = req.authorization.id;
     const { title, detail, startDate, endDate, startTime, endTime } = req.body;
-    const sql = `
-      INSERT INTO schedules (user_id, title, detail, start_date, end_date, start_time, end_time) 
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-
-    const values = [id, title, detail, startDate, endDate, startTime, endTime];
+    const { sql, values } = createScheduleQuery(id, title, detail, startDate, endDate, startTime, endTime);
 
     conn.query(sql, values, (err, results) => {
       if (err) {
@@ -287,20 +186,22 @@ const createSchedule = (req, res) => {
   });
 };
 
-// 기존 일정을 업데이트하는 함수
 const updateSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
     const userId = req.authorization.id;
     const scheduleId = req.params.id;
     const { title, detail, startDate, endDate, startTime, endTime } = req.body;
 
-    const sql = `
-      UPDATE schedules
-      SET title = ?, detail = ?, start_date = ?, end_date = ?, start_time = ?, end_time = ?
-      WHERE id = ? AND user_id = ?
-    `;
-
-    const values = [title, detail, startDate, endDate, startTime, endTime, scheduleId, userId];
+    const { sql, values } = updateScheduleQuery(
+      scheduleId,
+      userId,
+      title,
+      detail,
+      startDate,
+      endDate,
+      startTime,
+      endTime,
+    );
 
     conn.query(sql, values, (err, results) => {
       if (err) {
@@ -317,18 +218,11 @@ const updateSchedule = (req, res) => {
   });
 };
 
-// 기존 일정을 삭제하는 함수
 const deleteSchedule = (req, res) => {
   ensureAuthorization(req, res, () => {
     const userId = req.authorization.id;
     const scheduleId = req.params.id;
-
-    const sql = `
-      DELETE FROM schedules 
-      WHERE id = ? AND user_id = ?
-    `;
-
-    const values = [scheduleId, userId];
+    const { sql, values } = deleteScheduleQuery(scheduleId, userId);
 
     conn.query(sql, values, (err, results) => {
       if (err) {
