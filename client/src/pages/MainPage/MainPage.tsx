@@ -7,10 +7,11 @@ import { appContainer } from "../../App.css";
 import DatepickerModal from "../../components/ModalComponents/DatepickerModal/DatepickerModal";
 import TaskModal from "../../components/ModalComponents/TaskModal/TaskModal";
 import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
-import UserEditModal from "../../components/ModalComponents/UserEditModal/UserEditModal";
 import useModalStore, { toggleDatepickerModal, toggleLocationModal } from "../../store/modalStore";
 import LocationModal from "../../components/ModalComponents/LocationModal/LocationModal";
 import RegisterModal from "../../components/ModalComponents/RegisterModal/RegisterModal";
+import RegisterEditModal from "../../components/ModalComponents/RegisterEditModal/RegisterEditModal";
+import CheckPasswordModal from "../../components/ModalComponents/RegisterEditModal/CheckPasswordModal/CheckPasswordModal";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -18,13 +19,15 @@ const MainPage = () => {
     navigate("/calendar");
   };
 
-  const { loginModal, userEditModal, datepickerModal, taskModal, locationModal, registerModal } = useModalStore();
+  const { loginModal, userEditModal, datepickerModal, taskModal, locationModal, registerModal, pwCheckModal } =
+    useModalStore();
 
   return (
     <>
       {registerModal && <RegisterModal />}
       {loginModal && <LoginModal />}
-      {userEditModal && <UserEditModal />}
+      {userEditModal && <RegisterEditModal />}
+      {pwCheckModal && <CheckPasswordModal />}
       {locationModal && <LocationModal />}
       {datepickerModal && <DatepickerModal />}
       {taskModal && <TaskModal />}
