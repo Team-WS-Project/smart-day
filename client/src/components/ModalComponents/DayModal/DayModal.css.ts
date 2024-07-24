@@ -1,5 +1,5 @@
 import { style } from "@vanilla-extract/css";
-import { vars } from "../../../App.css";
+import { scrollbar, vars } from "../../../App.css";
 
 export const wrapper = style({
   width: "100vw",
@@ -13,6 +13,8 @@ export const wrapper = style({
 });
 
 export const modal = style({
+  width: "900px",
+  height: "450px",
   backgroundColor: vars.color.main,
   borderRadius: vars.radius.medium,
   color: vars.color.brightText,
@@ -24,6 +26,14 @@ export const dayModalLeft = style({
   margin: "2.5%",
 });
 
+export const dateUponIcon = style({
+  fontSize: vars.fontSizing.H6,
+  position: "absolute",
+  marginRight: "160px",
+  textAlign: "center",
+  marginTop: "30px",
+});
+
 export const dayModalRight = style({
   width: "100%",
   margin: "2.5%",
@@ -32,11 +42,16 @@ export const dayModalRight = style({
   display: "flex",
   flexWrap: "wrap",
   padding: "5px 30px",
+  alignItems: "self-start",
+  overflowY: "auto",
+  ...scrollbar,
+  border: "none",
 });
 
 export const dayModalClose = style({
   width: "5%",
   marginTop: "2.5%",
+  marginRight: "3%",
   textAlign: "center",
   fontSize: vars.fontSizing.H5,
 });
@@ -54,23 +69,50 @@ export const dayTitleIcons = style({
 export const dayTitleWeekday = style({
   fontSize: vars.fontSizing.H5,
   marginLeft: vars.spacing.small,
-  marginRight: "40px", // vars.spacing의 다양한게 필요
+  marginRight: "40px",
   alignSelf: "center",
 });
 
 export const dailyTodoColumn = style({
-  padding: "10px",
+  marginTop: "5%",
+  maxHeight: "60%",
+  padding: "5px",
+  overflowY: "auto",
+  ...scrollbar,
+  border: "none",
 });
 
 export const scheduleAddButton = style({
   width: "27%",
+  minWidth: "120px",
   backgroundColor: vars.color.brightIcon,
-  fontSize: vars.fontSizing.H8,
+  fontSize: vars.fontSizing.H9,
   fontFamily: vars.font.inter,
   height: "50px",
   borderRadius: vars.radius.small,
   alignSelf: "end",
-  marginBottom: "20px",
+  margin: "20px 0",
+
+  ":hover": {
+    backgroundColor: vars.color.darkIconHover,
+    transition: "transform 100ms",
+    transform: "scale(1.03)",
+  },
+});
+
+export const center = style({
+  textAlign: "center",
+});
+
+export const todoAddButton = style({
+  width: "80%",
+  minWidth: "120px",
+  backgroundColor: vars.color.brightIcon,
+  fontSize: vars.fontSizing.H9,
+  fontFamily: vars.font.inter,
+  height: "50px",
+  borderRadius: vars.radius.small,
+  margin: "10px 0",
 
   ":hover": {
     backgroundColor: vars.color.darkIconHover,

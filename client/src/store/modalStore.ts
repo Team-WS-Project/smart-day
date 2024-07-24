@@ -10,7 +10,8 @@ type ModalType =
   | "registerModal"
   | "taskModal"
   | "todoScheduleModal"
-  | "userEditModal";
+  | "userEditModal"
+  | "pwCheckModal";
 
 interface ModalState {
   datepickerModal: boolean;
@@ -22,6 +23,7 @@ interface ModalState {
   taskModal: boolean;
   todoScheduleModal: boolean;
   userEditModal: boolean;
+  pwCheckModal: boolean;
 
   actions: {
     changeModalState: (type: ModalType) => void;
@@ -38,6 +40,7 @@ const modalStore: StateCreator<ModalState> = (set) => ({
   taskModal: false,
   todoScheduleModal: false,
   userEditModal: false,
+  pwCheckModal: false,
   actions: {
     changeModalState: (type) => {
       set((state) => ({ ...state, [type]: !state[type] }));
@@ -52,9 +55,11 @@ export const toggleDayModal = () => useModalStore.getState().actions.changeModal
 export const toggleLocationModal = () => useModalStore.getState().actions.changeModalState("locationModal");
 export const toggleLoggerModal = () => useModalStore.getState().actions.changeModalState("loggerModal");
 export const toggleLoginModal = () => useModalStore.getState().actions.changeModalState("loginModal");
+
 export const toggleRegisterModal = () => useModalStore.getState().actions.changeModalState("registerModal");
 export const toggleTaskModal = () => useModalStore.getState().actions.changeModalState("taskModal");
 export const toggleTodoScheduleModal = () => useModalStore.getState().actions.changeModalState("todoScheduleModal");
 export const toggleUserEditModal = () => useModalStore.getState().actions.changeModalState("userEditModal");
+export const togglePWCheckModal = () => useModalStore.getState().actions.changeModalState("pwCheckModal");
 
 export default useModalStore;
