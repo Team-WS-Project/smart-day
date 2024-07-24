@@ -25,6 +25,7 @@ import LocationModal from "../../components/ModalComponents/LocationModal/Locati
 import RegisterEditModal from "../../components/ModalComponents/RegisterEditModal/RegisterEditModal";
 import CheckPasswordModal from "../../components/ModalComponents/RegisterEditModal/CheckPasswordModal/CheckPasswordModal";
 import { useUserInfoStore } from "../../store/userInfoStore";
+import { ko } from "date-fns/locale";
 
 const SchedulePage = () => {
   const hasPageBeenRendered = useRef({ effect: false });
@@ -97,6 +98,8 @@ const SchedulePage = () => {
           <div className={wave}>~</div>
           <div className={dateContainer}>
             <DatePicker
+              locale={ko}
+              dateFormatCalendar="YYYY년 MMMM"
               showIcon
               selected={endDate}
               dateFormat="yyyy-MM-dd"
