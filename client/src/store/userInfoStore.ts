@@ -14,9 +14,9 @@ interface userInfoState {
   nickname: string | null;
 
   actions: {
-    setUserId: (userId: number) => void;
+    setUserId: (userId: number | null) => void;
 
-    setNickname: (nickname: string) => void;
+    setNickname: (nickname: string | null) => void;
 
     setSelectedDate: (date: Date) => void;
 

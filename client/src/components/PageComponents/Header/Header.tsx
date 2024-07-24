@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import {
   afterLogin,
+  afterLoginContainer,
+  afterLoginDropdown,
+  afterLoginDropdownButton,
   headerButton,
   headerFooterContainer,
   headerNaviButtons,
@@ -8,11 +11,17 @@ import {
   headerTwoButtons,
   mainLogo,
 } from "./Header.css";
-import { toggleLoginModal, toggleRegisterModal } from "../../../store/modalStore";
+import { toggleLoginModal, togglePWCheckModal, toggleRegisterModal } from "../../../store/modalStore";
 import { useUserInfoStore } from "../../../store/userInfoStore";
+import { useState } from "react";
+import { IoMdArrowDropdown } from "react-icons/io";
+import { requestLogoutAPI } from "../../../apis/logoutAPI";
 
 const Header = () => {
   const userId = useUserInfoStore((state) => state.userId);
+  const nickname = useUserInfoStore((state) => state.nickname);
+  const actions = useUserInfoStore((state) => state.actions);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const navigate = useNavigate();
 
@@ -32,15 +41,15 @@ const Header = () => {
     navigate("/todolist");
   };
 
-  /* 모달들은 스타일을 확인할 수 있게 새 페이지로 연결만 시켜놓았습니다. */
-  // const openLoginModal = () => {
-  //   navigate("/loginmodal");
-  // };
-
-  // const openUserEditModal = () => {
-  //   navigate("/usereditmodal");
-  // };
-  /* ............................................................... */
+  const handleLogout = async () => {
+    try {
+      await requestLogoutAPI();
+      actions.setUserId(null);
+      actions.setNickname(null);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className={headerFooterContainer}>
@@ -63,19 +72,26 @@ const Header = () => {
         </div>
       </div>
       {userId !== null ? (
-        <div className={afterLogin}>{userId}님, 안녕하세요!</div>
+        <div className={afterLoginContainer}>
+          <div className={afterLogin} onClick={() => setDropdownVisible(!dropdownVisible)}>
+            {nickname !== null ? `${nickname}님, 안녕하세요!` : `${userId}님, 안녕하세요!`}
+            <IoMdArrowDropdown />
+          </div>
+          <div className={afterLoginDropdown} style={{ display: dropdownVisible ? "block" : "none" }}>
+            <button className={afterLoginDropdownButton} onClick={handleLogout}>
+              로그아웃
+            </button>
+            <button className={afterLoginDropdownButton} onClick={togglePWCheckModal}>
+              회원수정
+            </button>
+          </div>
+        </div>
       ) : (
         <div className={headerTwoButtons}>
-          <button
-            className={headerButton}
-            onClick={toggleLoginModal} //
-          >
+          <button className={headerButton} onClick={toggleLoginModal}>
             로그인
           </button>
-          <button
-            className={headerButton}
-            onClick={toggleRegisterModal} //
-          >
+          <button className={headerButton} onClick={toggleRegisterModal}>
             회원가입
           </button>
         </div>

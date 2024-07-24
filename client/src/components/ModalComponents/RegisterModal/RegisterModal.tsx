@@ -16,8 +16,8 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { GoTag } from "react-icons/go";
 import { toggleLocationModal, toggleLoginModal, toggleRegisterModal } from "../../../store/modalStore";
-import axios from "axios";
 import { requestRegisterAPI } from "../../../apis/registerAPI";
+import { useUserInfoStore } from "../../../store/userInfoStore";
 
 const RegisterModal = () => {
   const [type, setType] = useState("password");
@@ -29,7 +29,8 @@ const RegisterModal = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nickname, setNickname] = useState("");
 
-  const [location, setLocation] = useState("");
+  const { currentLocation } = useUserInfoStore();
+  const location = currentLocation;
 
   const [typeConfirmPassword, setTypeConfirmPassword] = useState("password");
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

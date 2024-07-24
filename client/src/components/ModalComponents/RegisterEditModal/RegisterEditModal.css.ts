@@ -8,7 +8,8 @@ export const wrapper = style({
   justifyContent: "center",
   alignItems: "center",
   position: "absolute",
-  zIndex: 10000,
+  zIndex: 30000,
+  backgroundColor: "rgba(0,0,0,0.3)",
 });
 
 export const registerContainer = style({
@@ -48,6 +49,7 @@ export const inputIcon = style({
   marginTop: vars.spacing.medium,
   marginLeft: vars.spacing.medium,
   marginRight: vars.spacing.medium,
+  cursor: "pointer",
 });
 
 export const inputBox = style({
@@ -61,7 +63,7 @@ export const inputBox = style({
 
 export const locationButton = style({
   width: "62%",
-  backgroundColor: vars.color.secondary,
+  backgroundColor: vars.color.buttonHighlight,
   color: vars.color.darkText,
   margin: "auto",
   textAlign: "center",
@@ -74,14 +76,14 @@ export const locationButton = style({
   fontWeight: "bold",
 
   ":hover": {
-    backgroundColor: vars.color.secondaryBright,
+    backgroundColor: vars.color.buttonHighlightHover,
   },
 });
 
 export const registerButton = style({
   width: "62%",
-  backgroundColor: vars.color.buttonHighlight,
-  color: vars.color.darkText,
+  backgroundColor: vars.color.buttonBlack,
+  color: vars.color.brightText,
   textAlign: "center",
   fontFamily: vars.font.inter,
   fontSize: vars.fontSizing.H8,
@@ -89,9 +91,9 @@ export const registerButton = style({
   padding: "12px 10px",
   borderRadius: vars.radius.small,
   border: "1px solid ${vars.color.brightIcon}",
-  margin: "15px auto",
+  margin: "20px auto",
 
   ":hover": {
-    backgroundColor: vars.color.buttonHighlightHover,
+    backgroundColor: vars.color.buttonBlackHover,
   },
 });
