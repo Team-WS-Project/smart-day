@@ -81,10 +81,10 @@ const TaskModal = () => {
           task.taskId,
           "",
           detail,
-          String(dayjs(startTime).format("HH:mm")),
-          String(dayjs(endTime).format("HH:mm")),
           dayjs(startDate).format("YYYY-MM-DD"),
           dayjs(startDate).format("YYYY-MM-DD"),
+          dayjs(startTime).format("HH:mm"),
+          dayjs(endTime).format("HH:mm"),
         );
       } else {
         updateTask(task.listIndex, task.taskIndex, newTask);
