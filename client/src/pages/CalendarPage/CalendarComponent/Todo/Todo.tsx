@@ -34,7 +34,7 @@ const Todo = ({ id, dueDate, isCheck, title, description }) => {
           onClick={() => alert("투두리스트 모달 열기")}
         >
           {" "}
-          {String(dueDate.getMonth() + 1) + "/" + String(dueDate.getDate())}
+          {dueDate}
         </text>
       </div>
       <div className={todolistDetail}>

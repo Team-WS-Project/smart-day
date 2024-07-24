@@ -33,6 +33,7 @@ import { useNavigate } from "react-router-dom";
 import useCalendarPageStore from "../../../store/calendarStore";
 import Todo from "./Todo/Todo";
 import { getIsHaveTask, getTodolist } from "../../../apis/calenderPageAPI";
+import dayjs from "dayjs";
 
 const CalendarComponent = () => {
   const [activeDate, setActiveDate] = useState(new Date());
@@ -53,12 +54,11 @@ const CalendarComponent = () => {
   ];
 
   const fetchIsHaveTask = async () => {
-    const nowYear = activeDate.getFullYear();
-    const nowMonth = activeDate.getMonth();
+    const nowYear = String(dayjs(activeDate).format("YYYY"));
+    const nowMonth = String(dayjs(activeDate).format("MM"));
 
     try {
       const res = await getIsHaveTask(nowYear, nowMonth);
-      console.log(res?.data);
       const updatedIsHaveTask = res?.data; // res.data는 array[0]~[30 or 31] 형태
 
       // store 업데이트
@@ -69,59 +69,33 @@ const CalendarComponent = () => {
   };
 
   const fetchTodolist = async () => {
-    const nowDate = String(activeDate.getFullYear()) + "-" + activeDate.getMonth();
+    const nowDate = String(dayjs(activeDate).format("YYYY-MM"));
+
     const res = await getTodolist(nowDate);
-    // console.log(res.data);
+    console.log(res?.data);
 
     // 아래 코드 수정 필요 -> res.data와 Todo[] interface 비교하여 형식 정해주기
-    const newTodoList = res?.data;
+    const newTodoList = res?.data.map((todo) => {
+      return {
+        id: todo.id,
+        dueDate: todo.due_date,
+        isDone: todo.completed === 0 ? false : true,
+        title: todo.title,
+        description: "",
+      };
+    });
     setTodolist(newTodoList);
+    console.log(isHaveTask);
   };
 
   useEffect(() => {
-    // 확인용 임시 데이터 -> Todo: fetch(month => { return isHaveTask; }) (@II-122)
-
-    // fetchIsHaveTask(nowYear, nowMonth);
-
-    // 아래는 api가 연결 되면 삭제할 코드
-    const haveTask = [
-      true,
-      false,
-      false,
-      true,
-      false,
-      true,
-      false,
-      true,
-      false,
-      true,
-      false,
-      false,
-      false,
-      true,
-      false,
-      false,
-      false,
-      true,
-      false,
-      false,
-      false,
-      false,
-      true,
-      false,
-      false,
-      true,
-      false,
-      false,
-      false,
-      false,
-    ];
-    setIsHaveTask(haveTask);
-  }, [setIsHaveTask]);
+    fetchIsHaveTask();
+    fetchTodolist();
+  }, [activeDate]);
 
   const onChange = ({ activeStartDate }) => {
     setActiveDate(activeStartDate);
-    // Todo: fetch(month => { isHaveTask = newIsHaveTask; }) 작업 필요 (@II-122)
+    fetchIsHaveTask();
   };
 
   const logoTextCenter = () => {
@@ -136,10 +110,12 @@ const CalendarComponent = () => {
     return date.getDate().toString();
   };
 
+  // error 해결 필요
   const tileClassName = ({ date, view }) => {
     if (view === "month" && date.getMonth() === activeDate.getMonth() && date.getDate() >= 1 && date.getDate() <= 31) {
       const index = date.getDate() - 1;
-      if (isHaveTask[index]) {
+      if (isHaveTask[index] === true) {
+        console.log(index);
         return "have-task";
       }
       return "default";

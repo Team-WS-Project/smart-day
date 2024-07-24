@@ -15,13 +15,12 @@ import useTaskStore from "../../../store/taskStore";
 import dayjs from "dayjs";
 
 type TTask = {
-  taskId: number;
-  listIndex: number;
+  id?: number;
   date: string;
   startTime: string;
   endTime: string;
   title: string;
-  details: string;
+  detail: string;
 };
 
 type TaskList = {
@@ -33,10 +32,21 @@ const List = ({ listIndex, tasks }: TaskList) => {
   const dayOfTheWeek = ["일", "월", "화", "수", "목", "금", "토"];
   const { standardDate } = useMainStore();
   const updateTask = useTaskStore((state) => state.updateTask);
+  const setIsNewTask = useTaskStore((state) => state.setIstNewTask);
   const nowDate = dayjs(standardDate).add(listIndex, "day");
 
   const addTask = () => {
-    updateTask(nowDate.format("YYYY-MM-DD"), "", "", "");
+    const emptyTask = {
+      taskIndex: -1,
+      listIndex: listIndex,
+      date: "",
+      startTime: "",
+      endTime: "",
+      title: "",
+      detail: "",
+    };
+    setIsNewTask(true);
+    updateTask(emptyTask);
     toggleTaskModal();
   };
 
@@ -49,15 +59,16 @@ const List = ({ listIndex, tasks }: TaskList) => {
       </div>
       <div className={taskListArea}>
         {tasks
-          ? tasks.map((item) => (
+          ? tasks.map((item, index) => (
               <Task
-                taskId={item.taskId}
+                id={item.id}
+                taskIndex={index}
                 listIndex={listIndex}
                 date={item.date}
                 startTime={item.startTime}
                 endTime={item.endTime}
                 title={item.title}
-                details={item.details}
+                detail={item.detail}
               />
             ))
           : null}

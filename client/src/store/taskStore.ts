@@ -2,36 +2,40 @@ import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
 interface task {
-  userId?: string;
+  taskId?: number;
+  taskIndex: number;
+  listIndex: number;
   date: string;
   startTime: string;
   endTime: string;
-  details: string;
+  detail: string;
 }
 
 interface TaskStore {
   task: task;
-  updateTask: (date: string, startTime: string, endTime: string, details: string) => void;
+  isNewTask: boolean;
+  setIstNewTask: (isTrue: boolean) => void;
+  updateTask: (nowTask: task) => void;
   updateDateTask: (date: string) => void;
 }
 
 const taskStore: StateCreator<TaskStore> = (set) => ({
   task: {
-    date: "01/01/2024",
+    taskIndex: 0,
+    listIndex: 0,
+    date: "2024-01-01",
     startTime: "09:00",
     endTime: "12:00",
-    details: "내용",
+    detail: "내용",
   },
-
-  updateTask: (date, startTime, endTime, details) =>
-    set((state) => ({
-      task: {
-        ...state.task,
-        date,
-        startTime,
-        endTime,
-        details,
-      },
+  isNewTask: true,
+  setIstNewTask: (isTrue: boolean) =>
+    set(() => ({
+      isNewTask: isTrue,
+    })),
+  updateTask: (nowTask: task) =>
+    set(() => ({
+      task: nowTask,
     })),
 
   updateDateTask: (date) =>
