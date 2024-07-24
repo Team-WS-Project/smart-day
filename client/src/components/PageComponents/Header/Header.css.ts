@@ -15,6 +15,9 @@ export const mainLogo = style({
   fontSize: vars.fontSizing.H5,
   fontFamily: vars.font.julius,
   marginLeft: vars.spacing.big1,
+  ":hover": {
+    cursor: "pointer",
+  },
 });
 
 export const headerTwoButtons = style({
@@ -61,6 +64,7 @@ export const headerNaviButtons = style({
     fontWeight: "bold",
     textDecoration: "underline",
     transition: "transform 100ms",
+    cursor: "pointer",
   },
 });
 

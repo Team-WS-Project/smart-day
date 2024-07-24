@@ -8,12 +8,13 @@ import {
   todoList,
   formTitle,
   noContent,
+  addTodoButton,
 } from "./TodolistPage.css";
 import Todo from "./TodolistPageComponents/Todo";
 import Footer from "../../components/PageComponents/Footer/Footer";
 import Header from "../../components/PageComponents/Header/Header";
 import { useEffect, useState } from "react";
-import useModalStore from "../../store/modalStore";
+import useModalStore, { toggleTodoScheduleModal } from "../../store/modalStore";
 import TodoScheduleModal from "../../components/ModalComponents/TodoScheduleModal/TodoScheduleModal";
 import { getCompletedTodos, getFailureTodos, getTodayTodos } from "../../apis/todolistAPIs";
 
@@ -25,9 +26,9 @@ type TTodo = {
 };
 
 type Todos = {
-  todayTodos: TTodo[] | undefined;
-  completedTodos: TTodo[] | undefined;
-  failureTodos: TTodo[] | undefined;
+  todayTodos: TTodo[];
+  completedTodos: TTodo[];
+  failureTodos: TTodo[];
 };
 
 type TodoDivision = "failure" | "today" | "completed";
@@ -38,34 +39,36 @@ const TodoListPage = () => {
   const todoScheduleModal = useModalStore((state) => state.todoScheduleModal);
 
   const [todos, setTodos] = useState<Todos>({
-    todayTodos: undefined,
-    completedTodos: undefined,
-    failureTodos: undefined,
+    todayTodos: [],
+    completedTodos: [],
+    failureTodos: [],
   });
 
-  useEffect(() => {
-    const fetchTodos = async () => {
-      try {
-        const todayResponse = await getTodayTodos();
-        const completedResponse = await getCompletedTodos();
-        const failureResponse = await getFailureTodos();
-        setTodos({
-          todayTodos: todayResponse?.data,
-          completedTodos: completedResponse?.data,
-          failureTodos: failureResponse?.data,
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const fetchTodos = async () => {
+    try {
+      const todayResponse = await getTodayTodos();
+      const completedResponse = await getCompletedTodos();
+      const failureResponse = await getFailureTodos();
+      setTodos({
+        todayTodos: todayResponse?.data,
+        completedTodos: completedResponse?.data,
+        failureTodos: failureResponse?.data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    fetchTodos();
-  }, []);
+  useEffect(() => {
+    if (!todoScheduleModal) {
+      fetchTodos();
+    }
+  }, [todoScheduleModal]);
 
   const handleCheckboxChange = (todo: TTodo, todoDivision: TodoDivision) => {
     const today = new Date();
     const dueDate = new Date(todo.due_date);
-    const timeDiff = dueDate.getTime() - today.getTime();
+    const timeDiff = dueDate.getDate() - today.getDate();
 
     if (todoDivision === FAILURE) {
       setTodos((prevState: Todos) => ({
@@ -165,6 +168,9 @@ const TodoListPage = () => {
               ) : (
                 <div className={noContent}>해야할 일이 없습니다.</div>
               )}
+            </div>
+            <div className={addTodoButton} onClick={toggleTodoScheduleModal}>
+              <div>+ 할 일 추가</div>
             </div>
           </div>
         </div>

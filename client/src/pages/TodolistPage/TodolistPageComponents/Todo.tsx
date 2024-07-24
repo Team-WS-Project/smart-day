@@ -1,5 +1,6 @@
 import { changeCompleted } from "../../../apis/todolistAPIs";
 import { toggleTodoScheduleModal } from "../../../store/modalStore";
+import useTodoScheduleStore from "../../../store/todoScheduleStore";
 import { checkBox, descriptionArea, dueDateArea, todoContainer } from "./Todo.css";
 
 type TodoProps = {
@@ -7,16 +8,18 @@ type TodoProps = {
   completed: boolean;
   title: string;
   dueDate: string;
-  onCheckboxChange: () => void; // 부모에서 전달된 체크박스 변경 핸들러
+  onCheckboxChange: () => void;
 };
 
 const Todo = ({ id, completed, title, dueDate, onCheckboxChange }: TodoProps) => {
+  const { setSelectedTodoId } = useTodoScheduleStore();
+
   return (
     <div className={todoContainer}>
       <input
         type="checkbox"
         className={checkBox}
-        checked={completed} // 부모에서 전달된 completed 상태 사용
+        checked={completed}
         onChange={async () => {
           try {
             await changeCompleted(id);
@@ -24,12 +27,26 @@ const Todo = ({ id, completed, title, dueDate, onCheckboxChange }: TodoProps) =>
           } catch (error) {
             alert("서버로의 요청이 실패했습니다.");
           }
-        }} // onChange로 처리
+        }}
       />
-      <div className={descriptionArea} onClick={toggleTodoScheduleModal}>
+      <div
+        className={descriptionArea}
+        onClick={() => {
+          toggleTodoScheduleModal();
+          setSelectedTodoId(id);
+        }}
+      >
         {title}
       </div>
-      <div className={dueDateArea}>{dueDate.slice(-5)}</div>
+      <div
+        className={dueDateArea}
+        onClick={() => {
+          toggleTodoScheduleModal();
+          setSelectedTodoId(id);
+        }}
+      >
+        {dueDate.slice(-5)}
+      </div>
     </div>
   );
 };

@@ -114,3 +114,15 @@ export const noContent = style({
   margin: "auto",
   color: "blue",
 });
+
+export const addTodoButton = style({
+  fontSize: vars.fontSizing.H8,
+  borderRadius: vars.radius.large,
+  backgroundColor: vars.color.secondary,
+  padding: "10px 20px",
+
+  ":hover": {
+    cursor: "pointer",
+    backgroundColor: vars.color.secondaryDarker,
+  },
+});

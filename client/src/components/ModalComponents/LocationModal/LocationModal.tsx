@@ -102,16 +102,23 @@ const LocationModal = () => {
         <div className={styles.favoriteArea}>
           <div className={styles.subTitle}>즐겨찾기한 위치</div>
           {favoriteLocations.map((location: FavoriteLocation, index) => (
-            <div key={index} className={styles.locationItem}>
+            <div
+              key={index}
+              className={styles.locationItem}
+              onClick={async () => {
+                await putCurrentLocation(location.location_name);
+                setCurrentLocation(location.location_name);
+              }}
+            >
               {location.location_name}
               <TiStarFullOutline
                 className={styles.starFilledIcon}
                 onClick={async (e) => {
                   try {
+                    e.stopPropagation();
                     await deleteServerFavoriteLocation(location.location_name);
                     deleteFavoriteLocation(location.location_name);
                   } catch (err) {}
-                  // e.stopPropagation();
                 }}
               />
             </div>
