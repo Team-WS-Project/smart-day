@@ -1,7 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const conn = require("../mariadb");
-const { getUser, join, login, updateUserInformation, logout } = require("../controller/usersController");
+const {
+  getUser,
+  join,
+  login,
+  updateUserInformation,
+  logout,
+  verifyPassword,
+} = require("../controller/usersController");
 
 router.use(express.json());
 
@@ -9,6 +15,7 @@ router.get("/", getUser); // 회원 정보 수정창 email, nickname, location �
 router.post("/join", join);
 router.post("/login", login);
 router.post("/logout", logout);
+router.post("/verifyPassword", verifyPassword);
 router.put("/update", updateUserInformation); // 회원 정보 수정
 
 module.exports = router;
