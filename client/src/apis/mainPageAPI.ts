@@ -51,7 +51,7 @@ export const putUpdateTaskAPI = async (id, title, detail, startDate, endDate, st
 
 export const deleteTaskAPI = async (id) => {
   try {
-    const res = await baseAxios.put(`/schedules/${id}`);
+    const res = await baseAxios.delete(`/schedules/${id}`);
 
     // 응답 처리
     return res;
