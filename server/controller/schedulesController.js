@@ -11,65 +11,6 @@ const {
   createScheduleArray,
 } = require("../models/schedulesQueries");
 
-const getSchedulesByFourDays = async (req, res) => {
-  ensureAuthorization(req, res, async () => {
-    const userId = req.authorization.id;
-    const { standardDate } = req.query;
-
-    const startDate = new Date(standardDate);
-    const daysToAdd = 4;
-
-    const formatDate = (date) => {
-      const yyyy = date.getFullYear();
-      const mm = String(date.getMonth() + 1).padStart(2, "0");
-      const dd = String(date.getDate()).padStart(2, "0");
-      return `${yyyy}-${mm}-${dd}`;
-    };
-
-    const addDays = (date, days) => {
-      const result = new Date(date);
-      result.setDate(result.getDate() + days);
-      return result;
-    };
-
-    const endDate = addDays(startDate, daysToAdd - 1);
-
-    const sql = `
-      SELECT id, start_date, start_time, end_time, title, detail 
-      FROM schedules 
-      WHERE user_id = ? 
-      AND start_date BETWEEN ? AND ?
-    `;
-
-    const values = [userId, formatDate(startDate), formatDate(endDate)];
-
-    try {
-      const results = await new Promise((resolve, reject) => {
-        conn.query(sql, values, (err, results) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve(results);
-        });
-      });
-
-      const tasks = results.map((result) => ({
-        date: new Date(result.start_date).toISOString().split("T")[0],
-        startTime: result.start_time,
-        endTime: result.end_time,
-        title: result.title,
-        description: result.detail,
-      }));
-
-      return res.status(StatusCodes.OK).json(tasks);
-    } catch (err) {
-      console.error(err);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
-    }
-  });
-};
-
 const getSchedules = async (req, res) => {
   ensureAuthorization(req, res, async () => {
     const id = req.authorization.id;
@@ -144,6 +85,88 @@ const getMonthlyArray = async (req, res) => {
     } catch (err) {
       console.error(err);
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
+    }
+  });
+};
+
+const getSchedulesByFourDays = async (req, res) => {
+  ensureAuthorization(req, res, async () => {
+    const userId = req.authorization.id;
+    const { standardDate } = req.query;
+
+    const startDate = new Date(standardDate);
+    const daysToAdd = 4;
+
+    const formatDate = (date) => {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    };
+
+    const addDays = (date, days) => {
+      const result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result;
+    };
+
+    const endDate = addDays(startDate, daysToAdd - 1);
+
+    const sql = `
+      SELECT id, start_date, start_time, end_time, title, detail 
+      FROM schedules 
+      WHERE user_id = ? 
+      AND start_date BETWEEN ? AND ?
+      ORDER BY start_date ASC, start_time ASC
+    `;
+
+    const values = [userId, formatDate(startDate), formatDate(endDate)];
+
+    try {
+      const results = await new Promise((resolve, reject) => {
+        conn.query(sql, values, (err, results) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(results);
+        });
+      });
+
+      const tasks = results.map((result) => ({
+        id: result.id,
+        date: new Date(result.start_date).toISOString().split("T")[0],
+        startTime: result.start_time,
+        endTime: result.end_time,
+        title: result.title,
+        detail: result.detail,
+      }));
+
+      const allDates = {};
+      for (let i = 0; i < daysToAdd; i++) {
+        const currentDate = formatDate(addDays(startDate, i));
+        allDates[currentDate] = [];
+      }
+
+      tasks.forEach((task) => {
+        if (!allDates[task.date]) {
+          allDates[task.date] = [];
+        }
+        allDates[task.date].push(task);
+      });
+
+      const groupedTasksArray = Object.keys(allDates)
+        .sort()
+        .map((date) => {
+          return allDates[date].sort((a, b) => {
+            return a.startTime.localeCompare(b.startTime);
+          });
+        });
+
+      return res.status(StatusCodes.OK).json(groupedTasksArray);
+    } catch (err) {
+      console.error(err);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).end();
     }
   });
 };
