@@ -22,7 +22,7 @@ const RegisterModal = () => {
     nickname: state.nickname,
   }));
 
-  const [newNickName, setNickname] = useState(nickname || "");
+  const [newNickName, setNickname] = useState("");
 
   const { currentLocation } = useUserInfoStore();
   const location = currentLocation;
@@ -52,7 +52,7 @@ const RegisterModal = () => {
           </div>
           <input
             className={inputBox}
-            placeholder="닉네임"
+            placeholder={`기존 닉네임 : ${nickname}`}
             value={newNickName}
             onChange={(e) => setNickname(e.target.value)}
           />
