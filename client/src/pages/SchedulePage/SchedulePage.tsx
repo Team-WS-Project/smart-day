@@ -84,6 +84,7 @@ const SchedulePage = () => {
               onChange={(date) => handleStartDateChange(date)}
               icon={<FiCalendar />}
               className={datePickerContainer}
+              maxDate={endDate}
             />
           </div>
 
@@ -96,6 +97,7 @@ const SchedulePage = () => {
               onChange={(date) => handleEndDateChange(date)}
               icon={<FiCalendar />}
               className={datePickerContainer}
+              minDate={startDate}
             />
           </div>
           <input type="checkbox"></input>
