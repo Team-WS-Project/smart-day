@@ -41,3 +41,12 @@ export const changeCompleted = async (todoId: number) => {
     throw Error;
   }
 };
+
+export const getTodoInfo = async (todoId: number) => {
+  try {
+    const res = await baseAxios.get(`todos/${todoId}`);
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+};

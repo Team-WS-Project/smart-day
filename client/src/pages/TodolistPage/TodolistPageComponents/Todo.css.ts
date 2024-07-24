@@ -43,4 +43,7 @@ export const dueDateArea = style({
   padding: "1%",
   textAlign: "center",
   borderRadius: vars.radius.small,
+  ":hover": {
+    cursor: "pointer",
+  },
 });

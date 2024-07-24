@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import {
   todoClose,
@@ -22,11 +22,62 @@ import { VscChromeClose } from "react-icons/vsc";
 import { wrapper } from "../RegisterModal/RegisterModal.css";
 import { toggleTodoScheduleModal } from "../../../store/modalStore";
 import useTodoScheduleStore from "../../../store/todoScheduleStore";
+import { getTodoInfo } from "../../../apis/todolistAPIs";
+import { createTodo, updateTodo } from "../../../apis/todoModalAPIs";
+import dayjs from "dayjs";
 
 const TodoScheduleModal = () => {
-  const { todoSchedule } = useTodoScheduleStore();
+  const { todoSchedule, setSelectedTodoId, updateTodoSchedule } = useTodoScheduleStore();
 
-  const [startDate, setStartDate] = useState(new Date(todoSchedule.date));
+  const [title, setTitle] = useState(todoSchedule.title);
+  const [detail, setDetail] = useState(todoSchedule.details);
+  const [dueDate, setdueDate] = useState(todoSchedule.date);
+
+  useEffect(() => {
+    const fetchTodoInfo = async () => {
+      if (todoSchedule.selectedTodoId) {
+        const res = await getTodoInfo(todoSchedule.selectedTodoId);
+        if (res?.data.length > 0) {
+          setdueDate(res?.data[0].due_date);
+          setTitle(res?.data[0].title);
+          setDetail(res?.data[0].detail || "");
+
+          updateTodoSchedule(res?.data[0].due_date, res?.data[0].title, res?.data[0].detail || "");
+        }
+      }
+    };
+    fetchTodoInfo();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [todoSchedule.selectedTodoId]);
+
+  const handleSaveButton = () => {
+    if (todoSchedule.selectedTodoId) {
+      updateTodo({
+        todoId: todoSchedule.selectedTodoId,
+        title,
+        detail,
+        dueDate,
+      });
+    } else {
+      createTodo({
+        title,
+        detail,
+        dueDate,
+      });
+    }
+
+    toggleTodoScheduleModal();
+    setSelectedTodoId(null);
+    updateTodoSchedule(dayjs(new Date()).format("YYYY-MM-DD"), "제목", "내용");
+  };
+
+  const handleCloseButton = () => {
+    toggleTodoScheduleModal();
+    setSelectedTodoId(null);
+    updateTodoSchedule(dayjs(new Date()).format("YYYY-MM-DD"), "제목", "내용");
+  };
+
   return (
     <div className={wrapper}>
       <div className={todoScheduleContainer}>
@@ -41,9 +92,9 @@ const TodoScheduleModal = () => {
             <div className={todoString}>기한 : </div>
             <div>
               <DatePicker
-                selected={startDate}
+                selected={new Date(dueDate)}
                 dateFormat="yyyy-MM-dd"
-                onChange={(date) => setStartDate(date)}
+                onChange={(date) => setdueDate(dayjs(date).format("YYYY-MM-DD"))}
                 className={todoDatePicker}
               />
             </div>
@@ -51,16 +102,30 @@ const TodoScheduleModal = () => {
 
           <div className={todoDate}>
             <div className={todoString}>제목 : </div>
-            <input className={todoInput} defaultValue={todoSchedule.title}></input>
+            <input
+              className={todoInput}
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
+            ></input>
           </div>
 
           <div className={todoString}>내용 : </div>
-          <textarea className={todoContent} defaultValue={todoSchedule.details}></textarea>
+          <textarea
+            className={todoContent}
+            value={detail}
+            onChange={(e) => {
+              setDetail(e.target.value);
+            }}
+          ></textarea>
           <div className={todoSaveBackground}>
-            <button className={todoSave}>저장</button>
+            <button className={todoSave} onClick={handleSaveButton}>
+              저장
+            </button>
           </div>
         </div>
-        <VscChromeClose className={todoClose} onClick={toggleTodoScheduleModal} />
+        <VscChromeClose className={todoClose} onClick={handleCloseButton} />
       </div>
     </div>
   );

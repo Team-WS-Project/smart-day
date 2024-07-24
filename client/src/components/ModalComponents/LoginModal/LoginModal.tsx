@@ -20,7 +20,7 @@ import { useUserInfoStore } from "../../../store/userInfoStore";
 import { requestLoginAPI } from "../../../apis/loginAPI";
 
 const LoginModal = () => {
-  const { setUserId, setCurrentLocation } = useUserInfoStore((state) => state.actions);
+  const { setUserId, setCurrentLocation, setFavoriteLocation } = useUserInfoStore((state) => state.actions);
   const [type, setType] = useState("password");
   const [showPassword, setShowPassword] = useState(false);
   const [icon, setIcon] = useState(<FaEyeSlash />);
@@ -39,13 +39,19 @@ const LoginModal = () => {
       if (respond !== undefined) {
         setUserId(respond.data[0].id);
         setCurrentLocation(respond.data[0].location);
-        // setFavoriteLocation();
+        setFavoriteLocation();
         toggleLoginModal();
       } else {
         throw Error;
       }
     } catch (err) {
       alert("로그인에 실패했습니다.");
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleLogin(email, password);
     }
   };
 
@@ -79,6 +85,7 @@ const LoginModal = () => {
               type={type}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
             />
             <div className={inputIcon} onClick={handleToggle} style={{ cursor: "pointer" }}>
               {icon}
