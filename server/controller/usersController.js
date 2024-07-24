@@ -118,6 +118,41 @@ const logout = (req, res) => {
   });
 };
 
+const verifyPassword = (req, res) => {
+  ensureAuthorization(req, res, () => {
+    const { password } = req.body;
+    const email = req.authorization.email;
+
+    const sql = `SELECT * FROM users WHERE email = ?`;
+
+    conn.query(sql, email, (err, results) => {
+      if (err) {
+        console.error(err);
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({
+            message: "데이터베이스 오류가 발생했습니다.",
+          })
+          .end();
+      }
+
+      const user = results[0];
+      const hashedPassword = hashPassword(password, user.salt);
+
+      if (user.password === hashedPassword) {
+        return res.status(StatusCodes.OK).json({ message: "비밀번호가 일치합니다." });
+      } else {
+        return res
+          .status(StatusCodes.UNAUTHORIZED)
+          .json({
+            message: "비밀번호가 일치하지 않습니다.",
+          })
+          .end();
+      }
+    });
+  });
+};
+
 // 회원 정보 수정
 const updateUserInformation = (req, res) => {
   const { location, nickname } = req.body;
@@ -151,6 +186,7 @@ module.exports = {
   getUser,
   join,
   login,
-  updateUserInformation,
   logout,
+  verifyPassword,
+  updateUserInformation,
 };
