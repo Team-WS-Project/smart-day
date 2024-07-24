@@ -14,12 +14,14 @@ import { VscChromeClose } from "react-icons/vsc";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { togglePWCheckModal, toggleUserEditModal } from "../../../../store/modalStore";
+import { getUserInfoAPI } from "../../../../apis/getUserInfoAPI";
+import { useChangeUserInfoStore } from "../../../../store/changeUserInfoStore";
 const CheckPasswordModal = () => {
-  //   const { setUserId, setCurrentLocation } = useUserInfoStore((state) => state.actions);
   const [type, setType] = useState("password");
   const [showPassword, setShowPassword] = useState(false);
   const [icon, setIcon] = useState(<FaEyeSlash />);
   const [password, setPassword] = useState("");
+  const actions = useChangeUserInfoStore((state) => state.actions);
 
   const handleToggle = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -27,21 +29,20 @@ const CheckPasswordModal = () => {
     setIcon((prevIcon) => (prevIcon.type === FaEyeSlash ? <FaEye /> : <FaEyeSlash />));
   };
 
-  // const handleLogin = (password: string) => {
-  //   try {
-
-  //     if (respond !== undefined) {
-  //       setUserId(respond.data[0].id);
-  //       setCurrentLocation(respond.data[0].location);
-  //       // setFavoriteLocation();
-  //       toggleCheckPasswordModal();
-  //     } else {
-  //       throw Error;
-  //     }
-  //   } catch (err) {
-  //     alert("로그인에 실패했습니다.");
-  //   }
-  // };
+  const handleGetUser = async () => {
+    try {
+      const res = await getUserInfoAPI(password);
+      if (res) {
+        actions.setEmail(res.data.email);
+        actions.setNickname(res.data.nickname);
+        actions.setLocation(res.data.location);
+        togglePWCheckModal();
+        toggleUserEditModal();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className={wrapper}>
@@ -66,12 +67,7 @@ const CheckPasswordModal = () => {
               {icon}
             </div>
           </div>
-          <div
-            className={pwCheckButton}
-            onClick={() => {
-              togglePWCheckModal(), toggleUserEditModal();
-            }}
-          >
+          <div className={pwCheckButton} onClick={handleGetUser}>
             비밀번호 확인
           </div>
         </div>

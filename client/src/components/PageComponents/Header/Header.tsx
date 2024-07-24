@@ -11,7 +11,7 @@ import {
   headerTwoButtons,
   mainLogo,
 } from "./Header.css";
-import { toggleLoginModal, toggleRegisterModal } from "../../../store/modalStore";
+import { toggleLoginModal, togglePWCheckModal, toggleRegisterModal } from "../../../store/modalStore";
 import { useUserInfoStore } from "../../../store/userInfoStore";
 import { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -81,7 +81,9 @@ const Header = () => {
             <button className={afterLoginDropdownButton} onClick={handleLogout}>
               로그아웃
             </button>
-            <button className={afterLoginDropdownButton}>회원수정</button>
+            <button className={afterLoginDropdownButton} onClick={togglePWCheckModal}>
+              회원수정
+            </button>
           </div>
         </div>
       ) : (

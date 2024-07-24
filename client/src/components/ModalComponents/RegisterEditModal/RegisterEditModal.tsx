@@ -15,20 +15,27 @@ import { CiMail } from "react-icons/ci";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { GoTag } from "react-icons/go";
-import { toggleLocationModal, toggleLoginModal, toggleRegisterModal } from "../../../store/modalStore";
+import { toggleLocationModal, toggleLoginModal, toggleUserEditModal } from "../../../store/modalStore";
 import { requestRegisterAPI } from "../../../apis/registerAPI";
+import { useChangeUserInfoStore } from "../../../store/changeUserInfoStore";
+import { useUserInfoStore } from "../../../store/userInfoStore";
 
 const RegisterModal = () => {
+  const { email, nickname } = useChangeUserInfoStore((state) => ({
+    email: state.email,
+    nickname: state.nickname,
+  }));
   const [type, setType] = useState("password");
   const [showPassword, setShowPassword] = useState(false);
   const [icon, setIcon] = useState(<FaEyeSlash />);
 
-  const [email, setEmail] = useState("");
+  const [newEmail, setEmail] = useState(email || "");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [newNickName, setNickname] = useState(nickname || "");
 
-  const [location, setLocation] = useState("");
+  const { currentLocation } = useUserInfoStore();
+  const location = currentLocation;
 
   const [typeConfirmPassword, setTypeConfirmPassword] = useState("password");
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -46,22 +53,22 @@ const RegisterModal = () => {
     setIconConfirmPassword((prevIcon) => (prevIcon.type === FaEyeSlash ? <FaEye /> : <FaEyeSlash />));
   };
 
-  const handleRegister = async (email: string, password: string, location: string, nickname: string) => {
+  const handleRegister = async (newEmail: string, password: string, location: string, newNickName: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(newEmail)) {
       alert("올바른 이메일 형식을 입력해주세요.");
     } else if (password !== confirmPassword) {
       alert("비밀번호가 일치하지 않습니다.");
     } else {
       try {
-        await requestRegisterAPI(email, password, location, nickname);
+        await requestRegisterAPI(newEmail, password, location, newNickName);
 
-        alert("회원가입에 성공하였습니다! 로그인을 진행해주세요.");
-        toggleRegisterModal();
+        alert("회원정보를 수정했습니다! 로그인을 진행해주세요.");
+        toggleUserEditModal();
         toggleLoginModal();
       } catch (error) {
-        alert("회원가입에 실패했습니다.");
+        alert("회원정보 수정에 실패했습니다.");
       }
     }
   };
@@ -69,7 +76,7 @@ const RegisterModal = () => {
   return (
     <div className={wrapper}>
       <div className={registerContainer}>
-        <div className={loginClose} onClick={toggleRegisterModal}>
+        <div className={loginClose} onClick={toggleUserEditModal}>
           <VscChromeClose />
         </div>
         <div className={loginMain}>SMART DAY</div>
@@ -82,7 +89,7 @@ const RegisterModal = () => {
           <input
             className={inputBox}
             placeholder="아이디 (email)"
-            value={email}
+            value={newEmail}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
@@ -123,15 +130,15 @@ const RegisterModal = () => {
           <input
             className={inputBox}
             placeholder="닉네임"
-            value={nickname}
+            value={newNickName}
             onChange={(e) => setNickname(e.target.value)}
           />
         </div>
         <div className={locationButton} onClick={toggleLocationModal}>
           위치 설정
         </div>
-        <div className={registerButton} onClick={() => handleRegister(email, password, location, nickname)}>
-          회원가입
+        <div className={registerButton} onClick={() => handleRegister(newEmail, password, location, newNickName)}>
+          회원정보 수정
         </div>
       </div>
     </div>
