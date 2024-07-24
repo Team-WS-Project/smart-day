@@ -33,9 +33,7 @@ const CheckPasswordModal = () => {
     try {
       const res = await getUserInfoAPI(password);
       if (res) {
-        actions.setEmail(res.data.email);
         actions.setNickname(res.data.nickname);
-        actions.setLocation(res.data.location);
         togglePWCheckModal();
         toggleUserEditModal();
       }
