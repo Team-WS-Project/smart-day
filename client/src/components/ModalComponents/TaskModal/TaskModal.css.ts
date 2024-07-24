@@ -8,7 +8,7 @@ export const wrapper = style({
   justifyContent: "center",
   alignItems: "center",
   position: "absolute",
-  zIndex: 20000,
+  zIndex: 1000,
   backgroundColor: "rgba(0,0,0,0.3)",
 });
 

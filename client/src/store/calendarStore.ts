@@ -1,9 +1,10 @@
+import dayjs from "dayjs";
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
 interface Todo {
   id: number;
-  dueDate: Date;
+  dueDate: string;
   isDone: boolean;
   title: string;
   description: string;
@@ -14,7 +15,7 @@ interface CalendarPageState {
   todolist: Todo[];
   actions: {
     setIsHaveTask: (newArray: boolean[]) => void;
-    changeIsHaveTask: (isEmpty: boolean) => void;
+    updateIsHaveTask: (isEmpty: boolean) => void;
     setTodolist: (newTodolist: Todo[]) => void;
     toggleTodoIsDone: (id: number) => void;
   };
@@ -24,7 +25,7 @@ const calendarPageStore: StateCreator<CalendarPageState> = (set) => ({
   todolist: [
     {
       id: 1,
-      dueDate: new Date(),
+      dueDate: dayjs(new Date()).format("YYYY-MM-DD"),
       isDone: false,
       title: "프로젝트 2",
       description: "내용",
@@ -37,7 +38,7 @@ const calendarPageStore: StateCreator<CalendarPageState> = (set) => ({
         isHaveTask: newArray,
       });
     },
-    changeIsHaveTask: (isEmpty: boolean) => {},
+    updateIsHaveTask: (isEmpty: boolean) => {},
     setTodolist: (newTodolist: Todo[]) => {
       set(() => ({ todolist: newTodolist }));
     },

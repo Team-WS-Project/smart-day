@@ -1,44 +1,51 @@
 import List from "../List/List";
 import { IoArrowBackCircleOutline, IoArrowForwardCircleOutline } from "react-icons/io5";
 import { arrowIcon, dailyTaskContainer, divArrow } from "./ListContainer.css";
-import useMainStore, { changeDateAfter, changeDateBefore } from "../../../store/mainStore";
+import useMainStore, { changeDateAfter, changeDateBefore, setStandardDate } from "../../../store/mainStore";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import { getTaskListsAPI } from "../../../apis/mainPageAPI";
+import { useUserInfoStore } from "../../../store/userInfoStore";
 
 const ListContainer = () => {
   const { standardDate, dailyTaskLists, actions } = useMainStore();
+  const { userId } = useUserInfoStore();
 
-  const startDate = dayjs(standardDate).format("YYYY-MM-DD");
-  // const endDate = dayjs(standardDate).add(3, "day").format("YYYY-MM-DD");
-  // console.log(startDate, endDate);
+  useEffect(() => {
+    const fetchTaskLists = async () => {
+      const startDate = dayjs(standardDate).format("YYYY-MM-DD");
 
-  const fetchTaskLists = async () => {
-    try {
-      const res = await getTaskListsAPI(startDate);
+      try {
+        const res = await getTaskListsAPI(startDate);
+        const newList = res.data; // newList는 특정 객체 배열을 가진 배열
+        console.log(newList);
 
-      console.log(res.data);
-      const newTasks = res.data; // res.data는 array[0]~[3] 형태
+        newList.forEach((innerArray) => {
+          innerArray.forEach((item) => {
+            item.startTime = item.startTime.substring(0, 5);
+            item.endTime = item.endTime.substring(0, 5);
+          });
+        });
 
-      const updatedDailyTaskLists = dailyTaskLists.map((list) => {
-        // 임시 작성 코드, 수정 필요!
-        const tasksToSet = newTasks.filter((task) => task.listIndex === list.listIndex);
-        return {
-          ...list,
-          tasks: tasksToSet,
-        };
-      });
+        const updatedDailyTaskLists = dailyTaskLists.map((data, index) => ({
+          tasks: newList[index], // tasks에 newList를 저장
+        }));
 
-      // 상태 업데이트
-      actions.changeTaskLists(updatedDailyTaskLists);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+        // 상태 업데이트
+        actions.changeTaskLists(updatedDailyTaskLists);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    if (userId) {
+      fetchTaskLists();
     }
-  };
+  }, [userId, standardDate]);
 
-  // useEffect(() => {
-  //   fetchTaskLists(startDate);
-  // }, [standardDate]);
+  useEffect(() => {
+    setStandardDate();
+  }, []);
 
   const clickLeftArrow = () => {
     changeDateBefore();
@@ -55,7 +62,7 @@ const ListContainer = () => {
           <IoArrowBackCircleOutline className={arrowIcon} onClick={clickLeftArrow} />
         </div>
         {dailyTaskLists.map((item, index) => (
-          <List key={index} listIndex={item.listIndex} tasks={item.tasks} />
+          <List key={index} listIndex={index} tasks={item.tasks} />
         ))}
         <div className={divArrow}>
           <IoArrowForwardCircleOutline className={arrowIcon} onClick={clickRightArrow} />
