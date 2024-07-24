@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import {
   center,
   dailyTodoColumn,
@@ -25,10 +25,11 @@ import TaskModal from "../TaskModal/TaskModal";
 import useDailyScheduleStore, { DailySchedule } from "../../../store/dayStore";
 import useDailyTodoStore, { DailyTodo } from "../../../store/todoStore";
 import { getDailySchedules } from "../../../apis/getDailySchedulesAPI";
+import { getDailyTodos } from "../../../apis/getDailyTodosAPI";
 
 const DayModal = () => {
-  const { showTodoScheduleModal } = useModalStore((state) => ({ showTodoScheduleModal: state.todoScheduleModal }));
-  const { showTaskModal } = useModalStore((state) => ({ showTaskModal: state.taskModal }));
+  const { taskModal, todoScheduleModal } = useModalStore();
+  const hasPageBeenRendered = useRef({ effect: false });
 
   const dailySchedules = useDailyScheduleStore((state) => state.dailySchedules);
   const date = useDailyScheduleStore((state) => state.date);
@@ -44,38 +45,32 @@ const DayModal = () => {
   };
 
   useEffect(() => {
-    const fetchDailySchedules = async () => {
+    const fetchData = async () => {
       try {
-        // scheduleActions.clearSchedule();
-        const data = await getDailySchedules(date);
-        data.forEach((item: DailySchedule) => {
+        console.log("fetching");
+        scheduleActions.clearSchedule();
+        todoActions.clearTodo();
+        const scheduleData = await getDailySchedules(date);
+        scheduleData.forEach((item: DailySchedule) => {
           scheduleActions.addSchedule(item);
         });
-      } catch (error) {
-        console.error("Failed to fetch schedules:", error);
-      }
-    };
-    fetchDailySchedules();
-  }, [date, scheduleActions]);
-
-  useEffect(() => {
-    const fetchDailyTodos = async () => {
-      try {
-        // todoActions.clearTodo();
-        const data = await getDailySchedules(date);
-        data.forEach((item: DailyTodo) => {
+        const todoData = await getDailyTodos(date);
+        todoData.forEach((item: DailyTodo) => {
           todoActions.addTodo(item);
         });
       } catch (error) {
-        console.error("Failed to fetch schedules:", error);
+        console.error("Failed to fetch schedules and todos:", error);
       }
     };
-    fetchDailyTodos();
-  }, [date, todoActions]);
+    if (hasPageBeenRendered.current["effect"]) {
+      fetchData();
+    }
+    hasPageBeenRendered.current["effect"] = true;
+  }, [date, todoActions, scheduleActions]);
   return (
     <div className={wrapper}>
-      {showTodoScheduleModal && <TodoScheduleModal />}
-      {showTaskModal && <TaskModal />}
+      {todoScheduleModal && <TodoScheduleModal />}
+      {taskModal && <TaskModal />}
       <div className={modal}>
         <div className={dayModalLeft}>
           <div className={dayModalTitle}>
@@ -90,7 +85,7 @@ const DayModal = () => {
           </div>
           <div className={dailyTodoColumn}>
             {dailyTodos.map((todo, index) => (
-              <DayTodoModal key={index} date={todo.date} title={todo.title} />
+              <DayTodoModal key={index} end_date={todo.end_date} title={todo.title} />
             ))}
             <div className={center}>
               <button className={todoAddButton}>+ TODO 추가</button>
@@ -99,7 +94,12 @@ const DayModal = () => {
         </div>
         <div className={dayModalRight}>
           {dailySchedules.map((schedule, index) => (
-            <DaySchedule key={index} startTime={schedule.startTime} endTime={schedule.endTime} title={schedule.title} />
+            <DaySchedule
+              key={index}
+              start_time={schedule.start_time.slice(0, 5)}
+              end_time={schedule.end_time.slice(0, 5)}
+              title={schedule.title}
+            />
           ))}
           <div>
             <button className={scheduleAddButton}>+ 새 일정 추가</button>

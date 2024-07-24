@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   dateContainer,
   datePickerContainer,
@@ -24,8 +24,10 @@ import Footer from "../../components/PageComponents/Footer/Footer";
 import LocationModal from "../../components/ModalComponents/LocationModal/LocationModal";
 import RegisterEditModal from "../../components/ModalComponents/RegisterEditModal/RegisterEditModal";
 import CheckPasswordModal from "../../components/ModalComponents/RegisterEditModal/CheckPasswordModal/CheckPasswordModal";
+import { useUserInfoStore } from "../../store/userInfoStore";
 
 const SchedulePage = () => {
+  const hasPageBeenRendered = useRef({ effect: false });
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(() => {
     const date = new Date();
@@ -35,6 +37,7 @@ const SchedulePage = () => {
   const schedules = useScheduleStore((state) => state.schedules);
   const actions = useScheduleStore((state) => state.actions);
   const { loginModal, userEditModal, dayModal, locationModal, registerModal, pwCheckModal } = useModalStore();
+  const userId = useUserInfoStore((state) => state.userId);
 
   useEffect(() => {
     const fetchSchedules = async () => {
@@ -48,8 +51,11 @@ const SchedulePage = () => {
         console.error("Failed to fetch schedules:", error);
       }
     };
-    fetchSchedules();
-  }, [startDate, endDate, actions]);
+    if (hasPageBeenRendered.current["effect"]) {
+      fetchSchedules();
+    }
+    hasPageBeenRendered.current["effect"] = true;
+  }, [startDate, endDate, actions, userId]);
 
   const handleStartDateChange = (date: Date | null) => {
     if (date) {
@@ -100,8 +106,6 @@ const SchedulePage = () => {
               minDate={startDate}
             />
           </div>
-          <input type="checkbox"></input>
-          <div>지난 날짜 일정 표시 off</div>
         </div>
 
         <div className={schedulersContainer}>

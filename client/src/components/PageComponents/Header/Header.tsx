@@ -30,15 +30,27 @@ const Header = () => {
   };
 
   const gotoSchedulePage = () => {
-    navigate("/schedule");
+    if (userId !== null) {
+      navigate("/schedule");
+    } else {
+      toggleLoginModal();
+    }
   };
 
   const gotoCalendarPage = () => {
-    navigate("/calendar");
+    if (userId !== null) {
+      navigate("/calendar");
+    } else {
+      toggleLoginModal();
+    }
   };
 
   const gotoTodolistPage = () => {
-    navigate("/todolist");
+    if (userId !== null) {
+      navigate("/todolist");
+    } else {
+      toggleLoginModal();
+    }
   };
 
   const handleLogout = async () => {
@@ -46,6 +58,7 @@ const Header = () => {
       await requestLogoutAPI();
       actions.setUserId(null);
       actions.setNickname(null);
+      navigate("/");
     } catch (err) {
       console.error(err);
     }
