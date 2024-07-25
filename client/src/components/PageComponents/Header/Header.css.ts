@@ -2,7 +2,7 @@ import { style } from "@vanilla-extract/css";
 import { vars } from "../../../App.css";
 
 export const headerFooterContainer = style({
-  height: "65px", // header와 footer의 높이 global css로 지정 필요
+  height: "65px",
   backgroundColor: vars.color.main,
   display: "flex",
   color: vars.color.brightText,
@@ -49,7 +49,8 @@ export const headerButton = style({
 export const headerNavigator = style({
   display: "flex",
   alignItems: "center",
-  width: "40%",
+  placeContent: "center",
+  minWidth: "40%",
 });
 
 export const headerNaviButtons = style({

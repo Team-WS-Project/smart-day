@@ -73,7 +73,7 @@ const DayModal = () => {
       fetchData();
     }
     hasPageBeenRendered.current["effect"] = true;
-  }, [date, todoActions, scheduleActions, todoScheduleModal]);
+  }, [date, todoActions, scheduleActions, todoScheduleModal, taskModal]);
 
   const clickAddTask = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
