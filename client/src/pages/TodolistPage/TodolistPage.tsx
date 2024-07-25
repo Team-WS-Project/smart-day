@@ -83,7 +83,7 @@ const TodoListPage = () => {
   const handleCheckboxChange = (todo: TTodo, todoDivision: TodoDivision) => {
     const today = new Date();
     const dueDate = new Date(todo.due_date);
-    const timeDiff = dueDate.getDate() - today.getDate();
+    const timeDiff = dueDate.getTime() - today.getTime();
 
     if (todoDivision === FAILURE) {
       setTodos((prevState: Todos) => ({
@@ -131,7 +131,7 @@ const TodoListPage = () => {
           <div className={leftPanel}>
             <div className={uncompletedList}>
               <div className={formTitle}>기간 내 완료하지 못한 일들</div>
-              {todos.failureTodos ? (
+              {todos.failureTodos?.length > 0 ? (
                 todos.failureTodos.map((elem) => {
                   return (
                     <div key={elem.id}>
@@ -152,7 +152,7 @@ const TodoListPage = () => {
 
             <div className={completedList}>
               <div className={formTitle}>완료한 일들</div>
-              {todos.completedTodos ? (
+              {todos.completedTodos?.length > 0 ? (
                 todos.completedTodos.map((elem) => (
                   <div key={elem.id}>
                     <Todo
@@ -173,7 +173,7 @@ const TodoListPage = () => {
           <div className={rightPanel}>
             <div className={todoList}>
               <div className={formTitle}>해야할 일들</div>
-              {todos.todayTodos ? (
+              {todos.todayTodos?.length > 0 ? (
                 todos.todayTodos.map((elem) => (
                   <div key={elem.id}>
                     <Todo

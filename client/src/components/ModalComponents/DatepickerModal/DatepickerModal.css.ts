@@ -5,7 +5,7 @@ export const wrapper = style({
   width: "100vw",
   height: "100vh",
   position: "absolute",
-  zIndex: 10000,
+  zIndex: 900,
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
