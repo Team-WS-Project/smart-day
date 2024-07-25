@@ -93,13 +93,19 @@ const TaskModal = () => {
   };
 
   const clickDeleteButton = () => {
-    deleteTaskAPI(task.taskId);
-    deleteTask(task.listIndex, task.taskIndex);
-    toggleTaskModal();
+    if (task.taskId !== undefined) {
+      deleteTaskAPI(task.taskId);
+      deleteTask(task.listIndex, task.taskIndex);
+      toggleTaskModal();
+    } else {
+      alert("삭제에 실패했습니다! 다시 시도해주세요");
+    }
   };
 
-  const [startTime, setStartTime] = useState<dayjs.Dayjs>(dayjs(`${startDate} ${task.startTime}`, "YYYY-MM-DD HH:mm"));
-  const [endTime, setEndTime] = useState<dayjs.Dayjs>(dayjs(`${startDate} ${task.endTime}`, "YYYY-MM-DD HH:mm"));
+  const [startTime, setStartTime] = useState<dayjs.Dayjs | null>(
+    dayjs(`${startDate} ${task.startTime}`, "YYYY-MM-DD HH:mm"),
+  );
+  const [endTime, setEndTime] = useState<dayjs.Dayjs | null>(dayjs(`${startDate} ${task.endTime}`, "YYYY-MM-DD HH:mm"));
   const [detail, setDetail] = useState(task.detail || "");
   const [title, setTitle] = useState(task.title || "");
 
@@ -119,10 +125,14 @@ const TaskModal = () => {
               <DatePicker
                 locale={ko}
                 dateFormatCalendar="YYYY년 MMMM"
-                selected={startDate}
+                selected={new Date(startDate)}
                 dateFormat="yyyy-MM-dd"
                 onChange={(datePickerDate) => {
-                  setStartDate(datePickerDate);
+                  if (datePickerDate) {
+                    setStartDate(datePickerDate);
+                  } else {
+                    alert("날짜 변경에 실패했습니다! 다시 시도해주세요");
+                  }
                 }}
                 className={scheduleDatePicker}
               />
