@@ -9,9 +9,21 @@ import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
 import RegisterEditModal from "../../components/ModalComponents/RegisterEditModal/RegisterEditModal";
 import CheckPasswordModal from "../../components/ModalComponents/RegisterEditModal/CheckPasswordModal/CheckPasswordModal";
 import LocationModal from "../../components/ModalComponents/LocationModal/LocationModal";
+import { useUserInfoStore } from "../../store/userInfoStore";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const CalendarPage = () => {
   const { loginModal, userEditModal, locationModal, registerModal, pwCheckModal } = useModalStore();
+  const userId = useUserInfoStore((state) => state.userId);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!userId) {
+      navigate("/");
+      return;
+    }
+  }, [navigate]);
 
   return (
     <>

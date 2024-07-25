@@ -22,6 +22,8 @@ import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
 import RegisterEditModal from "../../components/ModalComponents/RegisterEditModal/RegisterEditModal";
 import CheckPasswordModal from "../../components/ModalComponents/RegisterEditModal/CheckPasswordModal/CheckPasswordModal";
 import LocationModal from "../../components/ModalComponents/LocationModal/LocationModal";
+import { useNavigate } from "react-router-dom";
+import { useUserInfoStore } from "../../store/userInfoStore";
 
 type TTodo = {
   id: number;
@@ -43,6 +45,8 @@ const [FAILURE, TODAY, COMPLETED]: TodoDivision[] = ["failure", "today", "comple
 const TodoListPage = () => {
   const todoScheduleModal = useModalStore((state) => state.todoScheduleModal);
   const { loginModal, userEditModal, locationModal, registerModal, pwCheckModal } = useModalStore();
+  const userId = useUserInfoStore((state) => state.userId);
+  const navigate = useNavigate();
 
   const [todos, setTodos] = useState<Todos>({
     todayTodos: [],
@@ -66,10 +70,15 @@ const TodoListPage = () => {
   };
 
   useEffect(() => {
+    if (!userId) {
+      navigate("/");
+      return;
+    }
+
     if (!todoScheduleModal) {
       fetchTodos();
     }
-  }, [todoScheduleModal]);
+  }, [todoScheduleModal, navigate]);
 
   const handleCheckboxChange = (todo: TTodo, todoDivision: TodoDivision) => {
     const today = new Date();
