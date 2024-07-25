@@ -2,13 +2,13 @@ import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
 export interface DailySchedule {
-  scheduleId?: string;
+  id?: number;
   title: string;
   detail?: string;
-  startDate?: Date;
-  endDate?: Date;
-  startTime: string;
-  endTime: string;
+  start_date?: Date;
+  end_date?: Date;
+  start_time: string;
+  end_time: string;
 }
 
 interface DailySchedulesStore {
@@ -25,48 +25,7 @@ interface DailySchedulesStore {
 
 const dailyScheduleStore: StateCreator<DailySchedulesStore> = (set) => ({
   date: new Date(),
-  dailySchedules: [
-    {
-      startTime: "09:00",
-      endTime: "11:00",
-      title: "운동",
-    },
-    {
-      startTime: "12:00",
-      endTime: "13:00",
-      title: "점심",
-    },
-    {
-      startTime: "14:00",
-      endTime: "16:00",
-      title: "낮잠",
-    },
-    {
-      startTime: "15:00",
-      endTime: "18:00",
-      title: "중간잠",
-    },
-    {
-      startTime: "09:00",
-      endTime: "11:00",
-      title: "운동",
-    },
-    {
-      startTime: "12:00",
-      endTime: "13:00",
-      title: "점심",
-    },
-    {
-      startTime: "14:00",
-      endTime: "16:00",
-      title: "낮잠",
-    },
-    {
-      startTime: "15:00",
-      endTime: "18:00",
-      title: "중간잠",
-    },
-  ],
+  dailySchedules: [],
   actions: {
     setDate: (date: Date) => set(() => ({ date })),
     addSchedule: (newSchedule: DailySchedule) =>

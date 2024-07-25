@@ -1,15 +1,22 @@
 import List from "../List/List";
 import { IoArrowBackCircleOutline, IoArrowForwardCircleOutline } from "react-icons/io5";
 import { arrowIcon, dailyTaskContainer, divArrow } from "./ListContainer.css";
-import useMainStore, { changeDateAfter, changeDateBefore, setStandardDate } from "../../../store/mainStore";
+import useMainStore, {
+  changeDateAfter,
+  changeDateBefore,
+  clearMainTaskList,
+  setStandardDate,
+} from "../../../store/mainStore";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import { getTaskListsAPI } from "../../../apis/mainPageAPI";
 import { useUserInfoStore } from "../../../store/userInfoStore";
+import useModalStore from "../../../store/modalStore";
 
 const ListContainer = () => {
   const { standardDate, dailyTaskLists, actions } = useMainStore();
   const { userId } = useUserInfoStore();
+  const { taskModal } = useModalStore();
 
   useEffect(() => {
     const fetchTaskLists = async () => {
@@ -41,11 +48,18 @@ const ListContainer = () => {
     if (userId) {
       fetchTaskLists();
     }
-  }, [userId, standardDate]);
+  }, [userId, standardDate, taskModal]);
 
   useEffect(() => {
     setStandardDate();
   }, []);
+
+  useEffect(() => {
+    if (userId === null) {
+      console.log("비로그인상태");
+      clearMainTaskList();
+    }
+  }, [userId]);
 
   const clickLeftArrow = () => {
     changeDateBefore();

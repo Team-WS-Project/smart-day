@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
@@ -26,6 +25,7 @@ interface MainState {
     addTask: (listIndex: number, newTask: Task) => void;
     updateTask: (listIndex: number, taskIndex: number, updatedTask: Task) => void;
     deleteTask: (listIndex: number, taskIndex: number) => void;
+    clearMainTaskList: () => void;
   };
 }
 
@@ -33,15 +33,7 @@ const mainStore: StateCreator<MainState> = (set) => ({
   standardDate: new Date(),
   dailyTaskLists: [
     {
-      tasks: [
-        {
-          date: dayjs(new Date()).format("YYYY-MM-DD"),
-          startTime: "09:00",
-          endTime: "11:00",
-          title: "",
-          detail: "운동",
-        },
-      ],
+      tasks: [],
     },
     {
       tasks: [],
@@ -120,6 +112,23 @@ const mainStore: StateCreator<MainState> = (set) => ({
         });
         return { dailyTaskLists: updatedLists };
       }),
+    clearMainTaskList: () =>
+      set(() => ({
+        dailyTaskLists: [
+          {
+            tasks: [],
+          },
+          {
+            tasks: [],
+          },
+          {
+            tasks: [],
+          },
+          {
+            tasks: [],
+          },
+        ],
+      })),
   },
 });
 
@@ -128,5 +137,6 @@ const useMainStore = create<MainState>()(devtools(mainStore, { name: "MainPage S
 export const changeDateBefore = () => useMainStore.getState().actions.changeDateBefore();
 export const changeDateAfter = () => useMainStore.getState().actions.changeDateAfter();
 export const setStandardDate = () => useMainStore.getState().actions.setStandardDate();
+export const clearMainTaskList = () => useMainStore.getState().actions.clearMainTaskList();
 
 export default useMainStore;

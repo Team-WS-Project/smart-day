@@ -5,6 +5,7 @@ import useMainStore from "../../../store/mainStore";
 import useTaskStore from "../../../store/taskStore";
 // import dayjs, { Dayjs } from "dayjs";
 import { useUserInfoStore } from "../../../store/userInfoStore";
+import { deleteTaskAPI } from "../../../apis/mainPageAPI";
 
 type TTask = {
   id?: number;
@@ -14,13 +15,13 @@ type TTask = {
   startTime: string;
   endTime: string;
   title: string;
-  detail: string;
+  detail: string | undefined;
 };
 
 const Task = ({ id, taskIndex, listIndex, date, startTime, endTime, title, detail }: TTask) => {
   const { deleteTask } = useMainStore((state) => state.actions);
   const updateTask = useTaskStore((state) => state.updateTask);
-  const setIsNewTask = useTaskStore((state) => state.setIstNewTask);
+  const setIsNewTask = useTaskStore((state) => state.setIsNewTask);
   const { initializeSelectedDate } = useUserInfoStore((state) => state.actions);
 
   const clickTaskDiv = () => {
@@ -42,7 +43,7 @@ const Task = ({ id, taskIndex, listIndex, date, startTime, endTime, title, detai
 
   const clickTrashIcon = () => {
     if (id) {
-      // 여기에 delete api 연결 - axios
+      deleteTaskAPI(id);
       deleteTask(listIndex, taskIndex);
     } else {
       deleteTask(listIndex, taskIndex);

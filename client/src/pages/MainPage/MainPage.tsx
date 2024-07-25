@@ -1,8 +1,16 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import Header from "../../components/PageComponents/Header/Header";
 import Footer from "../../components/PageComponents/Footer/Footer";
 import ListContainer from "./ListContainer/ListContainer";
-import { datePick, linkCalendarPage, locationTextArea, pageContainer, textArea, weatherText } from "./MainPage.css";
+import {
+  datePick,
+  // linkCalendarPage,
+  locationChange,
+  locationTextArea,
+  pageContainer,
+  textArea,
+  // weatherText,
+} from "./MainPage.css";
 import { appContainer } from "../../App.css";
 import DatepickerModal from "../../components/ModalComponents/DatepickerModal/DatepickerModal";
 import TaskModal from "../../components/ModalComponents/TaskModal/TaskModal";
@@ -12,15 +20,17 @@ import LocationModal from "../../components/ModalComponents/LocationModal/Locati
 import RegisterModal from "../../components/ModalComponents/RegisterModal/RegisterModal";
 import RegisterEditModal from "../../components/ModalComponents/RegisterEditModal/RegisterEditModal";
 import CheckPasswordModal from "../../components/ModalComponents/RegisterEditModal/CheckPasswordModal/CheckPasswordModal";
+import { useUserInfoStore } from "../../store/userInfoStore";
 
 const MainPage = () => {
-  const navigate = useNavigate();
-  const gotoCalendarPage = () => {
-    navigate("/calendar");
-  };
+  // const navigate = useNavigate();
+  // const gotoCalendarPage = () => {
+  //   navigate("/calendar");
+  // };
 
   const { loginModal, userEditModal, datepickerModal, taskModal, locationModal, registerModal, pwCheckModal } =
     useModalStore();
+  const { currentLocation } = useUserInfoStore();
 
   return (
     <>
@@ -35,8 +45,11 @@ const MainPage = () => {
         <Header />
         <div className={pageContainer}>
           <div className={locationTextArea}>
-            현재 지역은 location 입니다.
-            <div onClick={toggleLocationModal}>위치변경</div>
+            현재 지역은 {currentLocation ? currentLocation : "서울시"} 입니다.
+            <div className={locationChange} onClick={toggleLocationModal}>
+              {" "}
+              위치변경
+            </div>
           </div>
           <div>
             <ListContainer />
@@ -45,10 +58,10 @@ const MainPage = () => {
             <div className={datePick} onClick={toggleDatepickerModal}>
               + 월별 일정 추가
             </div>
-            <div className={weatherText}>오늘은 날씨가 weather이므로, textObj 하시는건 어때요?</div>
+            {/* <div className={weatherText}>오늘은 날씨가 weather이므로, textObj 하시는건 어때요?</div>
             <div className={linkCalendarPage} onClick={gotoCalendarPage}>
               전체 달력 보기
-            </div>
+            </div> */}
           </div>
         </div>
         <Footer />
