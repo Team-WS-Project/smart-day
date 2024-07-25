@@ -26,6 +26,7 @@ import RegisterEditModal from "../../components/ModalComponents/RegisterEditModa
 import CheckPasswordModal from "../../components/ModalComponents/RegisterEditModal/CheckPasswordModal/CheckPasswordModal";
 import { useUserInfoStore } from "../../store/userInfoStore";
 import { ko } from "date-fns/locale";
+import { useNavigate } from "react-router-dom";
 
 const SchedulePage = () => {
   const hasPageBeenRendered = useRef({ effect: false });
@@ -39,8 +40,14 @@ const SchedulePage = () => {
   const actions = useScheduleStore((state) => state.actions);
   const { loginModal, userEditModal, dayModal, locationModal, registerModal, pwCheckModal } = useModalStore();
   const userId = useUserInfoStore((state) => state.userId);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!userId) {
+      navigate("/");
+      return;
+    }
+
     const fetchSchedules = async () => {
       try {
         actions.clearSchedule();
@@ -56,7 +63,7 @@ const SchedulePage = () => {
       fetchSchedules();
     }
     hasPageBeenRendered.current["effect"] = true;
-  }, [startDate, endDate, actions, userId]);
+  }, [startDate, endDate, actions, userId, navigate]);
 
   const handleStartDateChange = (date: Date | null) => {
     if (date) {

@@ -17,6 +17,11 @@ import { useEffect, useState } from "react";
 import useModalStore, { toggleTodoScheduleModal } from "../../store/modalStore";
 import TodoScheduleModal from "../../components/ModalComponents/TodoScheduleModal/TodoScheduleModal";
 import { getCompletedTodos, getFailureTodos, getTodayTodos } from "../../apis/todolistAPIs";
+import RegisterModal from "../../components/ModalComponents/RegisterModal/RegisterModal";
+import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
+import RegisterEditModal from "../../components/ModalComponents/RegisterEditModal/RegisterEditModal";
+import CheckPasswordModal from "../../components/ModalComponents/RegisterEditModal/CheckPasswordModal/CheckPasswordModal";
+import LocationModal from "../../components/ModalComponents/LocationModal/LocationModal";
 
 type TTodo = {
   id: number;
@@ -37,6 +42,7 @@ const [FAILURE, TODAY, COMPLETED]: TodoDivision[] = ["failure", "today", "comple
 
 const TodoListPage = () => {
   const todoScheduleModal = useModalStore((state) => state.todoScheduleModal);
+  const { loginModal, userEditModal, locationModal, registerModal, pwCheckModal } = useModalStore();
 
   const [todos, setTodos] = useState<Todos>({
     todayTodos: [],
@@ -105,6 +111,11 @@ const TodoListPage = () => {
   return (
     <>
       {todoScheduleModal ? <TodoScheduleModal /> : null}
+      {registerModal && <RegisterModal />}
+      {loginModal && <LoginModal />}
+      {userEditModal && <RegisterEditModal />}
+      {pwCheckModal && <CheckPasswordModal />}
+      {locationModal && <LocationModal />}
       <div className={appContainer}>
         <Header />
         <div className={contentsContainer}>
