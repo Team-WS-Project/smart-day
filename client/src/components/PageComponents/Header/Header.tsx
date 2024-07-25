@@ -105,8 +105,6 @@ const Header = () => {
           전체 일정
         </div>
         <div>|</div>
-        <div className={headerNaviButtons}>날씨</div>
-        <div>|</div>
         <div
           className={headerNaviButtons}
           onClick={gotoCalendarPage}

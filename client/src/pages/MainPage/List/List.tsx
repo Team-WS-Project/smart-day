@@ -35,7 +35,8 @@ const List = ({ listIndex, tasks }: TaskList) => {
   const setIsNewTask = useTaskStore((state) => state.setIsNewTask);
   const nowDate = dayjs(standardDate).add(listIndex, "day");
 
-  const addTask = () => {
+  const addTask = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     const emptyTask = {
       taskIndex: -1,
       listIndex: listIndex,
@@ -72,7 +73,7 @@ const List = ({ listIndex, tasks }: TaskList) => {
               />
             ))
           : null}
-        <div className={newTaskButton} onClick={addTask}>
+        <div className={newTaskButton} onClick={(e) => addTask(e)}>
           + 새 일정 추가
         </div>
       </div>

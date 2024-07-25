@@ -8,6 +8,7 @@ interface task {
   date: string;
   startTime: string;
   endTime: string;
+  title?: string;
   detail?: string;
 }
 
@@ -26,6 +27,7 @@ const taskStore: StateCreator<TaskStore> = (set) => ({
     date: "2024-01-01",
     startTime: "09:00",
     endTime: "10:00",
+    title: "제목",
     detail: "내용",
   },
   isNewTask: true,
@@ -50,6 +52,7 @@ const taskStore: StateCreator<TaskStore> = (set) => ({
         taskIndex: 0,
         listIndex: 0,
         date: "2024-01-01",
+        title: "제목",
         startTime: "09:00",
         endTime: "10:00",
         detail: "내용",
