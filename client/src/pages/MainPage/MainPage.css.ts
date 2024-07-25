@@ -32,7 +32,7 @@ export const datePick = style({
   fontWeight: "bold",
   cursor: "pointer",
   alignItems: "center",
-  color: vars.color.main,
+  color: "blue",
 });
 
 export const weatherText = style({
@@ -44,6 +44,14 @@ export const weatherText = style({
 export const linkCalendarPage = style({
   minWidth: "180px",
   marginLeft: "10%",
+  fontWeight: "bold",
+  cursor: "pointer",
+  color: "blue",
+});
+
+export const locationChange = style({
+  minWidth: "180px",
+  marginLeft: "1%",
   fontWeight: "bold",
   cursor: "pointer",
   color: "blue",

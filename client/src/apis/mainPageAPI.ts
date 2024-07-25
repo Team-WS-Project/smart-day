@@ -15,6 +15,7 @@ export const getTaskListsAPI = async (standardDate) => {
 
 export const postAddTaskAPI = async (title, detail, startDate, endDate, startTime, endTime) => {
   try {
+    console.log(title, detail);
     const res = await baseAxios.post("/schedules", {
       title: title,
       detail: detail,

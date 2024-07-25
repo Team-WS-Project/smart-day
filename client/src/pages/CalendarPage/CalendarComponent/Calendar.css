@@ -42,11 +42,11 @@
 
 .react-calendar__tile--now {
   color: black;
-  font-size: 15px;
+  font-size: 20px;
   text-decoration: underline;
   font-weight: bold;
 }
-  
+
 .react-calendar__tile--active {
   background-color: rgb(20, 35, 91);
   color: white;
@@ -76,7 +76,7 @@
 .my-calendar .react-calendar__navigation {
   border-style: none;
   height: auto;
-  margin-top : 1%
+  margin-top: 1%;
 }
 
 .react-calendar__navigation button:enabled:hover,
@@ -89,7 +89,7 @@
   font-size: 0.9rem;
   font-weight: bold;
 }
-  
+
 .react-calendar__navigation__arrow {
   padding: 0%;
 }

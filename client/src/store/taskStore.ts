@@ -8,13 +8,13 @@ interface task {
   date: string;
   startTime: string;
   endTime: string;
-  detail: string;
+  detail?: string;
 }
 
 interface TaskStore {
   task: task;
   isNewTask: boolean;
-  setIstNewTask: (isTrue: boolean) => void;
+  setIsNewTask: (isTrue: boolean) => void;
   updateTask: (nowTask: task) => void;
   updateDateTask: (date: string) => void;
 }
@@ -25,11 +25,11 @@ const taskStore: StateCreator<TaskStore> = (set) => ({
     listIndex: 0,
     date: "2024-01-01",
     startTime: "09:00",
-    endTime: "12:00",
+    endTime: "10:00",
     detail: "내용",
   },
   isNewTask: true,
-  setIstNewTask: (isTrue: boolean) =>
+  setIsNewTask: (isTrue: boolean) =>
     set(() => ({
       isNewTask: isTrue,
     })),
@@ -37,12 +37,22 @@ const taskStore: StateCreator<TaskStore> = (set) => ({
     set(() => ({
       task: nowTask,
     })),
-
   updateDateTask: (date) =>
     set((state) => ({
       task: {
         ...state.task,
         date,
+      },
+    })),
+  clearTask: () =>
+    set(() => ({
+      task: {
+        taskIndex: 0,
+        listIndex: 0,
+        date: "2024-01-01",
+        startTime: "09:00",
+        endTime: "10:00",
+        detail: "내용",
       },
     })),
 });

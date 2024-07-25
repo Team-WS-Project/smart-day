@@ -19,13 +19,15 @@ import { TiWeatherDownpour } from "react-icons/ti";
 import { VscChromeClose } from "react-icons/vsc";
 import DayTodoModal from "./DailyTodo/DailyTodo";
 import DaySchedule from "./DailyScheduleModal/DailySchedule";
-import useModalStore, { toggleDayModal, toggleTodoScheduleModal } from "../../../store/modalStore";
+import useModalStore, { toggleDayModal, toggleTaskModal, toggleTodoScheduleModal } from "../../../store/modalStore";
 import TodoScheduleModal from "../TodoScheduleModal/TodoScheduleModal";
 import TaskModal from "../TaskModal/TaskModal";
 import useDailyScheduleStore, { DailySchedule } from "../../../store/dayStore";
 import useDailyTodoStore, { DailyTodo } from "../../../store/todoStore";
 import { getDailySchedules } from "../../../apis/getDailySchedulesAPI";
 import { getDailyTodos } from "../../../apis/getDailyTodosAPI";
+import dayjs from "dayjs";
+import useTaskStore from "../../../store/taskStore";
 
 const DayModal = () => {
   const { taskModal, todoScheduleModal } = useModalStore();
@@ -38,6 +40,9 @@ const DayModal = () => {
 
   const scheduleActions = useDailyScheduleStore((state) => state.actions);
   const todoActions = useDailyTodoStore((state) => state.actions);
+
+  const updateTask = useTaskStore((state) => state.updateTask);
+  const setIsNewTask = useTaskStore((state) => state.setIsNewTask);
 
   const getDayOfWeek = (date: Date) => {
     const days = ["일", "월", "화", "수", "목", "금", "토"];
@@ -67,6 +72,21 @@ const DayModal = () => {
     }
     hasPageBeenRendered.current["effect"] = true;
   }, [date, todoActions, scheduleActions, todoScheduleModal]);
+  
+  const clickAddTask = () => {
+    const emptyTask = {
+      taskIndex: 0,
+      listIndex: 0,
+      date: dayjs(date).format("YYYY-MM-DD"),
+      startTime: "",
+      endTime: "",
+      title: "",
+      detail: "",
+    };
+    setIsNewTask(true);
+    updateTask(emptyTask);
+    toggleTaskModal();
+  };
   return (
     <div className={wrapper}>
       {todoScheduleModal && <TodoScheduleModal />}
@@ -94,17 +114,28 @@ const DayModal = () => {
             </div>
           </div>
         </div>
-        <div className={dayModalRight}>
+        <div
+          className={dayModalRight}
+          onClick={() => {
+            setIsNewTask(false);
+          }}
+        >
           {dailySchedules.map((schedule, index) => (
             <DaySchedule
               key={index}
+              id={schedule.id}
+              title={schedule.title}
+              detail={schedule.detail}
+              start_date={date}
               start_time={schedule.start_time.slice(0, 5)}
               end_time={schedule.end_time.slice(0, 5)}
-              title={schedule.title}
+
             />
           ))}
           <div>
-            <button className={scheduleAddButton}>+ 새 일정 추가</button>
+            <button className={scheduleAddButton} onClick={clickAddTask}>
+              + 새 일정 추가
+            </button>
           </div>
         </div>
         <div className={dayModalClose} onClick={toggleDayModal}>

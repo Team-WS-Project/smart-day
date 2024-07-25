@@ -1,4 +1,4 @@
-import { act, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { BsCalendar4 } from "react-icons/bs";
@@ -34,11 +34,18 @@ import useCalendarPageStore from "../../../store/calendarStore";
 import Todo from "./Todo/Todo";
 import { getIsHaveTask, getTodolist } from "../../../apis/calenderPageAPI";
 import dayjs from "dayjs";
+import useModalStore, { toggleDayModal, toggleLocationModal } from "../../../store/modalStore";
+import { useUserInfoStore } from "../../../store/userInfoStore";
+import useDailyScheduleStore from "../../../store/dayStore";
 
 const CalendarComponent = () => {
   const [activeDate, setActiveDate] = useState(new Date());
+  const { currentLocation } = useUserInfoStore();
   const { todolist, isHaveTask } = useCalendarPageStore();
   const { setIsHaveTask, setTodolist } = useCalendarPageStore((state) => state.actions);
+  const actions = useDailyScheduleStore((state) => state.actions);
+  const { taskModal, todoScheduleModal, dayModal } = useModalStore();
+
   const navigate = useNavigate();
 
   const weatherIcons = [
@@ -59,9 +66,8 @@ const CalendarComponent = () => {
 
     try {
       const res = await getIsHaveTask(nowYear, nowMonth);
-      const updatedIsHaveTask = res?.data; // res.data는 array[0]~[30 or 31] 형태
+      const updatedIsHaveTask = res?.data.monthArray; // res.data는 array[0]~[30 or 31] 형태
 
-      // store 업데이트
       setIsHaveTask(updatedIsHaveTask);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -72,9 +78,7 @@ const CalendarComponent = () => {
     const nowDate = String(dayjs(activeDate).format("YYYY-MM"));
 
     const res = await getTodolist(nowDate);
-    console.log(res?.data);
 
-    // 아래 코드 수정 필요 -> res.data와 Todo[] interface 비교하여 형식 정해주기
     const newTodoList = res?.data.map((todo) => {
       return {
         id: todo.id,
@@ -85,13 +89,12 @@ const CalendarComponent = () => {
       };
     });
     setTodolist(newTodoList);
-    console.log(isHaveTask);
   };
 
   useEffect(() => {
     fetchIsHaveTask();
     fetchTodolist();
-  }, [activeDate]);
+  }, [activeDate, taskModal, todoScheduleModal, dayModal]);
 
   const onChange = ({ activeStartDate }) => {
     setActiveDate(activeStartDate);
@@ -111,11 +114,10 @@ const CalendarComponent = () => {
   };
 
   // error 해결 필요
-  const tileClassName = ({ date, view }) => {
+  const haveTaskOrNot = ({ date, view }) => {
     if (view === "month" && date.getMonth() === activeDate.getMonth() && date.getDate() >= 1 && date.getDate() <= 31) {
       const index = date.getDate() - 1;
       if (isHaveTask[index] === true) {
-        console.log(index);
         return "have-task";
       }
       return "default";
@@ -125,7 +127,13 @@ const CalendarComponent = () => {
 
   const tileContent = ({ date, view }) => {
     const today = new Date();
-    if (view === "month" && date.getMonth() === today.getMonth()) {
+    if (
+      view === "month" &&
+      date.getMonth() === today.getMonth() &&
+      date.getMonth() === activeDate.getMonth() &&
+      date.getDate() >= 1 &&
+      date.getDate() <= 31
+    ) {
       if (today.getDate() <= date.getDate() && date.getDate() < today.getDate() + 7) {
         return <div className={iconArea}>{weatherIcons[Math.floor(Math.random() * 9)]}</div>;
       }
@@ -136,17 +144,25 @@ const CalendarComponent = () => {
     navigate("/schedule");
   };
 
+  const clickLocationChangeText = () => {
+    toggleLocationModal();
+  };
+
+  const clickDay = (nowDate) => {
+    actions.setDate(nowDate);
+    toggleDayModal();
+  };
+
   return (
     <div>
       <div className={logoArea}>
         <div className={textArea}>
           <div>
-            현재 지역은 location 입니다.
-            <text className={locationChangeText} onClick={() => alert("위치 변경 모달 열기")}>
+            현재 지역은 {currentLocation ? currentLocation : "서울시"} 입니다.
+            <text className={locationChangeText} onClick={clickLocationChangeText}>
               위치 변경
             </text>
           </div>
-          <div>" .................. 하드 코딩 된 데이터 ................. "</div>
         </div>
         <div className={logoAreaRight}>
           <div className={seeAllSchedules} onClick={gotoSchedulePage}>
@@ -164,8 +180,9 @@ const CalendarComponent = () => {
         <Calendar
           className="my-calendar"
           formatDay={formatDay}
-          tileClassName={tileClassName}
+          tileClassName={haveTaskOrNot}
           tileContent={tileContent}
+          onClickDay={clickDay}
           onActiveStartDateChange={onChange}
         />
         <div className={todolistContainer}>

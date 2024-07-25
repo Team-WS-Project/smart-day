@@ -32,14 +32,14 @@ const List = ({ listIndex, tasks }: TaskList) => {
   const dayOfTheWeek = ["일", "월", "화", "수", "목", "금", "토"];
   const { standardDate } = useMainStore();
   const updateTask = useTaskStore((state) => state.updateTask);
-  const setIsNewTask = useTaskStore((state) => state.setIstNewTask);
+  const setIsNewTask = useTaskStore((state) => state.setIsNewTask);
   const nowDate = dayjs(standardDate).add(listIndex, "day");
 
   const addTask = () => {
     const emptyTask = {
       taskIndex: -1,
       listIndex: listIndex,
-      date: "",
+      date: dayjs(standardDate).add(listIndex, "day").format("YYYY-MM-DD"),
       startTime: "",
       endTime: "",
       title: "",

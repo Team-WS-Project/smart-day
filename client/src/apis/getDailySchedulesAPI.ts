@@ -8,6 +8,8 @@ export const getDailySchedules = async (date: Date) => {
         date: dayjs(date).format("YYYY-MM-DD"),
       },
     });
+    console.log(dayjs(date).format("YYYY-MM-DD"));
+
     return res.data;
   } catch (err) {
     console.error(err);

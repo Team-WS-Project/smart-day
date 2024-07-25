@@ -3,6 +3,9 @@ import CalendarComponent from "./CalendarComponent/CalendarComponent";
 import Footer from "../../components/PageComponents/Footer/Footer";
 import Header from "../../components/PageComponents/Header/Header";
 import { calendarPageBody } from "./CalendarPage.css";
+import TaskModal from "../../components/ModalComponents/TaskModal/TaskModal";
+import DayModal from "../../components/ModalComponents/DayModal/DayModal";
+import TodoScheduleModal from "../../components/ModalComponents/TodoScheduleModal/TodoScheduleModal";
 import useModalStore from "../../store/modalStore";
 import RegisterModal from "../../components/ModalComponents/RegisterModal/RegisterModal";
 import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
@@ -14,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 const CalendarPage = () => {
-  const { loginModal, userEditModal, locationModal, registerModal, pwCheckModal } = useModalStore();
+  const { loginModal, userEditModal, locationModal, registerModal, pwCheckModal, taskModal, dayModal, todoScheduleModal } = useModalStore();
   const userId = useUserInfoStore((state) => state.userId);
   const navigate = useNavigate();
 
@@ -27,7 +30,9 @@ const CalendarPage = () => {
 
   return (
     <>
-      {" "}
+      {dayModal && <DayModal />}
+      {taskModal && <TaskModal />}
+      {todoScheduleModal && <TodoScheduleModal />}
       {registerModal && <RegisterModal />}
       {loginModal && <LoginModal />}
       {userEditModal && <RegisterEditModal />}

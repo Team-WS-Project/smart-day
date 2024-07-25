@@ -39,6 +39,7 @@ const TaskModal = () => {
 
   const selectedDate = useUserInfoStore((state) => state.selectedDate);
   const { addTask, updateTask, deleteTask } = useMainStore((state) => state.actions);
+  const setIsNewTask = useTaskStore((state) => state.setIsNewTask);
 
   const [startDate, setStartDate] = useState(() => {
     if (selectedDate) {
@@ -56,31 +57,26 @@ const TaskModal = () => {
       title: "",
       detail: detail,
     };
-    // console.log(newTask);
 
     if (isNewTask) {
       console.log("new");
-      if (task.taskId) {
-        addTask(task.listIndex, newTask);
-      } else {
-        // 스케줄 추가
-        postAddTaskAPI(
-          "",
-          detail,
-          dayjs(startDate).format("YYYY-MM-DD"),
-          dayjs(startDate).format("YYYY-MM-DD"),
-          dayjs(startTime).format("HH:mm"),
-          dayjs(endTime).format("HH:mm"),
-        );
-        addTask(task.listIndex, newTask);
-      }
+
+      addTask(task.listIndex, newTask);
+      // 스케줄 추가
+      postAddTaskAPI(
+        detail,
+        detail,
+        dayjs(startDate).format("YYYY-MM-DD"),
+        dayjs(startDate).format("YYYY-MM-DD"),
+        dayjs(startTime).format("HH:mm"),
+        dayjs(endTime).format("HH:mm"),
+      );
     } else {
       if (task.taskId) {
         updateTask(task.listIndex, task.taskIndex, newTask);
-        // fetch - 스케줄 수정
         putUpdateTaskAPI(
           task.taskId,
-          "",
+          detail, // title 컬럼이지만 title 입력을 구현하지 않아 임시로 detail 추가
           detail,
           dayjs(startDate).format("YYYY-MM-DD"),
           dayjs(startDate).format("YYYY-MM-DD"),
@@ -92,6 +88,7 @@ const TaskModal = () => {
       }
     }
 
+    setIsNewTask(false);
     toggleTaskModal();
   };
 
