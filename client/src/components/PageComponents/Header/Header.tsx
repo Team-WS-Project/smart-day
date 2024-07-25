@@ -16,6 +16,9 @@ import { useUserInfoStore } from "../../../store/userInfoStore";
 import { useEffect, useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { requestLogoutAPI } from "../../../apis/logoutAPI";
+import useDailyTodoStore from "../../../store/todoStore";
+import useDailyScheduleStore from "../../../store/dayStore";
+import useScheduleStore from "../../../store/scheduleStore";
 
 const Header = () => {
   const userId = useUserInfoStore((state) => state.userId);
@@ -24,6 +27,10 @@ const Header = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const setLoginRedirectPath = useModalStore((state) => state.actions.setLoginRedirectPath);
   const loginRedirectPath = useModalStore((state) => state.loginRedirectPath);
+
+  const clearTodo = useDailyTodoStore((state) => state.actions.clearTodo);
+  const clearSchedule = useDailyScheduleStore((state) => state.actions.clearSchedule);
+  const clear = useScheduleStore((state) => state.actions.clearSchedule);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -71,6 +78,9 @@ const Header = () => {
       await requestLogoutAPI();
       actions.setUserId(null);
       actions.setNickname(null);
+      clearTodo();
+      clearSchedule();
+      clear();
       navigate("/");
     } catch (err) {
       console.error(err);
