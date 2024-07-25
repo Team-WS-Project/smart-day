@@ -27,6 +27,7 @@ const DaySchedule = ({ id, title, detail, start_date, end_date, start_time, end_
     toggleTaskModal();
   };
 
+const DaySchedule = ({ start_time, end_time, title }: DailySchedule) => {
   return (
     <div className={dailySchedule} onClick={clickTaskDiv}>
       <div className={dailyScheduleTitle}>

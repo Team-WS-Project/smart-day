@@ -20,7 +20,9 @@ import { useUserInfoStore } from "../../../store/userInfoStore";
 import { requestLoginAPI } from "../../../apis/loginAPI";
 
 const LoginModal = () => {
-  const { setUserId, setCurrentLocation, setFavoriteLocation } = useUserInfoStore((state) => state.actions);
+  const { setUserId, setNickname, setCurrentLocation, setFavoriteLocation } = useUserInfoStore(
+    (state) => state.actions,
+  );
   const [type, setType] = useState("password");
   const [showPassword, setShowPassword] = useState(false);
   const [icon, setIcon] = useState(<FaEyeSlash />);
@@ -38,6 +40,7 @@ const LoginModal = () => {
       const respond = await requestLoginAPI(email, password);
       if (respond !== undefined) {
         setUserId(respond.data[0].id);
+        setNickname(respond.data[0].nickname);
         setCurrentLocation(respond.data[0].location);
         setFavoriteLocation();
         toggleLoginModal();

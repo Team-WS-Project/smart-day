@@ -7,9 +7,9 @@ type Todo = {
   dueDate: string;
 };
 
-export const createTodo = ({ title, detail, dueDate }: Todo) => {
+export const createTodo = async ({ title, detail, dueDate }: Todo) => {
   try {
-    baseAxios.post("/todos", {
+    await baseAxios.post("/todos", {
       title,
       detail,
       dueDate,
@@ -19,13 +19,21 @@ export const createTodo = ({ title, detail, dueDate }: Todo) => {
   }
 };
 
-export const updateTodo = ({ todoId, title, detail, dueDate }: Todo) => {
+export const updateTodo = async ({ todoId, title, detail, dueDate }: Todo) => {
   try {
-    baseAxios.put(`todos/${todoId}`, {
+    await baseAxios.put(`todos/${todoId}`, {
       title,
       detail,
       dueDate,
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteTodo = async (todoId: number) => {
+  try {
+    await baseAxios.delete(`todos/${todoId}`, {});
   } catch (error) {
     console.log(error);
   }

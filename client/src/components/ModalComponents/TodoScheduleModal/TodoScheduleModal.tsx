@@ -23,7 +23,7 @@ import { wrapper } from "../RegisterModal/RegisterModal.css";
 import { toggleTodoScheduleModal } from "../../../store/modalStore";
 import useTodoScheduleStore from "../../../store/todoScheduleStore";
 import { getTodoInfo } from "../../../apis/todolistAPIs";
-import { createTodo, updateTodo } from "../../../apis/todoModalAPIs";
+import { createTodo, deleteTodo, updateTodo } from "../../../apis/todoModalAPIs";
 import dayjs from "dayjs";
 import { ko } from "date-fns/locale";
 
@@ -81,7 +81,7 @@ const TodoScheduleModal = () => {
 
   const handleDeleteButton = async () => {
     if (todoSchedule.selectedTodoId) {
-      //await deleteTodo(todoSchedule.selectedTodoId);
+      await deleteTodo(todoSchedule.selectedTodoId);
     }
     toggleTodoScheduleModal();
     setSelectedTodoId(null);
