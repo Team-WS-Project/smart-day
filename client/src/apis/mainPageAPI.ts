@@ -1,6 +1,6 @@
 import { baseAxios } from "./baseAPI";
 
-export const getTaskListsAPI = async (standardDate) => {
+export const getTaskListsAPI = async (standardDate: string) => {
   try {
     const res = await baseAxios.get("/schedules/fourdays", {
       params: { standardDate: standardDate },
@@ -13,7 +13,14 @@ export const getTaskListsAPI = async (standardDate) => {
   }
 };
 
-export const postAddTaskAPI = async (title, detail, startDate, endDate, startTime, endTime) => {
+export const postAddTaskAPI = async (
+  title: string,
+  detail: string,
+  startDate: string,
+  endDate: string,
+  startTime: string,
+  endTime: string,
+) => {
   try {
     console.log(title, detail);
     const res = await baseAxios.post("/schedules", {
@@ -32,7 +39,15 @@ export const postAddTaskAPI = async (title, detail, startDate, endDate, startTim
   }
 };
 
-export const putUpdateTaskAPI = async (id, title, detail, startDate, endDate, startTime, endTime) => {
+export const putUpdateTaskAPI = async (
+  id: number,
+  title: string,
+  detail: string,
+  startDate: string,
+  endDate: string,
+  startTime: string,
+  endTime: string,
+) => {
   try {
     const res = await baseAxios.put(`/schedules/${id}`, {
       title: title,
@@ -50,7 +65,7 @@ export const putUpdateTaskAPI = async (id, title, detail, startDate, endDate, st
   }
 };
 
-export const deleteTaskAPI = async (id) => {
+export const deleteTaskAPI = async (id: number) => {
   try {
     const res = await baseAxios.delete(`/schedules/${id}`);
 

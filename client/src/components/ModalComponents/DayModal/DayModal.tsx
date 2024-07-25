@@ -75,7 +75,8 @@ const DayModal = () => {
     hasPageBeenRendered.current["effect"] = true;
   }, [date, todoActions, scheduleActions, todoScheduleModal]);
 
-  const clickAddTask = () => {
+  const clickAddTask = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     const emptyTask = {
       taskIndex: 0,
       listIndex: 0,
@@ -90,7 +91,8 @@ const DayModal = () => {
     toggleTaskModal();
   };
 
-  const clickAddTodo = () => {
+  const clickAddTodo = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     setDueDate(dayjs(date).format("YYYY-MM-DD"));
     toggleTodoScheduleModal();
   };
@@ -115,7 +117,7 @@ const DayModal = () => {
               <DayTodoModal key={index} id={todo.id} due_date={todo.due_date} title={todo.title} />
             ))}
             <div className={center}>
-              <button className={todoAddButton} onClick={clickAddTodo}>
+              <button className={todoAddButton} onClick={(e) => clickAddTodo(e)}>
                 + TODO 추가
               </button>
             </div>
@@ -139,7 +141,7 @@ const DayModal = () => {
             />
           ))}
           <div>
-            <button className={scheduleAddButton} onClick={clickAddTask}>
+            <button className={scheduleAddButton} onClick={(e) => clickAddTask(e)}>
               + 새 일정 추가
             </button>
           </div>

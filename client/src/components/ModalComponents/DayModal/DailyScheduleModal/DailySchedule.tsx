@@ -5,7 +5,7 @@ import useTaskStore from "../../../../store/taskStore";
 import { useUserInfoStore } from "../../../../store/userInfoStore";
 import dayjs from "dayjs";
 
-const DaySchedule = ({ id, title, detail, start_date, end_date, start_time, end_time }: DailySchedule) => {
+const DaySchedule = ({ id, title, detail, start_date, start_time, end_time }: DailySchedule) => {
   const setIsNewTask = useTaskStore((state) => state.setIsNewTask);
   const { initializeSelectedDate } = useUserInfoStore((state) => state.actions);
   const updateTask = useTaskStore((state) => state.updateTask);
@@ -18,8 +18,8 @@ const DaySchedule = ({ id, title, detail, start_date, end_date, start_time, end_
       date: dayjs(start_date).format("YYYY-MM-DD"),
       startTime: start_time,
       endTime: end_time,
-      title: detail ? detail : title,
-      detail: detail ? detail : title,
+      title: title,
+      detail: detail,
     };
     initializeSelectedDate();
     setIsNewTask(false);
