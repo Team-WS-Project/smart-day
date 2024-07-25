@@ -91,7 +91,7 @@ const DayModal = () => {
   };
 
   const clickAddTodo = () => {
-    setDueDate(date.toISOString().slice(0, 10));
+    setDueDate(dayjs(date).format("YYYY-MM-DD"));
     toggleTodoScheduleModal();
   };
   return (
