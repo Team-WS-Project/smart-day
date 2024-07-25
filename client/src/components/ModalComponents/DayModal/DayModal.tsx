@@ -85,7 +85,7 @@ const DayModal = () => {
           </div>
           <div className={dailyTodoColumn}>
             {dailyTodos.map((todo, index) => (
-              <DayTodoModal key={index} end_date={todo.end_date} title={todo.title} />
+              <DayTodoModal key={index} due_date={todo.due_date} title={todo.title} />
             ))}
             <div className={center}>
               <button className={todoAddButton} onClick={toggleTodoScheduleModal}>
