@@ -72,7 +72,7 @@ const DayModal = () => {
     }
     hasPageBeenRendered.current["effect"] = true;
   }, [date, todoActions, scheduleActions, todoScheduleModal]);
-  
+
   const clickAddTask = () => {
     const emptyTask = {
       taskIndex: 0,
@@ -105,7 +105,7 @@ const DayModal = () => {
           </div>
           <div className={dailyTodoColumn}>
             {dailyTodos.map((todo, index) => (
-              <DayTodoModal key={index} due_date={todo.due_date} title={todo.title} />
+              <DayTodoModal key={index} id={todo.id} due_date={todo.due_date} title={todo.title} />
             ))}
             <div className={center}>
               <button className={todoAddButton} onClick={toggleTodoScheduleModal}>
@@ -129,7 +129,6 @@ const DayModal = () => {
               start_date={date}
               start_time={schedule.start_time.slice(0, 5)}
               end_time={schedule.end_time.slice(0, 5)}
-
             />
           ))}
           <div>

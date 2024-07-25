@@ -2,7 +2,7 @@ import { create, StateCreator } from "zustand";
 import { devtools } from "zustand/middleware";
 
 export interface DailyTodo {
-  id?: string;
+  id: number;
   due_date: string;
   title: string;
   details?: string;
