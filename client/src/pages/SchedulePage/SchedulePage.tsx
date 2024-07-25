@@ -92,6 +92,8 @@ const SchedulePage = () => {
         <div className={dateSettingRow}>
           <div className={dateContainer}>
             <DatePicker
+              locale={ko}
+              dateFormatCalendar="YYYY년 MMMM"
               showIcon
               selected={startDate}
               dateFormat="yyyy-MM-dd"
