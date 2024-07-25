@@ -16,6 +16,7 @@ interface TodoScheduleStore {
   todoSchedule: todoSchedule;
   updateTodoSchedule: (date: string, title: string, details: string) => void;
   setSelectedTodoId: (todoId: number | null) => void;
+  setDueDate: (due_date: string) => void;
 }
 
 const todoScheduleStore: StateCreator<TodoScheduleStore> = (set) => ({
@@ -40,6 +41,16 @@ const todoScheduleStore: StateCreator<TodoScheduleStore> = (set) => ({
       todoSchedule: {
         ...state.todoSchedule,
         selectedTodoId: todoId,
+      },
+    }));
+  },
+  setDueDate: (due_date: string) => {
+    set((state) => ({
+      todoSchedule: {
+        ...state.todoSchedule,
+        title: "",
+        details: "",
+        date: due_date,
       },
     }));
   },

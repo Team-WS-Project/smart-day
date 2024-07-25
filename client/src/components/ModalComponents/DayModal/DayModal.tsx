@@ -28,6 +28,7 @@ import { getDailySchedules } from "../../../apis/getDailySchedulesAPI";
 import { getDailyTodos } from "../../../apis/getDailyTodosAPI";
 import dayjs from "dayjs";
 import useTaskStore from "../../../store/taskStore";
+import useTodoScheduleStore from "../../../store/todoScheduleStore";
 
 const DayModal = () => {
   const { taskModal, todoScheduleModal } = useModalStore();
@@ -44,6 +45,8 @@ const DayModal = () => {
   const updateTask = useTaskStore((state) => state.updateTask);
   const setIsNewTask = useTaskStore((state) => state.setIsNewTask);
 
+  const { setDueDate } = useTodoScheduleStore();
+
   const getDayOfWeek = (date: Date) => {
     const days = ["일", "월", "화", "수", "목", "금", "토"];
     return days[date.getDay()];
@@ -52,7 +55,6 @@ const DayModal = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("fetching");
         scheduleActions.clearSchedule();
         todoActions.clearTodo();
         const scheduleData = await getDailySchedules(date);
@@ -87,6 +89,11 @@ const DayModal = () => {
     updateTask(emptyTask);
     toggleTaskModal();
   };
+
+  const clickAddTodo = () => {
+    setDueDate(date.toISOString().slice(0, 10));
+    toggleTodoScheduleModal();
+  };
   return (
     <div className={wrapper}>
       {todoScheduleModal && <TodoScheduleModal />}
@@ -108,7 +115,7 @@ const DayModal = () => {
               <DayTodoModal key={index} id={todo.id} due_date={todo.due_date} title={todo.title} />
             ))}
             <div className={center}>
-              <button className={todoAddButton} onClick={toggleTodoScheduleModal}>
+              <button className={todoAddButton} onClick={clickAddTodo}>
                 + TODO 추가
               </button>
             </div>
