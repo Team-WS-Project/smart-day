@@ -23,8 +23,9 @@ import { wrapper } from "../RegisterModal/RegisterModal.css";
 import { toggleTodoScheduleModal } from "../../../store/modalStore";
 import useTodoScheduleStore from "../../../store/todoScheduleStore";
 import { getTodoInfo } from "../../../apis/todolistAPIs";
-import { createTodo, updateTodo } from "../../../apis/todoModalAPIs";
+import { createTodo, deleteTodo, updateTodo } from "../../../apis/todoModalAPIs";
 import dayjs from "dayjs";
+import { ko } from "date-fns/locale";
 
 const TodoScheduleModal = () => {
   const { todoSchedule, setSelectedTodoId, updateTodoSchedule } = useTodoScheduleStore();
@@ -51,16 +52,16 @@ const TodoScheduleModal = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [todoSchedule.selectedTodoId]);
 
-  const handleSaveButton = () => {
+  const handleSaveButton = async () => {
     if (todoSchedule.selectedTodoId) {
-      updateTodo({
+      await updateTodo({
         todoId: todoSchedule.selectedTodoId,
         title,
         detail,
         dueDate,
       });
     } else {
-      createTodo({
+      await createTodo({
         title,
         detail,
         dueDate,
@@ -78,12 +79,21 @@ const TodoScheduleModal = () => {
     updateTodoSchedule(dayjs(new Date()).format("YYYY-MM-DD"), "제목", "내용");
   };
 
+  const handleDeleteButton = async () => {
+    if (todoSchedule.selectedTodoId) {
+      await deleteTodo(todoSchedule.selectedTodoId);
+    }
+    toggleTodoScheduleModal();
+    setSelectedTodoId(null);
+    updateTodoSchedule(dayjs(new Date()).format("YYYY-MM-DD"), "제목", "내용");
+  };
+
   return (
     <div className={wrapper}>
       <div className={todoScheduleContainer}>
         <div className={todoScheduleLeft}>
           <div className={todoTrash}>
-            <FaRegTrashAlt className={trash} />
+            <FaRegTrashAlt className={trash} onClick={handleDeleteButton} />
           </div>
         </div>
         <div className={todoScheduleCenter}>
@@ -92,6 +102,8 @@ const TodoScheduleModal = () => {
             <div className={todoString}>기한 : </div>
             <div>
               <DatePicker
+                locale={ko}
+                dateFormatCalendar="YYYY년 MMMM"
                 selected={new Date(dueDate)}
                 dateFormat="yyyy-MM-dd"
                 onChange={(date) => setdueDate(dayjs(date).format("YYYY-MM-DD"))}

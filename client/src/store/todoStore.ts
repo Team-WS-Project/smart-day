@@ -3,7 +3,7 @@ import { devtools } from "zustand/middleware";
 
 export interface DailyTodo {
   id?: string;
-  end_date: string;
+  due_date: string;
   title: string;
   details?: string;
   completed?: string;

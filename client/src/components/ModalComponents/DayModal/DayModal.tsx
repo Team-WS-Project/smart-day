@@ -19,7 +19,7 @@ import { TiWeatherDownpour } from "react-icons/ti";
 import { VscChromeClose } from "react-icons/vsc";
 import DayTodoModal from "./DailyTodo/DailyTodo";
 import DaySchedule from "./DailyScheduleModal/DailySchedule";
-import useModalStore, { toggleDayModal } from "../../../store/modalStore";
+import useModalStore, { toggleDayModal, toggleTodoScheduleModal } from "../../../store/modalStore";
 import TodoScheduleModal from "../TodoScheduleModal/TodoScheduleModal";
 import TaskModal from "../TaskModal/TaskModal";
 import useDailyScheduleStore, { DailySchedule } from "../../../store/dayStore";
@@ -66,7 +66,7 @@ const DayModal = () => {
       fetchData();
     }
     hasPageBeenRendered.current["effect"] = true;
-  }, [date, todoActions, scheduleActions]);
+  }, [date, todoActions, scheduleActions, todoScheduleModal]);
   return (
     <div className={wrapper}>
       {todoScheduleModal && <TodoScheduleModal />}
@@ -85,10 +85,12 @@ const DayModal = () => {
           </div>
           <div className={dailyTodoColumn}>
             {dailyTodos.map((todo, index) => (
-              <DayTodoModal key={index} end_date={todo.end_date} title={todo.title} />
+              <DayTodoModal key={index} due_date={todo.due_date} title={todo.title} />
             ))}
             <div className={center}>
-              <button className={todoAddButton}>+ TODO 추가</button>
+              <button className={todoAddButton} onClick={toggleTodoScheduleModal}>
+                + TODO 추가
+              </button>
             </div>
           </div>
         </div>

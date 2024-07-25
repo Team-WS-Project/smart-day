@@ -17,6 +17,13 @@ import { useEffect, useState } from "react";
 import useModalStore, { toggleTodoScheduleModal } from "../../store/modalStore";
 import TodoScheduleModal from "../../components/ModalComponents/TodoScheduleModal/TodoScheduleModal";
 import { getCompletedTodos, getFailureTodos, getTodayTodos } from "../../apis/todolistAPIs";
+import RegisterModal from "../../components/ModalComponents/RegisterModal/RegisterModal";
+import LoginModal from "../../components/ModalComponents/LoginModal/LoginModal";
+import RegisterEditModal from "../../components/ModalComponents/RegisterEditModal/RegisterEditModal";
+import CheckPasswordModal from "../../components/ModalComponents/RegisterEditModal/CheckPasswordModal/CheckPasswordModal";
+import LocationModal from "../../components/ModalComponents/LocationModal/LocationModal";
+import { useNavigate } from "react-router-dom";
+import { useUserInfoStore } from "../../store/userInfoStore";
 
 type TTodo = {
   id: number;
@@ -37,6 +44,9 @@ const [FAILURE, TODAY, COMPLETED]: TodoDivision[] = ["failure", "today", "comple
 
 const TodoListPage = () => {
   const todoScheduleModal = useModalStore((state) => state.todoScheduleModal);
+  const { loginModal, userEditModal, locationModal, registerModal, pwCheckModal } = useModalStore();
+  const userId = useUserInfoStore((state) => state.userId);
+  const navigate = useNavigate();
 
   const [todos, setTodos] = useState<Todos>({
     todayTodos: [],
@@ -60,15 +70,20 @@ const TodoListPage = () => {
   };
 
   useEffect(() => {
+    if (!userId) {
+      navigate("/");
+      return;
+    }
+
     if (!todoScheduleModal) {
       fetchTodos();
     }
-  }, [todoScheduleModal]);
+  }, [todoScheduleModal, navigate]);
 
   const handleCheckboxChange = (todo: TTodo, todoDivision: TodoDivision) => {
     const today = new Date();
     const dueDate = new Date(todo.due_date);
-    const timeDiff = dueDate.getDate() - today.getDate();
+    const timeDiff = dueDate.getTime() - today.getTime();
 
     if (todoDivision === FAILURE) {
       setTodos((prevState: Todos) => ({
@@ -105,13 +120,18 @@ const TodoListPage = () => {
   return (
     <>
       {todoScheduleModal ? <TodoScheduleModal /> : null}
+      {registerModal && <RegisterModal />}
+      {loginModal && <LoginModal />}
+      {userEditModal && <RegisterEditModal />}
+      {pwCheckModal && <CheckPasswordModal />}
+      {locationModal && <LocationModal />}
       <div className={appContainer}>
         <Header />
         <div className={contentsContainer}>
           <div className={leftPanel}>
             <div className={uncompletedList}>
               <div className={formTitle}>기간 내 완료하지 못한 일들</div>
-              {todos.failureTodos ? (
+              {todos.failureTodos?.length > 0 ? (
                 todos.failureTodos.map((elem) => {
                   return (
                     <div key={elem.id}>
@@ -132,7 +152,7 @@ const TodoListPage = () => {
 
             <div className={completedList}>
               <div className={formTitle}>완료한 일들</div>
-              {todos.completedTodos ? (
+              {todos.completedTodos?.length > 0 ? (
                 todos.completedTodos.map((elem) => (
                   <div key={elem.id}>
                     <Todo
@@ -153,7 +173,7 @@ const TodoListPage = () => {
           <div className={rightPanel}>
             <div className={todoList}>
               <div className={formTitle}>해야할 일들</div>
-              {todos.todayTodos ? (
+              {todos.todayTodos?.length > 0 ? (
                 todos.todayTodos.map((elem) => (
                   <div key={elem.id}>
                     <Todo

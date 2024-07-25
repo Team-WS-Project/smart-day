@@ -24,9 +24,11 @@ interface ModalState {
   todoScheduleModal: boolean;
   userEditModal: boolean;
   pwCheckModal: boolean;
+  loginRedirectPath: string | null;
 
   actions: {
     changeModalState: (type: ModalType) => void;
+    setLoginRedirectPath: (path: string | null) => void;
   };
 }
 
@@ -41,10 +43,13 @@ const modalStore: StateCreator<ModalState> = (set) => ({
   todoScheduleModal: false,
   userEditModal: false,
   pwCheckModal: false,
+  loginRedirectPath: null,
+
   actions: {
     changeModalState: (type) => {
       set((state) => ({ ...state, [type]: !state[type] }));
     },
+    setLoginRedirectPath: (path) => set({ loginRedirectPath: path }),
   },
 });
 

@@ -32,6 +32,7 @@ import { useUserInfoStore } from "../../../store/userInfoStore";
 import useTaskStore from "../../../store/taskStore";
 import useMainStore from "../../../store/mainStore";
 import { deleteTaskAPI, postAddTaskAPI, putUpdateTaskAPI } from "../../../apis/mainPageAPI";
+import { ko } from "date-fns/locale";
 
 const TaskModal = () => {
   const { task, isNewTask } = useTaskStore();
@@ -118,6 +119,8 @@ const TaskModal = () => {
             <div className={scheduleString}>날짜 : </div>
             <div>
               <DatePicker
+                locale={ko}
+                dateFormatCalendar="YYYY년 MMMM"
                 selected={startDate}
                 dateFormat="yyyy-MM-dd"
                 onChange={(datePickerDate) => {
