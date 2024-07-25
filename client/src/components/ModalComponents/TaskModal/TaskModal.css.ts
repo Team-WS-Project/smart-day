@@ -115,6 +115,11 @@ export const timePicker = style({
   width: "90px",
 });
 
+export const titleInput = style({
+  marginLeft: vars.spacing.medium,
+  width: "65%",
+});
+
 globalStyle(`${timePicker} > div > input`, {
   textAlign: "right",
   backgroundColor: vars.color.brightIcon,

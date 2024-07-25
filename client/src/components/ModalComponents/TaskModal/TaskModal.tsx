@@ -15,6 +15,7 @@ import {
   scheduleTitle,
   scheduleTrash,
   timePicker,
+  titleInput,
   trash,
   wrapper,
 } from "./TaskModal.css";
@@ -54,7 +55,7 @@ const TaskModal = () => {
       date: dayjs(startDate).format("YYYY-MM-DD"),
       startTime: dayjs(startTime).format("HH:mm"),
       endTime: dayjs(endTime).format("HH:mm"),
-      title: "",
+      title: title,
       detail: detail,
     };
 
@@ -62,9 +63,8 @@ const TaskModal = () => {
       console.log("new");
 
       addTask(task.listIndex, newTask);
-      // 스케줄 추가
       postAddTaskAPI(
-        detail,
+        title,
         detail,
         dayjs(startDate).format("YYYY-MM-DD"),
         dayjs(startDate).format("YYYY-MM-DD"),
@@ -76,7 +76,7 @@ const TaskModal = () => {
         updateTask(task.listIndex, task.taskIndex, newTask);
         putUpdateTaskAPI(
           task.taskId,
-          detail, // title 컬럼이지만 title 입력을 구현하지 않아 임시로 detail 추가
+          title,
           detail,
           dayjs(startDate).format("YYYY-MM-DD"),
           dayjs(startDate).format("YYYY-MM-DD"),
@@ -101,6 +101,7 @@ const TaskModal = () => {
   const [startTime, setStartTime] = useState<dayjs.Dayjs>(dayjs(`${startDate} ${task.startTime}`, "YYYY-MM-DD HH:mm"));
   const [endTime, setEndTime] = useState<dayjs.Dayjs>(dayjs(`${startDate} ${task.endTime}`, "YYYY-MM-DD HH:mm"));
   const [detail, setDetail] = useState(task.detail || "");
+  const [title, setTitle] = useState(task.title || "");
 
   return (
     <div className={wrapper}>
@@ -150,7 +151,16 @@ const TaskModal = () => {
               </div>
             </div>
           </div>
-
+          <div className={scheduleDate}>
+            <div className={scheduleString}>제목 : </div>
+            <input
+              className={titleInput}
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
+            ></input>
+          </div>
           <div className={scheduleString}>내용 : </div>
           <textarea
             className={scheduleContent}
