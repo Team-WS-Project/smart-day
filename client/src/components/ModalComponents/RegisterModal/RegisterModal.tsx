@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   inputField,
   inputBox,
@@ -21,7 +21,6 @@ import { useUserInfoStore } from "../../../store/userInfoStore";
 
 const RegisterModal = () => {
   const [type, setType] = useState("password");
-  const [showPassword, setShowPassword] = useState(false);
   const [icon, setIcon] = useState(<FaEyeSlash />);
 
   const [email, setEmail] = useState("");
@@ -33,17 +32,14 @@ const RegisterModal = () => {
   const location = currentLocation;
 
   const [typeConfirmPassword, setTypeConfirmPassword] = useState("password");
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [iconConfirmPassword, setIconConfirmPassword] = useState(<FaEyeSlash />);
 
   const handleToggle = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
     setType((prevType) => (prevType === "password" ? "text" : "password"));
     setIcon((prevIcon) => (prevIcon.type === FaEyeSlash ? <FaEye /> : <FaEyeSlash />));
   };
 
   const handleToggleConfirmPassword = () => {
-    setShowConfirmPassword((prevShowConfirmPassword) => !prevShowConfirmPassword);
     setTypeConfirmPassword((prevType) => (prevType === "password" ? "text" : "password"));
     setIconConfirmPassword((prevIcon) => (prevIcon.type === FaEyeSlash ? <FaEye /> : <FaEyeSlash />));
   };

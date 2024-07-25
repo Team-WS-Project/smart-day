@@ -38,7 +38,16 @@ const SchedulePage = () => {
   });
   const schedules = useScheduleStore((state) => state.schedules);
   const actions = useScheduleStore((state) => state.actions);
-  const { loginModal, userEditModal, dayModal, locationModal, registerModal, pwCheckModal } = useModalStore();
+  const {
+    loginModal,
+    userEditModal,
+    dayModal,
+    locationModal,
+    registerModal,
+    pwCheckModal,
+    taskModal,
+    todoScheduleModal,
+  } = useModalStore();
   const userId = useUserInfoStore((state) => state.userId);
   const navigate = useNavigate();
 
@@ -63,7 +72,7 @@ const SchedulePage = () => {
       fetchSchedules();
     }
     hasPageBeenRendered.current["effect"] = true;
-  }, [startDate, endDate, actions, userId, navigate]);
+  }, [startDate, endDate, actions, userId, navigate, taskModal, todoScheduleModal]);
 
   const handleStartDateChange = (date: Date | null) => {
     if (date) {

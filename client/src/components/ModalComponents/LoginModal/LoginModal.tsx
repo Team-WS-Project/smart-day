@@ -24,13 +24,11 @@ const LoginModal = () => {
     (state) => state.actions,
   );
   const [type, setType] = useState("password");
-  const [showPassword, setShowPassword] = useState(false);
   const [icon, setIcon] = useState(<FaEyeSlash />);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleToggle = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
     setType((prevType) => (prevType === "password" ? "text" : "password"));
     setIcon((prevIcon) => (prevIcon.type === FaEyeSlash ? <FaEye /> : <FaEyeSlash />));
   };

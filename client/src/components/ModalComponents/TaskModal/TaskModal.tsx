@@ -51,31 +51,20 @@ const TaskModal = () => {
   });
 
   const clickSaveButton = () => {
-    const newTask = {
-      date: dayjs(startDate).format("YYYY-MM-DD"),
-      startTime: dayjs(startTime).format("HH:mm"),
-      endTime: dayjs(endTime).format("HH:mm"),
-      title: title,
-      detail: detail,
-    };
+    if (startTime && endTime && startTime.isBefore(endTime)) {
+      const newTask = {
+        date: dayjs(startDate).format("YYYY-MM-DD"),
+        startTime: dayjs(startTime).format("HH:mm"),
+        endTime: dayjs(endTime).format("HH:mm"),
+        title: title,
+        detail: detail,
+      };
 
-    if (isNewTask) {
-      console.log("new");
+      if (isNewTask) {
+        console.log("new");
 
-      addTask(task.listIndex, newTask);
-      postAddTaskAPI(
-        title,
-        detail,
-        dayjs(startDate).format("YYYY-MM-DD"),
-        dayjs(startDate).format("YYYY-MM-DD"),
-        dayjs(startTime).format("HH:mm"),
-        dayjs(endTime).format("HH:mm"),
-      );
-    } else {
-      if (task.taskId) {
-        updateTask(task.listIndex, task.taskIndex, newTask);
-        putUpdateTaskAPI(
-          task.taskId,
+        addTask(task.listIndex, newTask);
+        postAddTaskAPI(
           title,
           detail,
           dayjs(startDate).format("YYYY-MM-DD"),
@@ -84,12 +73,27 @@ const TaskModal = () => {
           dayjs(endTime).format("HH:mm"),
         );
       } else {
-        updateTask(task.listIndex, task.taskIndex, newTask);
+        if (task.taskId) {
+          updateTask(task.listIndex, task.taskIndex, newTask);
+          putUpdateTaskAPI(
+            task.taskId,
+            title,
+            detail,
+            dayjs(startDate).format("YYYY-MM-DD"),
+            dayjs(startDate).format("YYYY-MM-DD"),
+            dayjs(startTime).format("HH:mm"),
+            dayjs(endTime).format("HH:mm"),
+          );
+        } else {
+          updateTask(task.listIndex, task.taskIndex, newTask);
+        }
       }
-    }
 
-    setIsNewTask(false);
-    toggleTaskModal();
+      setIsNewTask(false);
+      toggleTaskModal();
+    } else {
+      alert("시간을 올바르게 입력해주세요!");
+    }
   };
 
   const clickDeleteButton = () => {
