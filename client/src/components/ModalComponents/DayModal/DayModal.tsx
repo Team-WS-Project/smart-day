@@ -123,9 +123,9 @@ const DayModal = () => {
         </div>
         <div
           className={dayModalRight}
-          onClick={() => {
-            setIsNewTask(false);
-          }}
+          // onClick={() => {
+          //   setIsNewTask(false);
+          // }}
         >
           {dailySchedules.map((schedule, index) => (
             <DaySchedule
