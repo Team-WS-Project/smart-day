@@ -37,6 +37,7 @@ import dayjs from "dayjs";
 import useModalStore, { toggleDayModal, toggleLocationModal } from "../../../store/modalStore";
 import { useUserInfoStore } from "../../../store/userInfoStore";
 import useDailyScheduleStore from "../../../store/dayStore";
+import { weatherApiFetchTest } from "../../../apis/weatherAPI/weatherAPI";
 
 const CalendarComponent = () => {
   const [activeDate, setActiveDate] = useState(new Date());
@@ -45,19 +46,20 @@ const CalendarComponent = () => {
   const { setIsHaveTask, setTodolist } = useCalendarPageStore((state) => state.actions);
   const actions = useDailyScheduleStore((state) => state.actions);
   const { taskModal, todoScheduleModal, dayModal } = useModalStore();
+  let weatherArray = [];
 
   const navigate = useNavigate();
 
   const weatherIcons = [
-    <TiWeatherCloudy />,
     <TiWeatherDownpour />,
+    <TiWeatherSunny />,
+    <TiWeatherWindyCloudy />,
+    <TiWeatherCloudy />,
     <TiWeatherPartlySunny />,
-    <TiWeatherShower />,
     <TiWeatherSnow />,
     <TiWeatherStormy />,
-    <TiWeatherSunny />,
     <TiWeatherWindy />,
-    <TiWeatherWindyCloudy />,
+    <TiWeatherShower />,
   ];
 
   const fetchIsHaveTask = async () => {
@@ -91,10 +93,24 @@ const CalendarComponent = () => {
     setTodolist(newTodoList);
   };
 
+  async function fetchweather() {
+    try {
+      const result = await weatherApiFetchTest(currentLocation); // Promise가 해결될 때까지 기다림
+      console.log(result);
+
+      weatherArray = result;
+    } catch (error) {
+      console.error("오류 발생:", error);
+    }
+  }
   useEffect(() => {
     fetchIsHaveTask();
     fetchTodolist();
   }, [activeDate, taskModal, todoScheduleModal, dayModal]);
+
+  useEffect(() => {
+    fetchweather();
+  }, [currentLocation]);
 
   const onChange = ({ activeStartDate }) => {
     setActiveDate(activeStartDate);
@@ -134,8 +150,12 @@ const CalendarComponent = () => {
       date.getDate() >= 1 &&
       date.getDate() <= 31
     ) {
-      if (today.getDate() <= date.getDate() && date.getDate() < today.getDate() + 7) {
-        return <div className={iconArea}>{weatherIcons[Math.floor(Math.random() * 9)]}</div>;
+      if (date.getDate() === today.getDate()) {
+        return <div className={iconArea}>{weatherIcons[0]}</div>;
+      } else if (date.getDate() === today.getDate() + 1) {
+        return <div className={iconArea}>{weatherIcons[1]}</div>;
+      } else if (date.getDate() === today.getDate() + 2) {
+        return <div className={iconArea}>{weatherIcons[2]}</div>;
       }
     }
   };

@@ -45,7 +45,7 @@ const MainPage = () => {
         <Header />
         <div className={pageContainer}>
           <div className={locationTextArea}>
-            현재 지역은 {currentLocation ? currentLocation : "서울시"} 입니다.
+            현재 지역은 {currentLocation ? currentLocation : "내 위치"} 입니다.
             <div className={locationChange} onClick={toggleLocationModal}>
               {" "}
               위치변경

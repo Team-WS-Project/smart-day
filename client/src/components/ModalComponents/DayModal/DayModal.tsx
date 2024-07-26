@@ -96,6 +96,7 @@ const DayModal = () => {
     setDueDate(dayjs(date).format("YYYY-MM-DD"));
     toggleTodoScheduleModal();
   };
+
   return (
     <div className={wrapper}>
       {todoScheduleModal && <TodoScheduleModal />}
