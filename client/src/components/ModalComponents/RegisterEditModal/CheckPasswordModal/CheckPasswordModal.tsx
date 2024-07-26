@@ -18,13 +18,11 @@ import { getUserInfoAPI } from "../../../../apis/getUserInfoAPI";
 import { useChangeUserInfoStore } from "../../../../store/changeUserInfoStore";
 const CheckPasswordModal = () => {
   const [type, setType] = useState("password");
-  const [showPassword, setShowPassword] = useState(false);
   const [icon, setIcon] = useState(<FaEyeSlash />);
   const [password, setPassword] = useState("");
   const actions = useChangeUserInfoStore((state) => state.actions);
 
   const handleToggle = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
     setType((prevType) => (prevType === "password" ? "text" : "password"));
     setIcon((prevIcon) => (prevIcon.type === FaEyeSlash ? <FaEye /> : <FaEyeSlash />));
   };
