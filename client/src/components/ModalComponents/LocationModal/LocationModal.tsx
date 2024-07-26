@@ -29,14 +29,14 @@ const LocationModal = () => {
     setCurrentLocation: state.actions.setCurrentLocation,
   }));
 
-  const handleSidoChange = (e) => {
+  const handleSidoChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value === "") {
       return;
     }
     setSelectedLocation({ ...selectedLocation, sido: e.target.value, sigungu: "" });
   };
 
-  const handleSigunguChange = async (e) => {
+  const handleSigunguChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value === "") {
       return;
     }
@@ -118,7 +118,9 @@ const LocationModal = () => {
                     e.stopPropagation();
                     await deleteServerFavoriteLocation(location.location_name);
                     deleteFavoriteLocation(location.location_name);
-                  } catch (err) {}
+                  } catch (err) {
+                    alert("삭제에 실패했습니다. 다시 시도하세요.");
+                  }
                 }}
               />
             </div>
@@ -133,10 +135,8 @@ const LocationModal = () => {
               <TiStarFullOutline
                 className={styles.starFilledIcon}
                 onClick={async () => {
-                  try {
-                    await deleteServerFavoriteLocation(currentLocation);
-                    deleteFavoriteLocation(currentLocation);
-                  } catch (err) {}
+                  await deleteServerFavoriteLocation(currentLocation);
+                  deleteFavoriteLocation(currentLocation);
                 }}
               />
             ) : (
