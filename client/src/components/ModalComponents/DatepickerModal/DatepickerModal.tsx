@@ -16,6 +16,8 @@ import { ko } from "date-fns/locale";
 import { FiX } from "react-icons/fi";
 import { toggleDatepickerModal, toggleTaskModal } from "../../../store/modalStore";
 import { useUserInfoStore } from "../../../store/userInfoStore";
+import useTaskStore from "../../../store/taskStore";
+import dayjs from "dayjs";
 
 const DatepickerModal = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -24,6 +26,27 @@ const DatepickerModal = () => {
     setSelectedDate: state.actions.setSelectedDate,
     initializeSelectedDate: state.actions.initializeSelectedDate,
   }));
+  const setIsNewTask = useTaskStore((state) => state.setIsNewTask);
+  const updateTask = useTaskStore((state) => state.updateTask);
+
+  const handleDateChange = (date: Date | null) => {
+    setStartDate(date);
+    if (date) {
+      setSelectedDate(date);
+    }
+    const emptyTask = {
+      taskIndex: -1,
+      listIndex: -1,
+      date: dayjs(date).format("YYYY-MM-DD"),
+      startTime: "",
+      endTime: "",
+      title: "",
+      detail: "",
+    };
+    setIsNewTask(true);
+    updateTask(emptyTask);
+    toggleTaskModal();
+  };
 
   return (
     <div className={wrapper}>
@@ -42,13 +65,7 @@ const DatepickerModal = () => {
         <div className={body}>
           <DatePicker
             selected={startDate}
-            onChange={(date) => {
-              setStartDate(date);
-              if (date) {
-                setSelectedDate(date);
-              }
-              toggleTaskModal();
-            }}
+            onChange={handleDateChange}
             inline
             locale={ko}
             monthsShown={1}

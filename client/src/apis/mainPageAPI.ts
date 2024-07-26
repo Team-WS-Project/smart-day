@@ -32,7 +32,6 @@ export const postAddTaskAPI = async (
       endTime: endTime,
     });
 
-    // 응답 처리
     return res;
   } catch (error) {
     console.error("Error fetching task lists:", error);
@@ -58,7 +57,6 @@ export const putUpdateTaskAPI = async (
       endDate: endDate,
     });
 
-    // 응답 처리
     return res;
   } catch (error) {
     console.error("Error fetching task lists:", error);
@@ -69,7 +67,6 @@ export const deleteTaskAPI = async (id: number) => {
   try {
     const res = await baseAxios.delete(`/schedules/${id}`);
 
-    // 응답 처리
     return res;
   } catch (error) {
     console.error("Error fetching task lists:", error);

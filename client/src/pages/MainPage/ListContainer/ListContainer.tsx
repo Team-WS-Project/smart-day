@@ -18,41 +18,45 @@ const ListContainer = () => {
   const { userId } = useUserInfoStore();
   const { taskModal } = useModalStore();
 
-  useEffect(() => {
-    const fetchTaskLists = async () => {
-      const startDate = dayjs(standardDate).format("YYYY-MM-DD");
+  const fetchTaskLists = async () => {
+    const startDate = dayjs(standardDate).format("YYYY-MM-DD");
 
-      try {
-        const res = await getTaskListsAPI(startDate);
-        const newList = res.data; // newList는 특정 객체 배열을 가진 배열
-        console.log(newList);
+    try {
+      const res = await getTaskListsAPI(startDate);
+      const newList = res?.data; // newList는 특정 객체 배열을 가진 배열
+      console.log(newList);
 
-        newList.forEach((innerArray) => {
-          innerArray.forEach((item) => {
-            item.startTime = item.startTime.substring(0, 5);
-            item.endTime = item.endTime.substring(0, 5);
-          });
+      newList.forEach((innerArray) => {
+        innerArray.forEach((item) => {
+          item.startTime = item.startTime.substring(0, 5);
+          item.endTime = item.endTime.substring(0, 5);
         });
+      });
 
-        const updatedDailyTaskLists = dailyTaskLists.map((data, index) => ({
-          tasks: newList[index], // tasks에 newList를 저장
-        }));
+      const updatedDailyTaskLists = dailyTaskLists.map((data, index) => ({
+        tasks: newList[index], // tasks에 newList를 저장
+      }));
 
-        // 상태 업데이트
-        actions.changeTaskLists(updatedDailyTaskLists);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+      // 상태 업데이트
+      actions.changeTaskLists(updatedDailyTaskLists);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
-    if (userId) {
+  useEffect(() => {
+    if (userId !== null) {
+      fetchTaskLists();
+      console.log("fetch...");
+    }
+  }, [standardDate, taskModal]);
+
+  useEffect(() => {
+    // setStandardDate();
+    if (userId !== null) {
       fetchTaskLists();
     }
-  }, [userId, standardDate, taskModal]);
-
-  useEffect(() => {
-    setStandardDate();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     if (userId === null) {
