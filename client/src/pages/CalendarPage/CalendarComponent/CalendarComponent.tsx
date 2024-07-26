@@ -46,7 +46,7 @@ const CalendarComponent = () => {
   const { setIsHaveTask, setTodolist } = useCalendarPageStore((state) => state.actions);
   const actions = useDailyScheduleStore((state) => state.actions);
   const { taskModal, todoScheduleModal, dayModal } = useModalStore();
-  let weatherArray = [];
+  const [weatherArray, setWeatherArray] = useState([]);
 
   const navigate = useNavigate();
 
@@ -93,23 +93,24 @@ const CalendarComponent = () => {
     setTodolist(newTodoList);
   };
 
-  async function fetchweather() {
+  const fetchWeather = async () => {
     try {
       const result = await weatherApiFetchTest(currentLocation); // Promise가 해결될 때까지 기다림
-      console.log(result);
 
-      weatherArray = result;
+      setWeatherArray(result);
     } catch (error) {
       console.error("오류 발생:", error);
     }
-  }
+  };
+
   useEffect(() => {
     fetchIsHaveTask();
     fetchTodolist();
-  }, [activeDate, taskModal, todoScheduleModal, dayModal]);
+    console.log(weatherArray);
+  }, [activeDate, taskModal, todoScheduleModal, dayModal, weatherArray]);
 
   useEffect(() => {
-    fetchweather();
+    fetchWeather();
   }, [currentLocation]);
 
   const onChange = ({ activeStartDate }) => {
@@ -151,11 +152,11 @@ const CalendarComponent = () => {
       date.getDate() <= 31
     ) {
       if (date.getDate() === today.getDate()) {
-        return <div className={iconArea}>{weatherIcons[0]}</div>;
+        return <div className={iconArea}>{weatherIcons[weatherArray[0]]}</div>;
       } else if (date.getDate() === today.getDate() + 1) {
-        return <div className={iconArea}>{weatherIcons[1]}</div>;
+        return <div className={iconArea}>{weatherIcons[weatherArray[1]]}</div>;
       } else if (date.getDate() === today.getDate() + 2) {
-        return <div className={iconArea}>{weatherIcons[2]}</div>;
+        return <div className={iconArea}>{weatherIcons[weatherArray[2]]}</div>;
       }
     }
   };
