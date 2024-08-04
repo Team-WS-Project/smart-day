@@ -1,6 +1,6 @@
 import { baseAxios } from "./baseAPI";
 
-export const getIsHaveTask = async (nowYear, nowMonth) => {
+export const getIsHaveTask = async (nowYear: string, nowMonth: string) => {
   try {
     const res = await baseAxios.get("/schedules/calendar", {
       params: {
@@ -16,7 +16,7 @@ export const getIsHaveTask = async (nowYear, nowMonth) => {
   }
 };
 
-export const getTodolist = async (nowDate) => {
+export const getTodolist = async (nowDate: string) => {
   try {
     const res = await baseAxios.get("/todos", {
       params: { month: nowDate },
@@ -29,7 +29,7 @@ export const getTodolist = async (nowDate) => {
   }
 };
 
-export const putToggleCompleted = async (todosId) => {
+export const putToggleCompleted = async (todosId: string) => {
   try {
     const res = await baseAxios.put("/todos/completed", {
       params: { todosId },

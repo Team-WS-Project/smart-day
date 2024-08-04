@@ -10,6 +10,7 @@ export const requestRegisterAPI = async (email: string, password: string, locati
     });
     return res;
   } catch (err) {
-    alert("등록 정보를 입력해주세요!");
+    console.error(err);
+    alert("회원가입에 실패했습니다! 다시 시작해주세요");
   }
 };

@@ -30,8 +30,8 @@ const DatepickerModal = () => {
   const updateTask = useTaskStore((state) => state.updateTask);
 
   const handleDateChange = (date: Date | null) => {
-    setStartDate(date);
     if (date) {
+      setStartDate(date);
       setSelectedDate(date);
     }
     const emptyTask = {

@@ -46,7 +46,7 @@ const CalendarComponent = () => {
   const { setIsHaveTask, setTodolist } = useCalendarPageStore((state) => state.actions);
   const actions = useDailyScheduleStore((state) => state.actions);
   const { taskModal, todoScheduleModal, dayModal } = useModalStore();
-  const [weatherArray, setWeatherArray] = useState([]);
+  const [weatherArray, setWeatherArray] = useState<number[]>([]);
 
   const navigate = useNavigate();
 
@@ -76,12 +76,19 @@ const CalendarComponent = () => {
     }
   };
 
+  interface Todo {
+    id: number;
+    due_date: string;
+    completed: number;
+    title: string;
+  }
+
   const fetchTodolist = async () => {
     const nowDate = String(dayjs(activeDate).format("YYYY-MM"));
 
     const res = await getTodolist(nowDate);
 
-    const newTodoList = res?.data.map((todo) => {
+    const newTodoList = res?.data.map((todo: Todo) => {
       return {
         id: todo.id,
         dueDate: todo.due_date,
@@ -95,7 +102,7 @@ const CalendarComponent = () => {
 
   const fetchWeather = async () => {
     try {
-      const result = await weatherApiFetchTest(currentLocation); // Promise가 해결될 때까지 기다림
+      const result = await weatherApiFetchTest(currentLocation);
 
       setWeatherArray(result);
     } catch (error) {
@@ -113,9 +120,11 @@ const CalendarComponent = () => {
     fetchWeather();
   }, [currentLocation]);
 
-  const onChange = ({ activeStartDate }) => {
-    setActiveDate(activeStartDate);
-    fetchIsHaveTask();
+  const onChange = ({ activeStartDate }: { activeStartDate: Date | null }) => {
+    if (activeStartDate) {
+      setActiveDate(activeStartDate);
+      fetchIsHaveTask();
+    }
   };
 
   const logoTextCenter = () => {
@@ -126,12 +135,12 @@ const CalendarComponent = () => {
     }
   };
 
-  const formatDay = (locale, date) => {
-    return date.getDate().toString();
+  const formatDay = (locale: string | undefined, date: Date) => {
+    return date.toLocaleDateString(locale);
   };
 
   // error 해결 필요
-  const haveTaskOrNot = ({ date, view }) => {
+  const haveTaskOrNot = ({ date, view }: { date: Date; view: string }) => {
     if (view === "month" && date.getMonth() === activeDate.getMonth() && date.getDate() >= 1 && date.getDate() <= 31) {
       const index = date.getDate() - 1;
       if (isHaveTask[index] === true) {
@@ -142,7 +151,7 @@ const CalendarComponent = () => {
     return "out-of-month";
   };
 
-  const tileContent = ({ date, view }) => {
+  const tileContent = ({ date, view }: { date: Date; view: string }) => {
     const today = new Date();
     if (
       view === "month" &&
@@ -169,7 +178,7 @@ const CalendarComponent = () => {
     toggleLocationModal();
   };
 
-  const clickDay = (nowDate) => {
+  const clickDay = (nowDate: Date) => {
     actions.setDate(nowDate);
     toggleDayModal();
   };
@@ -218,7 +227,7 @@ const CalendarComponent = () => {
                     dueDate={item.dueDate}
                     isCheck={item.isDone}
                     title={item.title}
-                    description={item.description}
+                    // description={item.description}
                   />
                 ))
               : null}

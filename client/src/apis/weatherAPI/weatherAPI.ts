@@ -82,7 +82,7 @@ export const weatherApiFetchTest = async (currentLocation: string) => {
   const res = await getShortWeather(currentLocation);
   const tmp = res?.data.response.body.items.item;
 
-  const sky = tmp.filter((elem) => {
+  const sky = tmp.filter((elem: { category: string }) => {
     return elem.category === "SKY";
   });
 

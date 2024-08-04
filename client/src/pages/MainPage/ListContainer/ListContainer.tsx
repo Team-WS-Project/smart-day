@@ -1,17 +1,17 @@
 import List from "../List/List";
 import { IoArrowBackCircleOutline, IoArrowForwardCircleOutline } from "react-icons/io5";
 import { arrowIcon, dailyTaskContainer, divArrow } from "./ListContainer.css";
-import useMainStore, {
-  changeDateAfter,
-  changeDateBefore,
-  clearMainTaskList,
-  setStandardDate,
-} from "../../../store/mainStore";
+import useMainStore, { changeDateAfter, changeDateBefore, clearMainTaskList } from "../../../store/mainStore";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import { getTaskListsAPI } from "../../../apis/mainPageAPI";
 import { useUserInfoStore } from "../../../store/userInfoStore";
 import useModalStore from "../../../store/modalStore";
+
+interface Task {
+  startTime: string;
+  endTime: string;
+}
 
 const ListContainer = () => {
   const { standardDate, dailyTaskLists, actions } = useMainStore();
@@ -26,14 +26,14 @@ const ListContainer = () => {
       const newList = res?.data; // newList는 특정 객체 배열을 가진 배열
       console.log(newList);
 
-      newList.forEach((innerArray) => {
-        innerArray.forEach((item) => {
+      newList.forEach((innerArray: Task[]) => {
+        innerArray.forEach((item: Task) => {
           item.startTime = item.startTime.substring(0, 5);
           item.endTime = item.endTime.substring(0, 5);
         });
       });
 
-      const updatedDailyTaskLists = dailyTaskLists.map((data, index) => ({
+      const updatedDailyTaskLists = dailyTaskLists.map((_, index) => ({
         tasks: newList[index], // tasks에 newList를 저장
       }));
 

@@ -6,7 +6,7 @@ export const putCurrentLocation = async (currentLocation: string) => {
       location: currentLocation,
     });
   } catch {
-    alert("현재 위치 설정에 오류가 발생했습니다. 다시 시도해주세요.");
+    // alert("현재 위치 설정에 오류가 발생했습니다. 다시 시도해주세요.");
   }
 };
 

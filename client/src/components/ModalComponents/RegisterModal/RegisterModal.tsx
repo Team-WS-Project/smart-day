@@ -53,11 +53,12 @@ const RegisterModal = () => {
       alert("비밀번호가 일치하지 않습니다.");
     } else {
       try {
-        await requestRegisterAPI(email, password, location, nickname);
-
-        alert("회원가입에 성공하였습니다! 로그인을 진행해주세요.");
-        toggleRegisterModal();
-        toggleLoginModal();
+        const res = await requestRegisterAPI(email, password, location, nickname);
+        if (res) {
+          alert("회원가입에 성공하였습니다! 로그인을 진행해주세요.");
+          toggleRegisterModal();
+          toggleLoginModal();
+        }
       } catch (error) {
         alert("회원가입에 실패했습니다.");
       }

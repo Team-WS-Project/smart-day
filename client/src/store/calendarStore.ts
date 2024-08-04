@@ -38,7 +38,7 @@ const calendarPageStore: StateCreator<CalendarPageState> = (set) => ({
         isHaveTask: newArray,
       });
     },
-    updateIsHaveTask: (isEmpty: boolean) => {},
+    updateIsHaveTask: () => {},
     setTodolist: (newTodolist: Todo[]) => {
       set(() => ({ todolist: newTodolist }));
     },

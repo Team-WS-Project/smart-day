@@ -1,20 +1,25 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { todo, todolistDetail } from "./Todo.css";
 import useCalendarPageStore from "../../../../store/calendarStore";
-import { putToggleCompleted } from "../../../../apis/calenderPageAPI";
 import { toggleTodoScheduleModal } from "../../../../store/modalStore";
 import useTodoScheduleStore from "../../../../store/todoScheduleStore";
 import { changeCompleted } from "../../../../apis/todolistAPIs";
 
-// Todo 컨테이너에 해당하는 props Todo 모달과 통일 필요
-const Todo = ({ id, dueDate, isCheck, title, description }) => {
+interface TodoProps {
+  id: number;
+  dueDate: string;
+  isCheck: boolean;
+  title: string;
+}
+
+const Todo = ({ id, dueDate, isCheck, title }: TodoProps) => {
   const [isChecked, setIsChecked] = useState(isCheck);
   const { toggleTodoIsDone } = useCalendarPageStore((state) => state.actions);
   const setSelectedTodoId = useTodoScheduleStore((state) => state.setSelectedTodoId);
 
-  const fetchToggleTodos = async (id) => {
+  const fetchToggleTodos = async (id: number) => {
     try {
-      const res = await changeCompleted(id);
+      await changeCompleted(id);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
