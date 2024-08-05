@@ -40,11 +40,7 @@
 
 ### 📦 client
 
-
-<summary>프로젝트 구조</summary>
-
 ```less
-less코드 복사
 📂src
  ┣ 📂apis              // 백엔드 서버에 요청할 API 파일들을 모아놓은 폴더
  ┣ 📂components        // 모달에 사용되는 컴포넌트와 공통 페이지에 사용되는 컴포넌트 관리
@@ -67,11 +63,7 @@ less코드 복사
 
 ### 📦 server
 
-
-<summary>프로젝트 구조</summary>
-
 ```arduino
-arduino코드 복사
 ┣ 📂controller          // 컨트롤러 파일
 ┣ 📂models              // SQL 함수 관리 폴더
 ┣ 📂node_modules
