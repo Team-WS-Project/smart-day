@@ -61,8 +61,6 @@ const TaskModal = () => {
       };
 
       if (isNewTask) {
-        console.log("new");
-
         addTask(task.listIndex, newTask);
         postAddTaskAPI(
           title,
@@ -158,7 +156,6 @@ const TaskModal = () => {
                     defaultValue={endTime}
                     onChange={(time) => {
                       setEndTime(time);
-                      console.log(endTime);
                     }}
                   />
                 </LocalizationProvider>

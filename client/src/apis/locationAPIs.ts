@@ -5,8 +5,8 @@ export const putCurrentLocation = async (currentLocation: string) => {
     await baseAxios.put("/users/update", {
       location: currentLocation,
     });
-  } catch {
-    // alert("현재 위치 설정에 오류가 발생했습니다. 다시 시도해주세요.");
+  } catch (err) {
+    console.error(err);
   }
 };
 
@@ -38,6 +38,6 @@ export const getFavorites = async () => {
     const res = await baseAxios.get("/favorites", {});
     return res;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };

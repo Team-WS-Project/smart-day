@@ -3,7 +3,6 @@ import { taskDetail, taskStyle, trashIcon } from "./Task.css";
 import { toggleTaskModal } from "../../../store/modalStore";
 import useMainStore from "../../../store/mainStore";
 import useTaskStore from "../../../store/taskStore";
-// import dayjs, { Dayjs } from "dayjs";
 import { useUserInfoStore } from "../../../store/userInfoStore";
 import { deleteTaskAPI } from "../../../apis/mainPageAPI";
 
@@ -56,7 +55,7 @@ const Task = ({ id, taskIndex, listIndex, date, startTime, endTime, title, detai
         <div className={taskDetail} onClick={clickTaskDiv}>
           {startTime} ~ {endTime}
           <br />
-          {detail ? detail.substring(0, 6) + (detail.length >= 6 ? "..." : "") : null}
+          {title ? title.substring(0, 6) + (title.length >= 6 ? "..." : "") : null}
         </div>
         <FaRegTrashAlt className={trashIcon} onClick={clickTrashIcon} />
       </div>

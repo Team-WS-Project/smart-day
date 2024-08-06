@@ -68,7 +68,7 @@ const userInfoStore: StateCreator<userInfoState> = (set) => ({
           return { ...state, favoriteLocations: favorites };
         });
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     },
 

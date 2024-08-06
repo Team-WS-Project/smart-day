@@ -22,7 +22,6 @@ export const postAddTaskAPI = async (
   endTime: string,
 ) => {
   try {
-    console.log(title, detail);
     const res = await baseAxios.post("/schedules", {
       title: title,
       detail: detail,

@@ -29,6 +29,7 @@ import {
   TiWeatherWindy,
   TiWeatherWindyCloudy,
 } from "react-icons/ti";
+import { TbCloudQuestion } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import useCalendarPageStore from "../../../store/calendarStore";
 import Todo from "./Todo/Todo";
@@ -37,7 +38,9 @@ import dayjs from "dayjs";
 import useModalStore, { toggleDayModal, toggleLocationModal } from "../../../store/modalStore";
 import { useUserInfoStore } from "../../../store/userInfoStore";
 import useDailyScheduleStore from "../../../store/dayStore";
-import { weatherApiFetchTest } from "../../../apis/weatherAPI/weatherAPI";
+import { useWeatherStore } from "../../../store/weatherStore";
+import { useFetchThreeDayWeathers } from "../../../apis/setThreeDayWeathersAPI";
+import useMainStore from "../../../store/mainStore";
 
 const CalendarComponent = () => {
   const [activeDate, setActiveDate] = useState(new Date());
@@ -46,7 +49,9 @@ const CalendarComponent = () => {
   const { setIsHaveTask, setTodolist } = useCalendarPageStore((state) => state.actions);
   const actions = useDailyScheduleStore((state) => state.actions);
   const { taskModal, todoScheduleModal, dayModal } = useModalStore();
-  const [weatherArray, setWeatherArray] = useState<number[]>([]);
+  const weatherData = useWeatherStore((state) => state.weatherData);
+  const fetchWeather = useFetchThreeDayWeathers();
+  const { standardDate } = useMainStore();
 
   const navigate = useNavigate();
 
@@ -100,24 +105,13 @@ const CalendarComponent = () => {
     setTodolist(newTodoList);
   };
 
-  const fetchWeather = async () => {
-    try {
-      const result = await weatherApiFetchTest(currentLocation);
-
-      setWeatherArray(result);
-    } catch (error) {
-      console.error("오류 발생:", error);
-    }
-  };
-
   useEffect(() => {
     fetchIsHaveTask();
     fetchTodolist();
-    console.log(weatherArray);
-  }, [activeDate, taskModal, todoScheduleModal, dayModal, weatherArray]);
+  }, [activeDate, taskModal, todoScheduleModal, dayModal, weatherData]);
 
   useEffect(() => {
-    fetchWeather();
+    fetchWeather(currentLocation, standardDate);
   }, [currentLocation]);
 
   const onChange = ({ activeStartDate }: { activeStartDate: Date | null }) => {
@@ -153,6 +147,8 @@ const CalendarComponent = () => {
 
   const tileContent = ({ date, view }: { date: Date; view: string }) => {
     const today = new Date();
+    const formattedToday = dayjs(today).format("YYYY-MM-DD");
+    const formattedDate = dayjs(date).format("YYYY-MM-DD");
     if (
       view === "month" &&
       date.getMonth() === today.getMonth() &&
@@ -160,12 +156,36 @@ const CalendarComponent = () => {
       date.getDate() >= 1 &&
       date.getDate() <= 31
     ) {
-      if (date.getDate() === today.getDate()) {
-        return <div className={iconArea}>{weatherIcons[weatherArray[0]]}</div>;
-      } else if (date.getDate() === today.getDate() + 1) {
-        return <div className={iconArea}>{weatherIcons[weatherArray[1]]}</div>;
-      } else if (date.getDate() === today.getDate() + 2) {
-        return <div className={iconArea}>{weatherIcons[weatherArray[2]]}</div>;
+      if (formattedDate === formattedToday) {
+        return (
+          <div className={iconArea}>
+            {weatherData && typeof weatherData[formattedDate] !== "undefined" ? (
+              weatherIcons[weatherData[formattedDate]]
+            ) : (
+              <TbCloudQuestion />
+            )}
+          </div>
+        );
+      } else if (formattedDate === dayjs(today).add(1, "day").format("YYYY-MM-DD")) {
+        return (
+          <div className={iconArea}>
+            {weatherData && typeof weatherData[formattedDate] !== "undefined" ? (
+              weatherIcons[weatherData[formattedDate]]
+            ) : (
+              <TbCloudQuestion />
+            )}
+          </div>
+        );
+      } else if (formattedDate === dayjs(today).add(2, "day").format("YYYY-MM-DD")) {
+        return (
+          <div className={iconArea}>
+            {weatherData && typeof weatherData[formattedDate] !== "undefined" ? (
+              weatherIcons[weatherData[formattedDate]]
+            ) : (
+              <TbCloudQuestion />
+            )}
+          </div>
+        );
       }
     }
   };
@@ -222,13 +242,7 @@ const CalendarComponent = () => {
           <div className={todolistPannel}>
             {todolist
               ? todolist.map((item) => (
-                  <Todo
-                    id={item.id}
-                    dueDate={item.dueDate}
-                    isCheck={item.isDone}
-                    title={item.title}
-                    // description={item.description}
-                  />
+                  <Todo id={item.id} dueDate={item.dueDate} isCheck={item.isDone} title={item.title} />
                 ))
               : null}
           </div>

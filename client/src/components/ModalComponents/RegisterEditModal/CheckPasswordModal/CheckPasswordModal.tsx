@@ -30,7 +30,6 @@ const CheckPasswordModal = () => {
   const handleGetUser = async () => {
     try {
       const res = await getUserInfoAPI(password);
-      console.log(res);
       if (res) {
         actions.setNickname(res.nickname);
         togglePWCheckModal();

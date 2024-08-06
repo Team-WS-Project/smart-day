@@ -56,7 +56,7 @@ const addTodos = (req, res) => {
 
     conn.query(sql, values, (err, results) => {
       if (err) {
-        console.log(err);
+        console.error(err);
         return res.status(StatusCodes.BAD_REQUEST).end();
       }
       if (results.affectedRows === 0) {
@@ -77,7 +77,7 @@ const updateTodos = (req, res) => {
 
     conn.query(sql, values, (err, results) => {
       if (err) {
-        console.log(err);
+        console.error(err);
         return res.status(StatusCodes.BAD_REQUEST).end();
       }
       if (results.affectedRows === 0) {
@@ -97,7 +97,7 @@ const changeCompleted = (req, res) => {
 
     conn.query(sql, [id], (err, results) => {
       if (err) {
-        console.log(err);
+        console.error(err);
         return res.status(StatusCodes.BAD_REQUEST).end();
       }
       return res.status(StatusCodes.OK).json(results);
@@ -112,7 +112,7 @@ const deleteTodos = (req, res) => {
     const sql = `DELETE FROM todos WHERE id = ? `;
     conn.query(sql, id, (err, results) => {
       if (err) {
-        console.log(err);
+        console.error(err);
         return res.status(StatusCodes.BAD_REQUEST).end();
       }
       if (results) {

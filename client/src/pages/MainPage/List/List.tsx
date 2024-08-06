@@ -1,4 +1,14 @@
-import { TiWeatherWindyCloudy } from "react-icons/ti";
+import {
+  TiWeatherCloudy,
+  TiWeatherDownpour,
+  TiWeatherPartlySunny,
+  TiWeatherShower,
+  TiWeatherSnow,
+  TiWeatherStormy,
+  TiWeatherSunny,
+  TiWeatherWindy,
+  TiWeatherWindyCloudy,
+} from "react-icons/ti";
 import {
   text2,
   text1,
@@ -13,6 +23,11 @@ import { toggleTaskModal } from "../../../store/modalStore";
 import Task from "../Task/Task";
 import useTaskStore from "../../../store/taskStore";
 import dayjs from "dayjs";
+import { useWeatherStore } from "../../../store/weatherStore";
+import { useFetchThreeDayWeathers } from "../../../apis/setThreeDayWeathersAPI";
+import { useUserInfoStore } from "../../../store/userInfoStore";
+import { useEffect } from "react";
+import { TbCloudQuestion } from "react-icons/tb";
 
 type TTask = {
   id?: number;
@@ -26,7 +41,20 @@ type TTask = {
 type TaskList = {
   listIndex: number;
   tasks: TTask[];
+  weatherData?: number[];
 };
+
+const weatherIcons = [
+  <TiWeatherDownpour />,
+  <TiWeatherSunny />,
+  <TiWeatherWindyCloudy />,
+  <TiWeatherCloudy />,
+  <TiWeatherPartlySunny />,
+  <TiWeatherSnow />,
+  <TiWeatherStormy />,
+  <TiWeatherWindy />,
+  <TiWeatherShower />,
+];
 
 const List = ({ listIndex, tasks }: TaskList) => {
   const dayOfTheWeek = ["일", "월", "화", "수", "목", "금", "토"];
@@ -34,6 +62,13 @@ const List = ({ listIndex, tasks }: TaskList) => {
   const updateTask = useTaskStore((state) => state.updateTask);
   const setIsNewTask = useTaskStore((state) => state.setIsNewTask);
   const nowDate = dayjs(standardDate).add(listIndex, "day");
+  const weatherData = useWeatherStore((state) => state.weatherData);
+  const { currentLocation } = useUserInfoStore();
+  const fetchWeather = useFetchThreeDayWeathers();
+
+  useEffect(() => {
+    fetchWeather(currentLocation, standardDate);
+  }, [currentLocation]);
 
   const addTask = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -51,12 +86,23 @@ const List = ({ listIndex, tasks }: TaskList) => {
     toggleTaskModal();
   };
 
+  const renderWeatherIcon = () => {
+    const targetDate = dayjs(standardDate).add(listIndex, "day");
+    const formattedDate = targetDate.format("YYYY-MM-DD");
+
+    if (!weatherData || typeof weatherData[formattedDate] === "undefined") {
+      return <TbCloudQuestion />;
+    }
+
+    return weatherIcons[weatherData[formattedDate]];
+  };
+
   return (
     <div className={taskListsContainerBox}>
       <div className={containerTitle}>
         <text className={text1}>{nowDate.format("DD")}</text>
         <text className={text2}>{dayOfTheWeek[(standardDate.getDay() + listIndex) % 7]}</text>
-        <TiWeatherWindyCloudy className={weatherIcon} />
+        <div className={weatherIcon}>{renderWeatherIcon()}</div>
       </div>
       <div className={taskListArea}>
         {tasks

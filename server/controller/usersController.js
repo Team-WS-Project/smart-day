@@ -42,7 +42,7 @@ const join = (req, res) => {
 
   conn.query(sql, values, (err, results) => {
     if (err) {
-      console.log(err);
+      console.error(err);
       return res.status(StatusCodes.BAD_REQUEST).end();
     }
 
@@ -61,7 +61,7 @@ const login = (req, res) => {
 
   conn.query(sql, email, (err, results) => {
     if (err) {
-      console.log(err);
+      console.error(err);
       return res.status(StatusCodes.BAD_REQUEST).end();
     }
 
@@ -94,9 +94,9 @@ const login = (req, res) => {
       );
 
       res.cookie("access_token", access_token, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "None",
       });
 
       return res.status(StatusCodes.OK).json(results);

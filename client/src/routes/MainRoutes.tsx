@@ -8,11 +8,10 @@ function MainRoutes() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/calendar" element={<CalendarPage />} />
-        <Route path="/schedule" element={<SchedulePage />} />
-        <Route path="/todolist" element={<TodoListPage />} />
-
+        <Route path={"/"} element={<MainPage />} />
+        <Route path={"/calendar"} element={<CalendarPage />} />
+        <Route path={"/schedule"} element={<SchedulePage />} />
+        <Route path={"/todolist"} element={<TodoListPage />} />
       </Routes>
     </Router>
   );

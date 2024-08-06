@@ -19,7 +19,7 @@ export const getCompletedTodos = async () => {
     const res = await baseAxios.get(queryString + "&completed=true", {});
     return res;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
@@ -28,7 +28,7 @@ export const getFailureTodos = async () => {
     const res = await baseAxios.get(queryString + "&completed=false", {});
     return res;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
@@ -37,7 +37,7 @@ export const changeCompleted = async (todoId: number) => {
     const res = await baseAxios.put(`/todos/completed/${todoId}`, {});
     return res;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw Error;
   }
 };
@@ -47,6 +47,6 @@ export const getTodoInfo = async (todoId: number) => {
     const res = await baseAxios.get(`todos/${todoId}`);
     return res;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };

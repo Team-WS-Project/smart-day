@@ -74,7 +74,7 @@ const mainStore: StateCreator<MainState> = (set) => ({
         const updatedLists = state.dailyTaskLists.map((list, index) => {
           if (index === listIndex) {
             const updatedTasks = [...list.tasks, newTask];
-            console.log(updatedTasks);
+
             // startTime 기준으로 정렬
             updatedTasks.sort((a, b) => (a.startTime > b.startTime ? 1 : -1));
             return {

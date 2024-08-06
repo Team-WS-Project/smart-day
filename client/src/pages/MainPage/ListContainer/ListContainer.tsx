@@ -24,7 +24,6 @@ const ListContainer = () => {
     try {
       const res = await getTaskListsAPI(startDate);
       const newList = res?.data; // newList는 특정 객체 배열을 가진 배열
-      console.log(newList);
 
       newList.forEach((innerArray: Task[]) => {
         innerArray.forEach((item: Task) => {
@@ -47,7 +46,6 @@ const ListContainer = () => {
   useEffect(() => {
     if (userId !== null) {
       fetchTaskLists();
-      console.log("fetch...");
     }
   }, [standardDate, taskModal]);
 
@@ -60,7 +58,6 @@ const ListContainer = () => {
 
   useEffect(() => {
     if (userId === null) {
-      console.log("비로그인상태");
       clearMainTaskList();
     }
   }, [userId]);

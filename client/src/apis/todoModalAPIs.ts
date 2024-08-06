@@ -15,7 +15,7 @@ export const createTodo = async ({ title, detail, dueDate }: Todo) => {
       dueDate,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -27,7 +27,7 @@ export const updateTodo = async ({ todoId, title, detail, dueDate }: Todo) => {
       dueDate,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -35,6 +35,6 @@ export const deleteTodo = async (todoId: number) => {
   try {
     await baseAxios.delete(`todos/${todoId}`, {});
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

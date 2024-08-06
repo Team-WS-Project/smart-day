@@ -64,8 +64,8 @@ const TodoListPage = () => {
         completedTodos: completedResponse?.data,
         failureTodos: failureResponse?.data,
       });
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.error(err);
     }
   };
 

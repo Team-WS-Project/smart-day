@@ -64,31 +64,30 @@ const getShortWeather = async (currentLocation: string) => {
     const nx = locationData[1];
     const ny = locationData[2];
 
-    console.log(nx, ny);
-    console.log(baseDate, baseTime);
-
     const res = await axios.get(
       `${apiURL}serviceKey=${serviceKey}&numOfRows=${numOfRows}&pageNo=${pageNo}&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}&dataType=${dataType}`,
     );
 
     return res;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 
 export const weatherApiFetchTest = async (currentLocation: string) => {
-  console.log(currentLocation);
-  const res = await getShortWeather(currentLocation);
-  const tmp = res?.data.response.body.items.item;
+  try {
+    const res = await getShortWeather(currentLocation);
+    const tmp = res?.data.response.body.items.item;
 
-  const sky = tmp.filter((elem: { category: string }) => {
-    return elem.category === "SKY";
-  });
+    const sky = tmp.filter((elem: { category: string }) => {
+      return elem.category === "SKY";
+    });
 
-  // 추출할 인덱스 배열
-  const indicesToExtract = [0, 23, 47];
-  const weatherCode = indicesToExtract.map((index) => sky[index].fcstValue);
+    const indicesToExtract = [0, 23, 47];
+    const weatherCode = indicesToExtract.map((index) => sky[index].fcstValue);
 
-  return weatherCode;
+    return weatherCode;
+  } catch (err) {
+    console.error("오류", err);
+  }
 };

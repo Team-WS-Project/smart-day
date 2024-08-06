@@ -23,11 +23,6 @@ import CheckPasswordModal from "../../components/ModalComponents/RegisterEditMod
 import { useUserInfoStore } from "../../store/userInfoStore";
 
 const MainPage = () => {
-  // const navigate = useNavigate();
-  // const gotoCalendarPage = () => {
-  //   navigate("/calendar");
-  // };
-
   const { loginModal, userEditModal, datepickerModal, taskModal, locationModal, registerModal, pwCheckModal } =
     useModalStore();
   const { currentLocation } = useUserInfoStore();
@@ -58,10 +53,6 @@ const MainPage = () => {
             <div className={datePick} onClick={toggleDatepickerModal}>
               + 월별 일정 추가
             </div>
-            {/* <div className={weatherText}>오늘은 날씨가 weather이므로, textObj 하시는건 어때요?</div>
-            <div className={linkCalendarPage} onClick={gotoCalendarPage}>
-              전체 달력 보기
-            </div> */}
           </div>
         </div>
         <Footer />

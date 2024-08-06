@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   center,
   dailyTodoColumn,
@@ -15,7 +15,6 @@ import {
   wrapper,
 } from "./DayModal.css";
 import { CiCalendar } from "react-icons/ci";
-import { TiWeatherDownpour } from "react-icons/ti";
 import { VscChromeClose } from "react-icons/vsc";
 import DayTodoModal from "./DailyTodo/DailyTodo";
 import DaySchedule from "./DailyScheduleModal/DailySchedule";
@@ -29,6 +28,31 @@ import { getDailyTodos } from "../../../apis/getDailyTodosAPI";
 import dayjs from "dayjs";
 import useTaskStore from "../../../store/taskStore";
 import useTodoScheduleStore from "../../../store/todoScheduleStore";
+import {
+  TiWeatherCloudy,
+  TiWeatherDownpour,
+  TiWeatherPartlySunny,
+  TiWeatherShower,
+  TiWeatherSnow,
+  TiWeatherStormy,
+  TiWeatherSunny,
+  TiWeatherWindy,
+  TiWeatherWindyCloudy,
+} from "react-icons/ti";
+import { TbCloudQuestion } from "react-icons/tb";
+import { useWeatherStore } from "../../../store/weatherStore";
+
+const weatherIcons = [
+  <TiWeatherDownpour />,
+  <TiWeatherSunny />,
+  <TiWeatherWindyCloudy />,
+  <TiWeatherCloudy />,
+  <TiWeatherPartlySunny />,
+  <TiWeatherSnow />,
+  <TiWeatherStormy />,
+  <TiWeatherWindy />,
+  <TiWeatherShower />,
+];
 
 const DayModal = () => {
   const { taskModal, todoScheduleModal } = useModalStore();
@@ -46,6 +70,8 @@ const DayModal = () => {
   const setIsNewTask = useTaskStore((state) => state.setIsNewTask);
 
   const { setDueDate } = useTodoScheduleStore();
+  const weatherData = useWeatherStore((state) => state.weatherData);
+  const [weatherIcon, setWeatherIcon] = useState(<TbCloudQuestion />);
 
   const getDayOfWeek = (date: Date) => {
     const days = ["일", "월", "화", "수", "목", "금", "토"];
@@ -74,6 +100,15 @@ const DayModal = () => {
     }
     hasPageBeenRendered.current["effect"] = true;
   }, [date, todoActions, scheduleActions, todoScheduleModal, taskModal]);
+
+  useEffect(() => {
+    const dateString = dayjs(date).format("YYYY-MM-DD");
+    if (Object.prototype.hasOwnProperty.call(weatherData, dateString)) {
+      setWeatherIcon(weatherIcons[weatherData[dateString]]);
+    } else {
+      setWeatherIcon(<TbCloudQuestion />);
+    }
+  }, [date]);
 
   const clickAddTask = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -109,9 +144,7 @@ const DayModal = () => {
             </div>
             <p className={dateUponIcon}>{date.getDate()}</p>
             <div className={dayTitleWeekday}>{getDayOfWeek(date)}</div>
-            <div className={dayTitleIcons}>
-              <TiWeatherDownpour />
-            </div>
+            <div className={dayTitleIcons}>{weatherIcon}</div>
           </div>
           <div className={dailyTodoColumn}>
             {dailyTodos.map((todo, index) => (
@@ -124,12 +157,7 @@ const DayModal = () => {
             </div>
           </div>
         </div>
-        <div
-          className={dayModalRight}
-          // onClick={() => {
-          //   setIsNewTask(false);
-          // }}
-        >
+        <div className={dayModalRight}>
           {dailySchedules.map((schedule, index) => (
             <DaySchedule
               key={index}
