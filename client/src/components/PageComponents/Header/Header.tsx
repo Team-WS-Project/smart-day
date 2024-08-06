@@ -19,6 +19,7 @@ import { requestLogoutAPI } from "../../../apis/logoutAPI";
 import useDailyTodoStore from "../../../store/todoStore";
 import useDailyScheduleStore from "../../../store/dayStore";
 import useScheduleStore from "../../../store/scheduleStore";
+import { useWeatherStore } from "../../../store/weatherStore";
 
 const Header = () => {
   const userId = useUserInfoStore((state) => state.userId);
@@ -31,6 +32,8 @@ const Header = () => {
   const clearTodo = useDailyTodoStore((state) => state.actions.clearTodo);
   const clearSchedule = useDailyScheduleStore((state) => state.actions.clearSchedule);
   const clear = useScheduleStore((state) => state.actions.clearSchedule);
+  const clearWeatherData = useWeatherStore((state) => state.actions.clearWeatherData);
+  const clearLocation = useUserInfoStore((state) => state.actions.clearCurrentLocation);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -81,6 +84,8 @@ const Header = () => {
       clearTodo();
       clearSchedule();
       clear();
+      clearWeatherData();
+      clearLocation();
       navigate("/");
     } catch (err) {
       console.error(err);

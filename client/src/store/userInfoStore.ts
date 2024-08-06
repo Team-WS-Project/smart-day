@@ -24,6 +24,8 @@ interface userInfoState {
 
     setCurrentLocation: (currentLocation: string) => void;
 
+    clearCurrentLocation: () => void;
+
     setFavoriteLocation: () => void;
 
     addFavoriteLocation: (location: string) => void;
@@ -58,6 +60,10 @@ const userInfoStore: StateCreator<userInfoState> = (set) => ({
 
     setCurrentLocation: (currentLocation) => {
       set((state) => ({ ...state, currentLocation: currentLocation }));
+    },
+
+    clearCurrentLocation: () => {
+      set((state) => ({ ...state, currentLocation: "" }));
     },
 
     setFavoriteLocation: async () => {

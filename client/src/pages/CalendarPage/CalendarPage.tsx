@@ -14,16 +14,29 @@ import CheckPasswordModal from "../../components/ModalComponents/RegisterEditMod
 import LocationModal from "../../components/ModalComponents/LocationModal/LocationModal";
 import { useUserInfoStore } from "../../store/userInfoStore";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const CalendarPage = () => {
-  const { loginModal, userEditModal, locationModal, registerModal, pwCheckModal, taskModal, dayModal, todoScheduleModal } = useModalStore();
+  const {
+    loginModal,
+    userEditModal,
+    locationModal,
+    registerModal,
+    pwCheckModal,
+    taskModal,
+    dayModal,
+    todoScheduleModal,
+  } = useModalStore();
   const userId = useUserInfoStore((state) => state.userId);
   const navigate = useNavigate();
+  const hasPageBeenRendered = useRef({ effect: false });
 
   useEffect(() => {
     if (!userId) {
-      navigate("/");
+      if (hasPageBeenRendered.current["effect"]) {
+        navigate("/");
+      }
+      hasPageBeenRendered.current["effect"] = true;
       return;
     }
   }, [navigate]);

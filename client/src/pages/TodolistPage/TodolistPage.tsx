@@ -13,7 +13,7 @@ import {
 import Todo from "./TodolistPageComponents/Todo";
 import Footer from "../../components/PageComponents/Footer/Footer";
 import Header from "../../components/PageComponents/Header/Header";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useModalStore, { toggleTodoScheduleModal } from "../../store/modalStore";
 import TodoScheduleModal from "../../components/ModalComponents/TodoScheduleModal/TodoScheduleModal";
 import { getCompletedTodos, getFailureTodos, getTodayTodos } from "../../apis/todolistAPIs";
@@ -47,6 +47,7 @@ const TodoListPage = () => {
   const { loginModal, userEditModal, locationModal, registerModal, pwCheckModal } = useModalStore();
   const userId = useUserInfoStore((state) => state.userId);
   const navigate = useNavigate();
+  const hasPageBeenRendered = useRef({ effect: false });
 
   const [todos, setTodos] = useState<Todos>({
     todayTodos: [],
@@ -71,12 +72,18 @@ const TodoListPage = () => {
 
   useEffect(() => {
     if (!userId) {
-      navigate("/");
+      if (hasPageBeenRendered.current["effect"]) {
+        navigate("/");
+      }
+      hasPageBeenRendered.current["effect"] = true;
       return;
     }
 
     if (!todoScheduleModal) {
-      fetchTodos();
+      if (hasPageBeenRendered.current["effect"]) {
+        fetchTodos();
+      }
+      hasPageBeenRendered.current["effect"] = true;
     }
   }, [todoScheduleModal, navigate]);
 

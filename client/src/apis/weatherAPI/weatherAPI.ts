@@ -50,7 +50,7 @@ const pageNo = 1;
 
 const dataType = "JSON";
 
-const apiURL = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?";
+const apiURL = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?";
 
 const getShortWeather = async (currentLocation: string) => {
   try {

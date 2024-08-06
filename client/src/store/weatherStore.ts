@@ -5,6 +5,7 @@ interface weatherStore {
   weatherData: Record<string, number>;
   actions: {
     setWeatherData: (newWeatherArray: Record<string, number>) => void;
+    clearWeatherData: () => void;
   };
 }
 
@@ -17,6 +18,9 @@ const weatherStore: StateCreator<weatherStore> = (set) => ({
         convertedData[key] = Number(value);
       }
       set((state) => ({ ...state, weatherData: convertedData }));
+    },
+    clearWeatherData() {
+      set((state) => ({ ...state, weatherData: {} }));
     },
   },
 });

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { BsCalendar4 } from "react-icons/bs";
@@ -54,6 +54,7 @@ const CalendarComponent = () => {
   const { standardDate } = useMainStore();
 
   const navigate = useNavigate();
+  const hasPageBeenRendered = useRef({ effect: false });
 
   const weatherIcons = [
     <TiWeatherDownpour />,
@@ -106,12 +107,18 @@ const CalendarComponent = () => {
   };
 
   useEffect(() => {
-    fetchIsHaveTask();
-    fetchTodolist();
+    if (hasPageBeenRendered.current["effect"]) {
+      fetchIsHaveTask();
+      fetchTodolist();
+    }
+    hasPageBeenRendered.current["effect"] = true;
   }, [activeDate, taskModal, todoScheduleModal, dayModal, weatherData]);
 
   useEffect(() => {
-    fetchWeather(currentLocation, standardDate);
+    if (hasPageBeenRendered.current["effect"]) {
+      fetchWeather(currentLocation, standardDate);
+    }
+    hasPageBeenRendered.current["effect"] = true;
   }, [currentLocation]);
 
   const onChange = ({ activeStartDate }: { activeStartDate: Date | null }) => {

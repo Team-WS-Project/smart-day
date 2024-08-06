@@ -2,11 +2,12 @@ import List from "../List/List";
 import { IoArrowBackCircleOutline, IoArrowForwardCircleOutline } from "react-icons/io5";
 import { arrowIcon, dailyTaskContainer, divArrow } from "./ListContainer.css";
 import useMainStore, { changeDateAfter, changeDateBefore, clearMainTaskList } from "../../../store/mainStore";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import dayjs from "dayjs";
 import { getTaskListsAPI } from "../../../apis/mainPageAPI";
 import { useUserInfoStore } from "../../../store/userInfoStore";
 import useModalStore from "../../../store/modalStore";
+import { useFetchThreeDayWeathers } from "../../../apis/setThreeDayWeathersAPI";
 
 interface Task {
   startTime: string;
@@ -17,6 +18,16 @@ const ListContainer = () => {
   const { standardDate, dailyTaskLists, actions } = useMainStore();
   const { userId } = useUserInfoStore();
   const { taskModal } = useModalStore();
+  const { currentLocation } = useUserInfoStore();
+  const fetchWeather = useFetchThreeDayWeathers();
+  const hasPageBeenRendered = useRef({ effect: false });
+
+  useEffect(() => {
+    if (hasPageBeenRendered.current["effect"]) {
+      fetchWeather(currentLocation, standardDate);
+    }
+    hasPageBeenRendered.current["effect"] = true;
+  }, [currentLocation]);
 
   const fetchTaskLists = async () => {
     const startDate = dayjs(standardDate).format("YYYY-MM-DD");
@@ -45,20 +56,19 @@ const ListContainer = () => {
 
   useEffect(() => {
     if (userId !== null) {
-      fetchTaskLists();
+      if (hasPageBeenRendered.current["effect"]) {
+        fetchTaskLists();
+      }
+      hasPageBeenRendered.current["effect"] = true;
     }
-  }, [standardDate, taskModal]);
-
-  useEffect(() => {
-    // setStandardDate();
-    if (userId !== null) {
-      fetchTaskLists();
-    }
-  }, [userId]);
+  }, [standardDate, taskModal, userId]);
 
   useEffect(() => {
     if (userId === null) {
-      clearMainTaskList();
+      if (hasPageBeenRendered.current["effect"]) {
+        clearMainTaskList();
+      }
+      hasPageBeenRendered.current["effect"] = true;
     }
   }, [userId]);
 

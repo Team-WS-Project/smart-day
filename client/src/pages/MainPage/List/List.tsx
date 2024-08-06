@@ -24,9 +24,6 @@ import Task from "../Task/Task";
 import useTaskStore from "../../../store/taskStore";
 import dayjs from "dayjs";
 import { useWeatherStore } from "../../../store/weatherStore";
-import { useFetchThreeDayWeathers } from "../../../apis/setThreeDayWeathersAPI";
-import { useUserInfoStore } from "../../../store/userInfoStore";
-import { useEffect } from "react";
 import { TbCloudQuestion } from "react-icons/tb";
 
 type TTask = {
@@ -63,12 +60,6 @@ const List = ({ listIndex, tasks }: TaskList) => {
   const setIsNewTask = useTaskStore((state) => state.setIsNewTask);
   const nowDate = dayjs(standardDate).add(listIndex, "day");
   const weatherData = useWeatherStore((state) => state.weatherData);
-  const { currentLocation } = useUserInfoStore();
-  const fetchWeather = useFetchThreeDayWeathers();
-
-  useEffect(() => {
-    fetchWeather(currentLocation, standardDate);
-  }, [currentLocation]);
 
   const addTask = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
