@@ -1,4 +1,4 @@
-# 🗓️ 캘린더 웹 사이트 제작 프로젝트
+<img width="348" alt="image (6)" src="https://github.com/user-attachments/assets/cab404bb-f45c-4662-bd86-686485982acd" /># 🗓️ 캘린더 웹 사이트 제작 프로젝트
 
 ## 프로젝트 소개 
 
@@ -48,6 +48,21 @@
 - Notion, Figma, Slack, dbdiagram.io
     
 </br>
+
+## 설계
+
+### ERD
+
+users, todolists, schedules, favorites 테이블
+<img width="265" alt="image (6)" src="https://github.com/user-attachments/assets/154dc67c-0515-4566-a7e6-a2a37f5b9746" />
+
+### API 설계 
+userAPI, todosAPI, schedulesAPI, 즐겨찾기 각각으로 구분하여 get, post, delete, put 기능을 설계 <br>
+ex)
+<img width="348" alt="image (6)" src="https://github.com/user-attachments/assets/f95f9c5a-b9ee-4928-8e07-703efef98049" />
+
+
+</br>
  
 ## 프로젝트 폴더 구조
 
@@ -94,3 +109,10 @@
 <br/>
 
 ## 주요 기능
+<img width="959" alt="image" src="https://github.com/user-attachments/assets/189bcdbe-46c5-4418-9792-ec217e2521f9" />
+<img width="354" alt="image (1)" src="https://github.com/user-attachments/assets/3d5ae99a-ea49-444d-aa54-b616bfb25cc9" />
+<img width="418" alt="image (2)" src="https://github.com/user-attachments/assets/795b7600-89a0-49f1-907e-039dbce6ecf2" />
+<img width="357" alt="image (3)" src="https://github.com/user-attachments/assets/c190e24c-7d6d-499a-9bab-3f7bc49318bd" />
+<img width="119" alt="image (4)" src="https://github.com/user-attachments/assets/9d6c3e74-13a7-4abd-9b2c-83163e67bf29" />
+<img width="242" alt="image (5)" src="https://github.com/user-attachments/assets/c963d579-8d0d-49aa-b3b0-0669129666c7" />
+
