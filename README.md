@@ -53,14 +53,13 @@
 
 ### ERD
 
-users, todolists, schedules, favorites 테이블
+users, todolists, schedules, favorites 테이블 <br>
 <img width="265" alt="image (6)" src="https://github.com/user-attachments/assets/154dc67c-0515-4566-a7e6-a2a37f5b9746" />
 
 ### API 설계 
 userAPI, todosAPI, schedulesAPI, 즐겨찾기 각각으로 구분하여 get, post, delete, put 기능을 설계 <br>
-ex)
+ex) <br>
 <img width="348" alt="image (6)" src="https://github.com/user-attachments/assets/f95f9c5a-b9ee-4928-8e07-703efef98049" />
-
 
 </br>
  
