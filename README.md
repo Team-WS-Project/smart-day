@@ -108,10 +108,14 @@ ex) <br>
 <br/>
 
 ## 주요 기능
-<img width="959" alt="image" src="https://github.com/user-attachments/assets/189bcdbe-46c5-4418-9792-ec217e2521f9" />
-<img width="354" alt="image (1)" src="https://github.com/user-attachments/assets/3d5ae99a-ea49-444d-aa54-b616bfb25cc9" />
-<img width="418" alt="image (2)" src="https://github.com/user-attachments/assets/795b7600-89a0-49f1-907e-039dbce6ecf2" />
-<img width="357" alt="image (3)" src="https://github.com/user-attachments/assets/c190e24c-7d6d-499a-9bab-3f7bc49318bd" />
-<img width="119" alt="image (4)" src="https://github.com/user-attachments/assets/9d6c3e74-13a7-4abd-9b2c-83163e67bf29" />
-<img width="242" alt="image (5)" src="https://github.com/user-attachments/assets/c963d579-8d0d-49aa-b3b0-0669129666c7" />
+
+### 초기 화면 
+로그인을 하고나면 당일로 부터 4일의 일정을 확인할 수 있습니다. 일정 추가를 누르면 모달이 뜨면서 내용을 추가 할 수 있습니다.<br>
+<img width="700" alt="image" src="https://github.com/user-attachments/assets/189bcdbe-46c5-4418-9792-ec217e2521f9" />
+<img width="700" alt="image (1)" src="https://github.com/user-attachments/assets/3d5ae99a-ea49-444d-aa54-b616bfb25cc9" />
+<img width="700" alt="image (2)" src="https://github.com/user-attachments/assets/795b7600-89a0-49f1-907e-039dbce6ecf2" />
+<img width="700" alt="image (3)" src="https://github.com/user-attachments/assets/c190e24c-7d6d-499a-9bab-3f7bc49318bd" />
+로그인과 할 일 추가, todolist는 모달이 뜨면서 양식에 맞게 데이터를 저장할 수 있습니다.<br>
+<img width="200" alt="image (4)" src="https://github.com/user-attachments/assets/9d6c3e74-13a7-4abd-9b2c-83163e67bf29" />
+<img width="200" alt="image (5)" src="https://github.com/user-attachments/assets/c963d579-8d0d-49aa-b3b0-0669129666c7" />
 
