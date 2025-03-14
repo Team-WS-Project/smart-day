@@ -1,4 +1,4 @@
-<img width="348" alt="image (6)" src="https://github.com/user-attachments/assets/cab404bb-f45c-4662-bd86-686485982acd" /># 🗓️ 캘린더 웹 사이트 제작 프로젝트
+# 🗓️ 캘린더 웹 사이트 제작 프로젝트
 
 ## 프로젝트 소개 
 
