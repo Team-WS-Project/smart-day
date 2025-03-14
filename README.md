@@ -14,6 +14,9 @@
 
 프로그래머스 데브코스 웹 풀 사이클 3기 **완승팀**입니다.
 
+### 프로젝트 기간
+2024.6 - 2024.7 1개월
+
 ### 멘토
 
 - **[유승완](https://github.com/Seung-wan)**
@@ -35,6 +38,16 @@
 | 팀원 | [최효은](https://github.com/hyoeun0001) | Todos API 구현<br>서버 배포 |
 
 <br/>
+
+## 개발 환경
+
+프레임 워크
+- Typescript, React, Vite
+- axios, Zustand			
+- Node.js, Express, MariaDB, JWT	
+- Notion, Figma, Slack, dbdiagram.io
+    
+</br>
  
 ## 프로젝트 폴더 구조
 
@@ -80,12 +93,3 @@
 
 <br/>
 
-## .env 파일 설정
-
-```
-env코드 복사
-PORT=0000
-PRIVATE_KEY="PRIVATE_KEY"
-TOKEN_EXPIRED_TIME=0h
-
-```
