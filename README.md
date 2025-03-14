@@ -118,5 +118,5 @@ ex) <br>
 <br>
 로그인과 할 일 추가, todolist는 모달이 뜨면서 양식에 맞게 데이터를 저장할 수 있습니다.<br>
 <img width="200" alt="image (4)" src="https://github.com/user-attachments/assets/9d6c3e74-13a7-4abd-9b2c-83163e67bf29" />
-<img width="200" alt="image (5)" src="https://github.com/user-attachments/assets/c963d579-8d0d-49aa-b3b0-0669129666c7" />
+<img width="300" alt="image (5)" src="https://github.com/user-attachments/assets/c963d579-8d0d-49aa-b3b0-0669129666c7" />
 
