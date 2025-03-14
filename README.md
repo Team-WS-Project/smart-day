@@ -115,6 +115,7 @@ ex) <br>
 <img width="700" alt="image (1)" src="https://github.com/user-attachments/assets/3d5ae99a-ea49-444d-aa54-b616bfb25cc9" />
 <img width="700" alt="image (2)" src="https://github.com/user-attachments/assets/795b7600-89a0-49f1-907e-039dbce6ecf2" />
 <img width="700" alt="image (3)" src="https://github.com/user-attachments/assets/c190e24c-7d6d-499a-9bab-3f7bc49318bd" />
+<br>
 로그인과 할 일 추가, todolist는 모달이 뜨면서 양식에 맞게 데이터를 저장할 수 있습니다.<br>
 <img width="200" alt="image (4)" src="https://github.com/user-attachments/assets/9d6c3e74-13a7-4abd-9b2c-83163e67bf29" />
 <img width="200" alt="image (5)" src="https://github.com/user-attachments/assets/c963d579-8d0d-49aa-b3b0-0669129666c7" />
